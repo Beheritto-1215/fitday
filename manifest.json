@@ -5,6 +5,7 @@
   "lang": "zh-CN",
   "start_url": "/",
   "scope": "/",
+  "id": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",

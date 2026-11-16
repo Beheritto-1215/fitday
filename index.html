@@ -681,6 +681,22 @@
       letter-spacing: 0.01em;
     }
 
+    .bmr-warning {
+      margin: 10px 0 0;
+      padding: 9px 10px;
+      border: 1px solid rgba(255, 154, 154, 0.45);
+      border-radius: 10px;
+      background: rgba(188, 43, 43, 0.26);
+      color: #ffe5e5;
+      font-size: 10px;
+      font-weight: 650;
+      line-height: 1.5;
+    }
+
+    .bmr-warning[hidden] {
+      display: none;
+    }
+
     .fiber-widget {
       margin-top: 9px;
       padding: 9px 10px 8px;
@@ -1336,9 +1352,45 @@
       border-radius: 11px;
       background: var(--surface-2);
       color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
       font-size: 11px;
       font-weight: 650;
+      user-select: none;
+      -webkit-touch-callout: none;
       transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .meal-chip-edit {
+      width: 20px;
+      height: 20px;
+      display: inline-grid;
+      place-items: center;
+      margin-right: -4px;
+      border-radius: 6px;
+      color: var(--muted-2);
+    }
+
+    .meal-chip-edit .icon {
+      width: 12px;
+      height: 12px;
+    }
+
+    .meal-chip-edit:hover {
+      background: var(--surface-3);
+      color: var(--ink-soft);
+    }
+
+    .meal-delete-btn {
+      width: 100%;
+      min-height: 38px;
+      margin-top: 8px;
+      border-radius: 10px;
+      color: var(--danger);
+      background: var(--danger-soft);
+      font-size: 10.5px;
+      font-weight: 680;
     }
 
     .meal-chip.is-active {
@@ -1484,6 +1536,14 @@
 
     .protein-quality.is-good strong {
       color: var(--accent-ink);
+    }
+
+    .protein-quality.is-excellent {
+      background: #e5f5ea;
+    }
+
+    .protein-quality.is-excellent strong {
+      color: #1f6a45;
     }
 
     .protein-quality.is-warn {
@@ -1644,6 +1704,103 @@
       height: 16px;
       flex: none;
       color: var(--muted-2);
+    }
+
+    .advanced-food-manager {
+      margin-top: 14px;
+      padding-top: 13px;
+      border-top: 1px solid var(--line);
+    }
+
+    .advanced-food-manager .custom-entry {
+      margin-top: 8px;
+    }
+
+    .copy-diet-btn {
+      min-height: 34px;
+      padding: 0 10px;
+      border: 1px solid #c8d9cd;
+      border-radius: 10px;
+      background: #f3f8f3;
+      color: var(--accent-ink);
+      font-size: 10px;
+      font-weight: 680;
+      white-space: nowrap;
+    }
+
+    .copy-diet-dialog {
+      max-height: min(78vh, 620px);
+      overflow-y: auto;
+    }
+
+    .copy-date-list {
+      display: grid;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .copy-date-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      min-height: 54px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface-2);
+      text-align: left;
+    }
+
+    .copy-date-item:active {
+      background: var(--surface-3);
+    }
+
+    .copy-date-copy strong {
+      display: block;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 680;
+    }
+
+    .copy-date-copy small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .copy-date-kcal {
+      flex: none;
+      color: var(--muted);
+      font-size: 9.5px;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+
+    .copy-diet-empty {
+      margin-top: 12px;
+      padding: 18px 12px;
+      border-radius: 13px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .copy-mode-copy {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .copy-mode-actions {
+      display: grid;
+      gap: 8px;
+      margin-top: 18px;
     }
 
     .btn {
@@ -3241,8 +3398,8 @@
 
     .assess-metrics {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 8px;
       margin-top: 16px;
       padding-top: 13px;
       border-top: 1px solid var(--line);
@@ -4899,6 +5056,162 @@
         transition-duration: 0.01ms !important;
       }
     }
+    .onboarding {
+      position: fixed;
+      inset: 0;
+      z-index: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding:
+        max(22px, env(safe-area-inset-top))
+        18px
+        max(22px, env(safe-area-inset-bottom));
+      background:
+        radial-gradient(circle at 20% 0%, rgba(139, 214, 174, 0.22), transparent 38%),
+        radial-gradient(circle at 100% 100%, rgba(240, 193, 112, 0.16), transparent 42%),
+        linear-gradient(150deg, #10221b 0%, #162b22 52%, #0d1b16 100%);
+      overflow-y: auto;
+    }
+
+    .onboarding[hidden] {
+      display: none;
+    }
+
+    .onboarding-shell {
+      width: min(100%, 440px);
+      padding: 22px 20px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.075);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
+      color: #f7fbf8;
+      backdrop-filter: blur(16px);
+    }
+
+    .onboarding-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+    }
+
+    .onboarding-orb {
+      width: 118px;
+      height: 118px;
+      display: grid;
+      place-items: center;
+      margin: 26px auto 18px;
+      border: 1px solid rgba(178, 235, 201, 0.35);
+      border-radius: 34px;
+      background:
+        linear-gradient(145deg, rgba(161, 230, 187, 0.24), rgba(255, 255, 255, 0.04));
+      color: #c9f6d8;
+      font-size: 38px;
+      font-weight: 760;
+      letter-spacing: -0.05em;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    .onboarding-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .onboarding-dots span {
+      width: 22px;
+      height: 4px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.16);
+      transition: width 0.22s ease, background 0.22s ease;
+    }
+
+    .onboarding-dots span.is-active {
+      width: 38px;
+      background: #a8e6bd;
+    }
+
+    .onboarding-shell h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 720;
+      line-height: 1.35;
+      letter-spacing: -0.03em;
+      text-align: center;
+    }
+
+    .onboarding-body {
+      min-height: 76px;
+      margin: 12px 0 0;
+      color: rgba(244, 251, 246, 0.7);
+      font-size: 12px;
+      line-height: 1.75;
+      text-align: center;
+    }
+
+    .onboarding-encourage {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid rgba(168, 230, 189, 0.25);
+      border-radius: 15px;
+      background: rgba(168, 230, 189, 0.1);
+      color: #dcf7e5;
+      font-size: 12px;
+      font-weight: 620;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .onboarding-actions {
+      display: grid;
+      grid-template-columns: 0.82fr 1.2fr;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .onboarding-actions button {
+      min-height: 48px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .onboarding-prev {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .onboarding-next,
+    .onboarding-start {
+      border: 1px solid rgba(183, 239, 203, 0.3);
+      background: linear-gradient(135deg, #c7f2d5, #9fe2b7);
+      color: #163326;
+    }
+
+    .onboarding-start {
+      grid-column: 1 / -1;
+    }
+
+    .onboarding-start[hidden],
+    .onboarding-next[hidden],
+    .onboarding-prev[hidden] {
+      display: none;
+    }
+
+    .onboarding-foot {
+      margin: 13px 0 0;
+      color: rgba(255, 255, 255, 0.32);
+      font-size: 8.5px;
+      text-align: center;
+      letter-spacing: 0.08em;
+    }
   </style>
 </head>
 <body>
@@ -5013,6 +5326,7 @@
             <div class="hero-progress" aria-hidden="true">
               <span id="dietProgress"></span>
             </div>
+            <p class="bmr-warning" id="bmrWarning" hidden>当前摄入已低于基础代谢，长期如此将损伤身体，请增加进食！</p>
             <div class="macro-grid">
               <div class="macro-card macro-carbs">
                 <span class="macro-name">碳水</span>
@@ -5089,17 +5403,6 @@
               <div class="suggestions" id="foodSuggestions" role="listbox" aria-label="食物搜索建议" hidden></div>
             </div>
 
-            <button class="custom-entry" id="openCustomFood" type="button">
-              <span class="custom-entry-icon" aria-hidden="true">
-                <svg class="icon"><use href="#i-plus"></use></svg>
-              </span>
-              <span class="custom-entry-copy">
-                <strong>自定义录入</strong>
-                <small id="customFoodHint">搜不到？按每 100g 营养长期保存</small>
-              </span>
-              <svg class="icon" aria-hidden="true"><use href="#i-right"></use></svg>
-            </button>
-
             <div class="picked-food" id="foodSelected" hidden></div>
 
             <div class="amount-row">
@@ -5126,7 +5429,7 @@
               <button type="button" data-grams="150">150g</button>
               <button type="button" data-grams="200">200g</button>
             </div>
-            <p class="database-note">营养值均按每 100g 估算，已内置 <strong id="foodLibraryCount">1,887</strong> 种食物；米饭、肉类、薯类等已标注（生）/（熟），找不到时可用上方自定义录入。</p>
+            <p class="database-note">营养值均按每 100g 估算，已内置 <strong id="foodLibraryCount">1,887</strong> 种食物；米饭、肉类、薯类等已标注（生）/（熟），找不到时请到综合评估 → 高级设置 → 自定义食物管理中录入。</p>
           </section>
 
           <section class="card">
@@ -5135,6 +5438,7 @@
                 <h2><span data-day-label>今日</span>饮食</h2>
                 <p class="card-sub" id="foodListSub">还没有记录</p>
               </div>
+              <button class="copy-diet-btn" id="openCopyDiet" type="button">复制历史饮食</button>
             </div>
             <div class="food-list" id="foodList"></div>
             <div class="diet-summary" id="foodTotalsSummary" hidden></div>
@@ -5485,7 +5789,7 @@
                 <summary>
                   <span class="advanced-summary-copy">
                     <strong>高级设置</strong>
-                    <small id="advancedSummaryHint">动态热量 · 分场景宏量 · 微量元素参考</small>
+                    <small id="advancedSummaryHint">动态热量 · 分场景宏量 · 微量元素 · 自定义食物</small>
                   </span>
                   <span class="advanced-chevron" aria-hidden="true">⌄</span>
                 </summary>
@@ -5637,6 +5941,21 @@
                 <p class="form-hint">铁、锌、镁会按性别自动切换；未设置性别时按男性参考值。</p>
               </div>
 
+              <div class="advanced-food-manager">
+                <span class="field-caption">自定义食物管理</span>
+                <button class="custom-entry" id="openCustomFood" type="button">
+                  <span class="custom-entry-icon" aria-hidden="true">
+                    <svg class="icon"><use href="#i-plus"></use></svg>
+                  </span>
+                  <span class="custom-entry-copy">
+                    <strong>添加 / 管理自定义食物</strong>
+                    <small id="customFoodHint">搜不到？按每 100g 营养长期保存</small>
+                  </span>
+                  <svg class="icon" aria-hidden="true"><use href="#i-right"></use></svg>
+                </button>
+                <p class="form-hint">自定义食物独立保存在本机；添加后可回到饮食页搜索使用。</p>
+              </div>
+
                 </div>
               </details>
 
@@ -5663,12 +5982,17 @@
                 <small id="metricBmiLabel">待填写</small>
               </div>
               <div class="assess-metric">
+                <span>基础代谢（BMR）</span>
+                <strong id="metricBmr">--</strong>
+                <small id="metricBmrLabel">待完善资料</small>
+              </div>
+              <div class="assess-metric">
                 <span>热量差额</span>
                 <strong id="metricBalance">--</strong>
                 <small id="metricBalanceLabel">摄入 − 目标</small>
               </div>
               <div class="assess-metric">
-                <span>估算消耗</span>
+                <span>估算消耗（TDEE）</span>
                 <strong id="metricBurn">--</strong>
                 <small id="metricBurnLabel">kcal / 日</small>
               </div>
@@ -5910,6 +6234,67 @@
     </div>
   </div>
 
+  <div class="dialog-backdrop" id="mealEditBackdrop" hidden>
+    <div class="edit-dialog" role="dialog" aria-modal="true" aria-labelledby="mealEditTitle">
+      <div class="sheet-head">
+        <div>
+          <p class="sheet-kicker">EDIT MEAL</p>
+          <h2 id="mealEditTitle">编辑餐次</h2>
+        </div>
+        <button class="sheet-close" id="closeMealEdit" type="button" aria-label="关闭编辑餐次">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <p class="sheet-sub">系统固定餐次不可修改；重命名后历史记录会同步更新。</p>
+      <div class="edit-form">
+        <label class="field">
+          <span>餐次名称</span>
+          <span class="suffix-input">
+            <input id="mealEditName" type="text" maxlength="20" autocomplete="off">
+          </span>
+        </label>
+        <p class="edit-hint" id="mealEditHint">删除自定义餐次后，历史记录会自动归入“未分类”。</p>
+        <button class="meal-delete-btn" id="deleteMealEdit" type="button">删除这个餐次</button>
+        <div class="edit-actions">
+          <button class="btn btn-secondary" id="cancelMealEdit" type="button">取消</button>
+          <button class="btn btn-primary" id="saveMealEdit" type="button">保存修改</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-backdrop" id="copyDietBackdrop" hidden>
+    <div class="edit-dialog copy-diet-dialog" role="dialog" aria-modal="true" aria-labelledby="copyDietTitle">
+      <div class="sheet-head">
+        <div>
+          <p class="sheet-kicker">COPY HISTORY</p>
+          <h2 id="copyDietTitle">复制历史饮食</h2>
+        </div>
+        <button class="sheet-close" id="closeCopyDiet" type="button" aria-label="关闭复制历史饮食">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
+        </button>
+      </div>
+      <p class="sheet-sub">选择最近 7 天中有饮食记录的一天，复制到 <strong id="copyTargetDateLabel">今天</strong>。</p>
+      <div class="copy-date-list" id="copyDietDates"></div>
+      <div class="copy-diet-empty" id="copyDietEmpty" hidden>最近 7 天没有可复制的饮食记录。</div>
+    </div>
+  </div>
+
+  <div class="dialog-backdrop" id="copyDietModeBackdrop" hidden>
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="copyModeTitle">
+      <div class="dialog-icon" aria-hidden="true">
+        <svg class="icon"><use href="#i-info"></use></svg>
+      </div>
+      <h2 id="copyModeTitle">当前日期已有记录</h2>
+      <p class="copy-mode-copy" id="copyModeBody"></p>
+      <div class="copy-mode-actions">
+        <button class="btn btn-primary full" id="copyModeAppend" type="button">追加到现有记录</button>
+        <button class="btn btn-secondary full" id="copyModeOverwrite" type="button">覆盖当前记录</button>
+        <button class="btn btn-secondary full" id="copyModeCancel" type="button">取消</button>
+      </div>
+    </div>
+  </div>
+
   <div class="dialog-backdrop" id="customFoodBackdrop" hidden>
     <div class="custom-dialog" role="dialog" aria-modal="true" aria-labelledby="customFoodTitle">
       <div class="sheet-head">
@@ -6040,6 +6425,7 @@
           <label><input type="checkbox" name="antiTags" value="fungiAlgae"><span>菌藻类 <em>+8</em></span></label>
           <label><input type="checkbox" name="antiTags" value="wholeGrains"><span>全谷物 <em>+8</em></span></label>
           <label><input type="checkbox" name="antiTags" value="legumes"><span>豆类 <em>+7</em></span></label>
+          <label><input type="checkbox" name="antiTags" value="fermented"><span>发酵类 <em>+10</em></span></label>
         </div>
 
         <span class="field-caption custom-micro-caption">促炎减分标签（可选）</span>
@@ -6050,7 +6436,7 @@
           <label><input type="checkbox" name="antiTags" value="highSalt"><span>高盐腌制 <em>-10</em></span></label>
         </div>
 
-        <p class="custom-form-note">自定义食物会记录 4 项宏量营养、膳食纤维和 6 项微量元素；勾选标签后会参与每日抗炎评分。所有数据仅保存在本机浏览器。</p>
+        <p class="custom-form-note">自定义食物会记录 4 项宏量营养、膳食纤维和 6 项微量元素；勾选标签后会参与每日抗炎评分。发酵类等标签会计入抗炎加分。所有数据仅保存在本机浏览器。</p>
         <button class="btn btn-primary full" id="customFoodSubmit" type="submit">保存并选择</button>
       </form>
 
@@ -6064,6 +6450,28 @@
     </div>
   </div>
 
+  <div class="onboarding" id="onboarding" hidden role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
+    <div class="onboarding-shell">
+      <div class="onboarding-top">
+        <span>FITDAY / START</span>
+        <span id="onboardingStep">1 / 3</span>
+      </div>
+      <div class="onboarding-orb" id="onboardingOrb">01</div>
+      <div class="onboarding-dots" id="onboardingDots" aria-hidden="true"></div>
+      <h2 id="onboardingTitle">饮食记录与宏量营养</h2>
+      <p class="onboarding-body" id="onboardingBody"></p>
+      <div class="onboarding-encourage" id="onboardingEncourage" hidden>
+        “记录本身就是一种胜利，坚持下来，你会遇见更强的自己！”
+      </div>
+      <div class="onboarding-actions">
+        <button class="onboarding-prev" id="onboardingPrev" type="button" hidden>上一步</button>
+        <button class="onboarding-next" id="onboardingNext" type="button">下一步</button>
+        <button class="onboarding-start" id="onboardingStart" type="button" hidden>开始使用</button>
+      </div>
+      <p class="onboarding-foot">数据仅保存在本机浏览器</p>
+    </div>
+  </div>
+
   <script>
     (() => {
       "use strict";
@@ -6072,6 +6480,7 @@
       // 常量
       // ============================================================
       const STORAGE_KEY = "fitday.data.v1";
+      const ONBOARDING_FLAG = "fitday.onboarding.v1";
       const SCHEMA_VERSION = 1;
       const ACTIVITY_FACTOR = 1.375;
       const KJ_PER_KCAL = 4.184;
@@ -6079,6 +6488,20 @@
       const MAX_FILE_SIZE = 8 * 1024 * 1024;
       const WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
       const DEFAULT_MEAL_TYPES = ["早餐", "午餐", "晚餐", "练前加餐", "练后加餐"];
+      const ONBOARDING_STEPS = [
+        {
+          title: "饮食记录与宏量营养",
+          body: "搜索食物并按克数记录，自动汇总热量、蛋白质、碳水与脂肪；当天吃完后还能看到优质蛋白与抗炎反馈。"
+        },
+        {
+          title: "训练打卡与自重计算",
+          body: "记录力量和有氧训练，自动估算运动消耗；自重动作会按动作类型折算有效容量，让训练记录更接近真实强度。"
+        },
+        {
+          title: "综合评估与数据备份",
+          body: "查看 BMI、BMR、TDEE 与每日评估建议；在综合评估底部导出 JSON 备份，换设备前先保存一份。"
+        }
+      ];
       const HIGH_DEMAND_KEYWORDS = [
         "深蹲", "硬拉", "杠铃划船", "划船", "引体", "腿举", "臀桥",
         "臀推", "分腿蹲", "保加利亚", "早安式"
@@ -6151,6 +6574,12 @@
           label: "豆类",
           points: 7,
           keywords: ["黄豆", "黑豆", "红豆", "绿豆", "鹰嘴豆", "扁豆", "豌豆", "毛豆", "豆腐", "豆浆", "腐竹", "千张", "豆干", "豆角", "豆类"]
+        },
+        {
+          id: "fermented",
+          label: "发酵类",
+          points: 10,
+          keywords: ["酸奶", "酸乳", "奶酪", "芝士", "纳豆", "泡菜", "酸菜", "味噌", "豆豉", "腐乳", "酸奶油", "发酵"]
         },
         {
           id: "fried",
@@ -8495,6 +8924,7 @@
         dietStatus: byId("dietStatus"),
         dietTargetLine: byId("dietTargetLine"),
         dietProgress: byId("dietProgress"),
+        bmrWarning: byId("bmrWarning"),
         macroCarbs: byId("macroCarbs"),
         macroCarbsTarget: byId("macroCarbsTarget"),
         macroCarbsBar: byId("macroCarbsBar"),
@@ -8519,6 +8949,26 @@
         newMealName: byId("newMealName"),
         saveMeal: byId("saveMeal"),
         cancelMeal: byId("cancelMeal"),
+        mealEditBackdrop: byId("mealEditBackdrop"),
+        mealEditName: byId("mealEditName"),
+        mealEditHint: byId("mealEditHint"),
+        closeMealEdit: byId("closeMealEdit"),
+        cancelMealEdit: byId("cancelMealEdit"),
+        saveMealEdit: byId("saveMealEdit"),
+        deleteMealEdit: byId("deleteMealEdit"),
+        openCopyDiet: byId("openCopyDiet"),
+        copyDietBackdrop: byId("copyDietBackdrop"),
+        copyDietTitle: byId("copyDietTitle"),
+        copyTargetDateLabel: byId("copyTargetDateLabel"),
+        copyDietDates: byId("copyDietDates"),
+        copyDietEmpty: byId("copyDietEmpty"),
+        closeCopyDiet: byId("closeCopyDiet"),
+        copyDietModeBackdrop: byId("copyDietModeBackdrop"),
+        copyModeTitle: byId("copyModeTitle"),
+        copyModeBody: byId("copyModeBody"),
+        copyModeAppend: byId("copyModeAppend"),
+        copyModeOverwrite: byId("copyModeOverwrite"),
+        copyModeCancel: byId("copyModeCancel"),
         foodSearch: byId("foodSearch"),
         clearSearch: byId("clearSearch"),
         foodSuggestions: byId("foodSuggestions"),
@@ -8642,6 +9092,8 @@
         assessSubline: byId("assessSubline"),
         metricBmi: byId("metricBmi"),
         metricBmiLabel: byId("metricBmiLabel"),
+        metricBmr: byId("metricBmr"),
+        metricBmrLabel: byId("metricBmrLabel"),
         metricBalance: byId("metricBalance"),
         metricBalanceLabel: byId("metricBalanceLabel"),
         metricBurn: byId("metricBurn"),
@@ -8681,6 +9133,16 @@
         tabs: $$(".tab"),
         views: $$(".view"),
         toast: byId("toast"),
+        onboarding: byId("onboarding"),
+        onboardingStep: byId("onboardingStep"),
+        onboardingOrb: byId("onboardingOrb"),
+        onboardingDots: byId("onboardingDots"),
+        onboardingTitle: byId("onboardingTitle"),
+        onboardingBody: byId("onboardingBody"),
+        onboardingEncourage: byId("onboardingEncourage"),
+        onboardingPrev: byId("onboardingPrev"),
+        onboardingNext: byId("onboardingNext"),
+        onboardingStart: byId("onboardingStart"),
         viewsStage: byId("viewsStage"),
         dialogBackdrop: byId("dialogBackdrop"),
         dialogTitle: byId("dialogTitle"),
@@ -9239,11 +9701,19 @@
             </div>
           `;
         }
-        const good = stats.ratio >= 0.8;
+        let qualityClass = "is-warn";
+        let qualityText = "不完全蛋白占比过高，建议补充肉蛋奶";
+        if (stats.ratio > 0.8) {
+          qualityClass = "is-excellent";
+          qualityText = "优质蛋白优秀（>80%）";
+        } else if (stats.ratio >= 0.7) {
+          qualityClass = "is-good";
+          qualityText = "优质蛋白达标（70%-80%）";
+        }
         return `
-          <div class="protein-quality ${good ? "is-good" : "is-warn"}">
+          <div class="protein-quality ${qualityClass}">
             <span>${label} ${fmt(stats.high, 1)} / ${fmt(stats.total, 1)}g · ${stats.pct}%</span>
-            <strong>${good ? "达标(优)" : "不完全蛋白占比过高，建议补充肉蛋奶"}</strong>
+            <strong>${qualityText}</strong>
           </div>
         `;
       }
@@ -9517,6 +9987,13 @@
       let editingWorkoutId = null;
       let editingCustomFoodId = null;
       let editingCardioId = null;
+      let editingMealName = null;
+      let mealEditLastFocus = null;
+      let mealLongPressTimer = null;
+      let mealLongPressTriggered = false;
+      let mealLongPressStart = null;
+      let onboardingStepIndex = 0;
+      let copySourceDate = null;
       let foodEditLastFocus = null;
       let workoutEditLastFocus = null;
       let cardioEditLastFocus = null;
@@ -9602,7 +10079,11 @@
           els.customFoodBackdrop,
           els.foodEditBackdrop,
           els.workoutEditBackdrop,
-          els.cardioEditBackdrop
+          els.cardioEditBackdrop,
+          els.mealEditBackdrop,
+          els.copyDietBackdrop,
+          els.copyDietModeBackdrop,
+          els.onboarding
         ].some((overlay) => overlay && !overlay.hidden);
       }
 
@@ -9965,19 +10446,31 @@
       // ============================================================
       // 餐次
       // ============================================================
+      function isFixedMeal(name) {
+        const target = String(name || "").toLowerCase();
+        return DEFAULT_MEAL_TYPES.some((meal) => meal.toLowerCase() === target);
+      }
+
       function renderMealSelector() {
         if (!db.mealTypes.length) db.mealTypes = [...DEFAULT_MEAL_TYPES];
         if (!db.mealTypes.includes(selectedMeal)) {
           selectedMeal = db.mealTypes[0];
         }
-        els.mealChips.innerHTML = db.mealTypes.map((meal) => `
-          <button
-            class="meal-chip${meal === selectedMeal ? " is-active" : ""}"
-            type="button"
-            data-meal="${escapeHTML(meal)}"
-            aria-pressed="${meal === selectedMeal}"
-          >${escapeHTML(meal)}</button>
-        `).join("");
+        els.mealChips.innerHTML = db.mealTypes.map((meal) => {
+          const custom = !isFixedMeal(meal);
+          return `
+            <button
+              class="meal-chip${meal === selectedMeal ? " is-active" : ""}"
+              type="button"
+              data-meal="${escapeHTML(meal)}"
+              ${custom ? 'data-custom-meal="1"' : ""}
+              aria-pressed="${meal === selectedMeal}"
+            >
+              <span>${escapeHTML(meal)}</span>
+              ${custom ? `<span class="meal-chip-edit" data-edit-meal="${escapeHTML(meal)}" role="button" tabindex="0" aria-label="编辑餐次 ${escapeHTML(meal)}"><svg class="icon" aria-hidden="true"><use href="#i-edit"></use></svg></span>` : ""}
+            </button>
+          `;
+        }).join("");
       }
 
       function showMealAddRow() {
@@ -10021,6 +10514,151 @@
         hideMealAddRow();
         renderAll();
         showToast(`已添加餐次：${name}`);
+      }
+
+      function openMealEdit(name) {
+        if (!name || isFixedMeal(name) || !db.mealTypes.includes(name)) return;
+        editingMealName = name;
+        mealEditLastFocus = document.activeElement;
+        els.mealEditName.value = name;
+        els.mealEditHint.textContent = "删除自定义餐次后，历史记录会自动归入“未分类”。";
+        els.mealEditBackdrop.hidden = false;
+        document.body.style.overflow = "hidden";
+        window.requestAnimationFrame(() => {
+          els.mealEditName.focus({ preventScroll: true });
+          els.mealEditName.select();
+        });
+      }
+
+      function closeMealEdit() {
+        if (els.mealEditBackdrop.hidden) return;
+        els.mealEditBackdrop.hidden = true;
+        editingMealName = null;
+        if (els.dialogBackdrop.hidden && els.customFoodBackdrop.hidden &&
+          els.foodEditBackdrop.hidden && els.workoutEditBackdrop.hidden &&
+          els.cardioEditBackdrop.hidden) {
+          document.body.style.overflow = "";
+        }
+        if (mealEditLastFocus && typeof mealEditLastFocus.focus === "function") {
+          mealEditLastFocus.focus({ preventScroll: true });
+        }
+        mealEditLastFocus = null;
+      }
+
+      function replaceMealInHistory(oldName, newName) {
+        const affected = [];
+        Object.keys(db.days).forEach((date) => {
+          const foods = db.days[date] && db.days[date].foods;
+          if (!Array.isArray(foods)) return;
+          foods.forEach((food) => {
+            if (food.meal === oldName) {
+              affected.push(food);
+              food.meal = newName;
+            }
+          });
+        });
+        return affected;
+      }
+
+      function saveMealEdit() {
+        const oldName = editingMealName;
+        const newName = els.mealEditName.value.trim().slice(0, 20);
+        if (!oldName) return;
+        if (!newName) {
+          showToast("请输入餐次名称");
+          els.mealEditName.focus();
+          return;
+        }
+        if (newName === "未分类") {
+          showToast("“未分类”是系统保留分组，请换一个名称");
+          els.mealEditName.focus();
+          return;
+        }
+        if (isFixedMeal(newName)) {
+          showToast("系统固定餐次名称不可占用");
+          els.mealEditName.focus();
+          return;
+        }
+        if (db.mealTypes.some((meal) =>
+          meal !== oldName && meal.toLowerCase() === newName.toLowerCase()
+        )) {
+          showToast("这个餐次已经存在");
+          els.mealEditName.focus();
+          return;
+        }
+        if (newName === oldName) {
+          closeMealEdit();
+          return;
+        }
+        const index = db.mealTypes.indexOf(oldName);
+        if (index < 0) {
+          closeMealEdit();
+          return;
+        }
+        const previousMeals = [...db.mealTypes];
+        const affected = replaceMealInHistory(oldName, newName);
+        db.mealTypes[index] = newName;
+        if (selectedMeal === oldName) selectedMeal = newName;
+        const previousExpanded = new Set(expandedMeals);
+        const nextExpanded = new Set();
+        expandedMeals.forEach((key) => {
+          const separator = key.indexOf("|");
+          const date = key.slice(0, separator);
+          const meal = key.slice(separator + 1);
+          nextExpanded.add(meal === oldName ? `${date}|${newName}` : key);
+        });
+        expandedMeals = nextExpanded;
+        if (!saveDB()) {
+          db.mealTypes.splice(0, db.mealTypes.length, ...previousMeals);
+          affected.forEach((food) => { food.meal = oldName; });
+          expandedMeals = previousExpanded;
+          if (selectedMeal === newName) selectedMeal = oldName;
+          return;
+        }
+        closeMealEdit();
+        renderAll();
+        showToast(`已重命名餐次：${oldName} → ${newName}`);
+      }
+
+      async function deleteMealType(name) {
+        if (!name || isFixedMeal(name)) return;
+        const index = db.mealTypes.indexOf(name);
+        if (index < 0) return;
+        const confirmed = await openDialog({
+          title: "确定要删除吗？",
+          body: `将删除自定义餐次「${name}」。该餐次下的历史饮食记录会移入“未分类”，不会丢失。`,
+          confirmText: "删除",
+          cancelText: "取消",
+          danger: true
+        });
+        if (!confirmed) return;
+        const previousMeals = [...db.mealTypes];
+        const previousSelectedMeal = selectedMeal;
+        const affected = [];
+        Object.keys(db.days).forEach((date) => {
+          const foods = db.days[date] && db.days[date].foods;
+          if (!Array.isArray(foods)) return;
+          foods.forEach((food) => {
+            if (food.meal === name) {
+              affected.push(food);
+              food.meal = "未分类";
+            }
+          });
+        });
+        db.mealTypes.splice(index, 1);
+        if (selectedMeal === name) selectedMeal = db.mealTypes[0] || DEFAULT_MEAL_TYPES[0];
+        const previousExpanded = new Set(expandedMeals);
+        expandedMeals = new Set([...expandedMeals].filter((key) => !key.endsWith(`|${name}`)));
+        if (!saveDB()) {
+          db.mealTypes.splice(0, db.mealTypes.length, ...previousMeals);
+          affected.forEach((food) => { food.meal = name; });
+          expandedMeals = previousExpanded;
+          selectedMeal = previousSelectedMeal;
+          return;
+        }
+        closeMealEdit();
+        renderAll();
+        showToast(`已删除餐次「${name}」，历史记录已归入未分类`);
       }
 
       // ============================================================
@@ -11218,6 +11856,9 @@
         const totals = sumDay(day);
         const targets = calcTargets();
         const target = targets.targetKcal;
+        const bmr = calcBMR(db.profile);
+
+        els.bmrWarning.hidden = !(bmr && totals.kcal < bmr);
 
         els.dietKcal.textContent = fmt(totals.kcal);
 
@@ -11453,7 +12094,7 @@
         if (!foods.length) {
           els.antiScoreBadge.textContent = "--";
           els.antiInflammatory.innerHTML = `
-            <div class="anti-empty">记录饮食后，会根据深色蔬菜、莓果、深海鱼、坚果、番茄、菌藻类、全谷物、豆类以及油炸、含糖饮料、加工肉类、高盐腌制等食物组合，生成${dayLabel}抗炎指数。</div>
+            <div class="anti-empty">记录饮食后，会根据深色蔬菜、莓果、深海鱼、坚果、番茄、菌藻类、全谷物、豆类、发酵类以及油炸、含糖饮料、加工肉类、高盐腌制等食物组合，生成${dayLabel}抗炎指数。</div>
             <p class="anti-disclaimer">本评分为饮食结构参考，非医学诊断。</p>
           `;
           return;
@@ -11704,6 +12345,14 @@
         }
 
         if (hasFood) {
+          if (bmr && totals.kcal < bmr) {
+            addRule(
+              rules,
+              "bad",
+              "摄入低于基础代谢",
+              "当前摄入已低于基础代谢，长期如此将损伤身体，请增加进食！"
+            );
+          }
           if (targets.targetKcal) {
             const target = targets.targetKcal;
             if (totals.kcal > target) {
@@ -12082,6 +12731,14 @@
         } else {
           els.metricBmi.textContent = "--";
           els.metricBmiLabel.textContent = "待填写";
+        }
+
+        if (bmr) {
+          els.metricBmr.textContent = `${fmt(bmr)} kcal`;
+          els.metricBmrLabel.textContent = "Mifflin-St Jeor";
+        } else {
+          els.metricBmr.textContent = "--";
+          els.metricBmrLabel.textContent = "待完善资料";
         }
 
         const balance = hasFood && targets.targetKcal ? totals.kcal - targets.targetKcal : null;
@@ -12859,6 +13516,125 @@
         });
       }
 
+      function recentCopyDietDates() {
+        return Array.from({ length: 7 }, (_, index) => addDays(todayKey(), -index))
+          .filter((date) => date !== selectedDate)
+          .map((date) => {
+            const day = db.days[date];
+            const foods = day && Array.isArray(day.foods) ? day.foods : [];
+            return { date, foods, totals: sumDay(day) };
+          })
+          .filter((item) => item.foods.length > 0);
+      }
+
+      function openCopyDietModal() {
+        copySourceDate = null;
+        els.copyTargetDateLabel.textContent = dateTitle(selectedDate);
+        const dates = recentCopyDietDates();
+        els.copyDietDates.innerHTML = dates.map(({ date, foods, totals }) => `
+          <button class="copy-date-item" type="button" data-copy-date="${date}">
+            <span class="copy-date-copy">
+              <strong>${escapeHTML(dateTitle(date))}</strong>
+              <small>${escapeHTML(dateSubtitle(date))}</small>
+            </span>
+            <span class="copy-date-kcal">${foods.length} 项<br>${fmt(totals.kcal)} kcal</span>
+          </button>
+        `).join("");
+        els.copyDietEmpty.hidden = dates.length > 0;
+        els.copyDietBackdrop.hidden = false;
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeCopyDietModal() {
+        if (els.copyDietBackdrop.hidden) return;
+        els.copyDietBackdrop.hidden = true;
+        copySourceDate = null;
+        if (!isAnyOverlayOpen()) document.body.style.overflow = "";
+      }
+
+      function closeCopyDietMode() {
+        if (els.copyDietModeBackdrop.hidden) return;
+        els.copyDietModeBackdrop.hidden = true;
+        if (!isAnyOverlayOpen()) document.body.style.overflow = "";
+      }
+
+      function askCopyDietMode(date) {
+        const source = db.days[date];
+        const sourceFoods = source && Array.isArray(source.foods) ? source.foods : [];
+        if (!sourceFoods.length) {
+          showToast("所选日期没有饮食记录");
+          return;
+        }
+        copySourceDate = date;
+        const targetDay = db.days[selectedDate];
+        const targetCount = targetDay && Array.isArray(targetDay.foods) ? targetDay.foods.length : 0;
+        if (!targetCount) {
+          performCopyDiet("append");
+          return;
+        }
+        els.copyModeTitle.textContent = `当前日期已有 ${targetCount} 条饮食记录`;
+        els.copyModeBody.textContent = `将把「${dateTitle(date)}」的 ${sourceFoods.length} 条食物复制到「${dateTitle(selectedDate)}」。追加会保留现有记录，覆盖只会替换当前饮食记录，训练、体重等数据不受影响。`;
+        els.copyDietModeBackdrop.hidden = false;
+        document.body.style.overflow = "hidden";
+      }
+
+      function performCopyDiet(mode) {
+        const source = copySourceDate;
+        const targetDate = selectedDate;
+        const sourceDay = source ? db.days[source] : null;
+        const sourceFoods = sourceDay && Array.isArray(sourceDay.foods) ? [...sourceDay.foods] : [];
+        if (!source || source === targetDate || !sourceFoods.length) {
+          closeCopyDietMode();
+          closeCopyDietModal();
+          return;
+        }
+        const copies = sourceFoods.map((food) => ({
+          ...food,
+          id: uid(),
+          createdAt: new Date().toISOString(),
+          antiTags: [...(food.antiTags || [])],
+          per100: { ...(food.per100 || {}) }
+        }));
+        const targetDay = getDay(targetDate, true);
+        const previousFoods = [...targetDay.foods];
+        if (mode === "overwrite") {
+          targetDay.foods.splice(0, targetDay.foods.length, ...copies);
+        } else {
+          targetDay.foods.push(...copies);
+        }
+        if (!saveDB()) {
+          targetDay.foods.splice(0, targetDay.foods.length, ...previousFoods);
+          pruneDay(targetDate);
+          return;
+        }
+        copies.forEach((food) => {
+          expandedMeals.add(`${targetDate}|${food.meal || "未分类"}`);
+        });
+        closeCopyDietMode();
+        closeCopyDietModal();
+        renderAll();
+        showToast(`已从「${dateTitle(source)}」${mode === "overwrite" ? "覆盖" : "追加"} ${copies.length} 条饮食`);
+      }
+
+      function bindCopyDietEvents() {
+        els.openCopyDiet.addEventListener("click", openCopyDietModal);
+        els.closeCopyDiet.addEventListener("click", closeCopyDietModal);
+        els.copyDietBackdrop.addEventListener("click", (event) => {
+          if (event.target === els.copyDietBackdrop) closeCopyDietModal();
+        });
+        els.copyDietDates.addEventListener("click", (event) => {
+          const button = event.target.closest("[data-copy-date]");
+          if (!button) return;
+          askCopyDietMode(button.dataset.copyDate);
+        });
+        els.copyModeAppend.addEventListener("click", () => performCopyDiet("append"));
+        els.copyModeOverwrite.addEventListener("click", () => performCopyDiet("overwrite"));
+        els.copyModeCancel.addEventListener("click", closeCopyDietMode);
+        els.copyDietModeBackdrop.addEventListener("click", (event) => {
+          if (event.target === els.copyDietModeBackdrop) closeCopyDietMode();
+        });
+      }
+
       function deleteWorkout(id) {
         const dateKey = selectedDate;
         const day = db.days[dateKey];
@@ -13584,10 +14360,71 @@
 
         // 饮食搜索
         els.mealChips.addEventListener("click", (event) => {
+          if (mealLongPressTriggered) {
+            mealLongPressTriggered = false;
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+          }
+          const editButton = event.target.closest("[data-edit-meal]");
+          if (editButton) {
+            event.preventDefault();
+            event.stopPropagation();
+            openMealEdit(editButton.dataset.editMeal);
+            return;
+          }
           const chip = event.target.closest("[data-meal]");
           if (!chip) return;
           selectedMeal = chip.dataset.meal;
           renderMealSelector();
+        });
+        const clearMealLongPress = () => {
+          window.clearTimeout(mealLongPressTimer);
+          mealLongPressTimer = null;
+          mealLongPressStart = null;
+        };
+        els.mealChips.addEventListener("pointerdown", (event) => {
+          if (event.button !== undefined && event.button !== 0) return;
+          const chip = event.target.closest("[data-custom-meal]");
+          if (!chip || event.target.closest("[data-edit-meal]")) return;
+          mealLongPressStart = { x: event.clientX, y: event.clientY };
+          mealLongPressTriggered = false;
+          window.clearTimeout(mealLongPressTimer);
+          mealLongPressTimer = window.setTimeout(() => {
+            mealLongPressTriggered = true;
+            openMealEdit(chip.dataset.meal);
+            window.setTimeout(() => { mealLongPressTriggered = false; }, 600);
+          }, 550);
+        });
+        els.mealChips.addEventListener("pointermove", (event) => {
+          if (!mealLongPressStart) return;
+          if (Math.hypot(event.clientX - mealLongPressStart.x, event.clientY - mealLongPressStart.y) > 10) {
+            clearMealLongPress();
+          }
+        });
+        els.mealChips.addEventListener("keydown", (event) => {
+          const editButton = event.target.closest("[data-edit-meal]");
+          if (!editButton || (event.key !== "Enter" && event.key !== " ")) return;
+          event.preventDefault();
+          openMealEdit(editButton.dataset.editMeal);
+        });
+        ["pointerup", "pointercancel", "pointerleave"].forEach((type) => {
+          els.mealChips.addEventListener(type, clearMealLongPress);
+        });
+        els.mealEditBackdrop.addEventListener("click", (event) => {
+          if (event.target === els.mealEditBackdrop) closeMealEdit();
+        });
+        els.closeMealEdit.addEventListener("click", closeMealEdit);
+        els.cancelMealEdit.addEventListener("click", closeMealEdit);
+        els.saveMealEdit.addEventListener("click", saveMealEdit);
+        els.deleteMealEdit.addEventListener("click", () => deleteMealType(editingMealName));
+        els.mealEditName.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            saveMealEdit();
+          } else if (event.key === "Escape") {
+            closeMealEdit();
+          }
         });
         els.mealAddToggle.addEventListener("click", () => {
           if (els.mealAddRow.hidden) showMealAddRow();
@@ -13896,6 +14733,9 @@
           else if (!els.workoutEditBackdrop.hidden) closeWorkoutEdit();
           else if (!els.cardioEditBackdrop.hidden) closeCardioEdit();
           else if (!els.dialogBackdrop.hidden) closeDialog(false);
+          else if (!els.mealEditBackdrop.hidden) closeMealEdit();
+          else if (!els.copyDietModeBackdrop.hidden) closeCopyDietMode();
+          else if (!els.copyDietBackdrop.hidden) closeCopyDietModal();
           else if (!els.customFoodBackdrop.hidden) closeCustomFoodModal();
         });
 
@@ -13911,6 +14751,96 @@
       // ============================================================
       // 启动
       // ============================================================
+      function hasExistingUserData() {
+        const profile = db.profile || {};
+        if (["height", "weight", "age", "sex", "calorieLimit"].some((key) => profile[key] !== "" && profile[key] != null)) {
+          return true;
+        }
+        if ((db.customFoods || []).length > 0) return true;
+        return Object.keys(db.days || {}).some((date) => {
+          const day = db.days[date];
+          if (!day) return false;
+          return (Array.isArray(day.foods) && day.foods.length > 0) ||
+            (Array.isArray(day.workouts) && day.workouts.length > 0) ||
+            (Array.isArray(day.cardios) && day.cardios.length > 0) ||
+            day.weight !== null && day.weight !== undefined ||
+            Boolean(day.restDay) ||
+            Boolean(day.trainingType);
+        });
+      }
+
+      function renderOnboardingStep() {
+        const step = ONBOARDING_STEPS[onboardingStepIndex];
+        if (!step) return;
+        const last = onboardingStepIndex === ONBOARDING_STEPS.length - 1;
+        els.onboardingStep.textContent = `${onboardingStepIndex + 1} / ${ONBOARDING_STEPS.length}`;
+        els.onboardingOrb.textContent = String(onboardingStepIndex + 1).padStart(2, "0");
+        els.onboardingTitle.textContent = step.title;
+        els.onboardingBody.textContent = step.body;
+        els.onboardingDots.innerHTML = ONBOARDING_STEPS.map((_, index) =>
+          `<span class="${index === onboardingStepIndex ? "is-active" : ""}"></span>`
+        ).join("");
+        els.onboardingPrev.hidden = onboardingStepIndex === 0;
+        els.onboardingNext.hidden = last;
+        els.onboardingStart.hidden = !last;
+        els.onboardingEncourage.hidden = !last;
+      }
+
+      function showOnboarding() {
+        onboardingStepIndex = 0;
+        renderOnboardingStep();
+        els.onboarding.hidden = false;
+        document.body.style.overflow = "hidden";
+        window.requestAnimationFrame(() => {
+          (els.onboardingStart.hidden ? els.onboardingNext : els.onboardingStart).focus({ preventScroll: true });
+        });
+      }
+
+      function finishOnboarding() {
+        try {
+          localStorage.setItem(ONBOARDING_FLAG, "1");
+        } catch (error) {
+          // 存储不可用时仍然关闭引导，不阻塞使用。
+        }
+        els.onboarding.hidden = true;
+        document.body.style.overflow = "";
+      }
+
+      function maybeShowOnboarding() {
+        let seen = false;
+        try {
+          seen = localStorage.getItem(ONBOARDING_FLAG) === "1";
+        } catch (error) {
+          seen = false;
+        }
+        if (seen) return;
+        if (hasExistingUserData()) {
+          try {
+            localStorage.setItem(ONBOARDING_FLAG, "1");
+          } catch (error) {
+            // 忽略存储异常。
+          }
+          return;
+        }
+        showOnboarding();
+      }
+
+      function bindOnboardingEvents() {
+        els.onboardingNext.addEventListener("click", () => {
+          if (onboardingStepIndex < ONBOARDING_STEPS.length - 1) {
+            onboardingStepIndex += 1;
+            renderOnboardingStep();
+          }
+        });
+        els.onboardingPrev.addEventListener("click", () => {
+          if (onboardingStepIndex > 0) {
+            onboardingStepIndex -= 1;
+            renderOnboardingStep();
+          }
+        });
+        els.onboardingStart.addEventListener("click", finishOnboarding);
+      }
+
       function init() {
         const hash = window.location.hash.replace("#", "");
         bindEvents();
@@ -13922,6 +14852,8 @@
         updateDateUI();
         renderAll();
         setTrainingMode(trainingMode);
+        bindCopyDietEvents();
+        bindOnboardingEvents();
         switchTab(["diet", "training", "assessment"].includes(hash) ? hash : "diet", {
           updateHash: false,
           scroll: false
@@ -13932,6 +14864,7 @@
         } catch (error) {
           // 浏览器禁用了本地存储时仍可使用页面，保存时会给出提示。
         }
+        maybeShowOnboarding();
       }
 
       init();
