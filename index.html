@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+<!-- FitDay v23 · 动态营养监控与长期趋势（增量升级，不改动原有数据结构） -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f4f5f2">
   <meta name="color-scheme" content="light">
+  <meta name="app-version" content="v23">
   <meta name="description" content="FitDay - 纯本地、移动端优先的健身饮食记录工具">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -681,16 +683,45 @@
       letter-spacing: 0.01em;
     }
 
+    /* v23：改为温和提示色，避免未记录时被当成“0 摄入”而恐吓用户。 */
     .bmr-warning {
       margin: 10px 0 0;
       padding: 9px 10px;
-      border: 1px solid rgba(255, 154, 154, 0.45);
+      border: 1px solid rgba(240, 196, 110, 0.32);
       border-radius: 10px;
-      background: rgba(188, 43, 43, 0.26);
-      color: #ffe5e5;
+      background: rgba(240, 196, 110, 0.13);
+      color: #f7e3b8;
       font-size: 10px;
-      font-weight: 650;
+      font-weight: 600;
       line-height: 1.5;
+    }
+
+    .training-load-hint {
+      margin: 10px 0 0;
+      padding: 9px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 11px;
+      background: rgba(255, 255, 255, 0.07);
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 10px;
+      font-weight: 550;
+      line-height: 1.5;
+    }
+
+    .training-load-hint:empty {
+      display: none;
+    }
+
+    .training-load-hint.is-high {
+      border-color: rgba(240, 196, 110, 0.34);
+      background: rgba(240, 196, 110, 0.13);
+      color: #f7e3b8;
+    }
+
+    .training-load-hint.is-medium {
+      border-color: rgba(139, 220, 176, 0.28);
+      background: rgba(139, 220, 176, 0.11);
+      color: #c9f2db;
     }
 
     .bmr-warning[hidden] {
@@ -2535,6 +2566,46 @@
       color: #496655;
       font-size: 9.5px;
       line-height: 1.6;
+    }
+
+    /* v23：长期趋势监控（增量样式，沿用现有卡片与指标外观） */
+    .long-term-weight-rows {
+      display: grid;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 9px;
+      border-top: 1px solid var(--line);
+    }
+
+    .long-term-weight-rows > span {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 9.5px;
+      line-height: 1.45;
+    }
+
+    .long-term-weight-rows strong {
+      color: var(--ink);
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .long-term-advice {
+      margin-top: 9px;
+    }
+
+    .long-term-note {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.55;
+    }
+
+    .long-term-note.is-warn {
+      color: var(--warn);
     }
 
     .anti-tag {
@@ -5326,7 +5397,7 @@
             <div class="hero-progress" aria-hidden="true">
               <span id="dietProgress"></span>
             </div>
-            <p class="bmr-warning" id="bmrWarning" hidden>当前摄入已低于基础代谢，长期如此将损伤身体，请增加进食！</p>
+            <p class="bmr-warning" id="bmrWarning" hidden>今日记录摄入低于基础代谢参考值。如果还没记录完整，可以先补齐；若长期如此，建议适当增加进食。</p>
             <div class="macro-grid">
               <div class="macro-card macro-carbs">
                 <span class="macro-name">碳水</span>
@@ -5546,6 +5617,7 @@
               </div>
             </div>
             <p class="hero-burn-detail" id="trainingBurnDetail">力量 0 kcal · 有氧 0 kcal</p>
+            <p class="training-load-hint" id="trainingLoadHint"></p>
             <p class="hero-estimate-note">* 运动消耗与营养目标为粗略科学估算*</p>
           </section>
 
@@ -6033,6 +6105,19 @@
               <span class="count-badge">近 7 天</span>
             </div>
             <div id="weeklyDashboard">
+              <div class="trend-loading">正在读取本地记录…</div>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="longTermTitle">
+            <div class="card-head compact">
+              <div>
+                <h2 id="longTermTitle">长期趋势监控</h2>
+                <p class="card-sub">最近 7 天平均摄入 · 7 天体重对比前 7 天</p>
+              </div>
+              <span class="count-badge">近 14 天</span>
+            </div>
+            <div id="longTermTrends">
               <div class="trend-loading">正在读取本地记录…</div>
             </div>
           </section>
@@ -9054,6 +9139,7 @@
         workoutReps: byId("workoutReps"),
         workoutBurn: byId("workoutBurn"),
         trainingBurnDetail: byId("trainingBurnDetail"),
+        trainingLoadHint: byId("trainingLoadHint"),
         trainingFormSub: byId("trainingFormSub"),
         modeStrength: byId("modeStrength"),
         modeCardio: byId("modeCardio"),
@@ -9102,6 +9188,7 @@
         insightCount: byId("insightCount"),
         weeklyTrends: byId("weeklyTrends"),
         weeklyDashboard: byId("weeklyDashboard"),
+        longTermTrends: byId("longTermTrends"),
 
         profileForm: byId("profileForm"),
         estimateCalories: byId("estimateCalories"),
@@ -9752,6 +9839,9 @@
           : { type: "normal", label: DAY_TYPE_LABELS.normal, manual: false };
       }
 
+      // 【v23 重要约束】每日目标完全独立，严禁跨日营养结转：
+      // 目标只由个人设置（身高/体重/年龄/性别/目标）和“当天”训练日类型计算，
+      // 不读取任何历史日期的摄入、结余或达标情况；昨天吃超或没吃够都不会改变今天的目标。
       function calcTargets(dateKey = selectedDate) {
         const profile = db.profile;
         const weight = positiveNumber(profile.weight);
@@ -11853,31 +11943,33 @@
       function renderDiet() {
         const day = db.days[selectedDate];
         const foods = day ? day.foods : [];
+        const hasFood = foods.length > 0;
         const totals = sumDay(day);
         const targets = calcTargets();
         const target = targets.targetKcal;
         const bmr = calcBMR(db.profile);
 
-        els.bmrWarning.hidden = !(bmr && totals.kcal < bmr);
+        // v23：未记录任何饮食时，不把 0 当作真实摄入，也不触发“低于基础代谢”提示。
+        els.bmrWarning.hidden = !(bmr && hasFood && totals.kcal < bmr);
 
-        els.dietKcal.textContent = fmt(totals.kcal);
+        els.dietKcal.textContent = hasFood ? fmt(totals.kcal) : "—";
 
         if (target) {
           const remaining = target - totals.kcal;
-          const ratio = clamp((totals.kcal / target) * 100, 0, 100);
+          const ratio = hasFood ? clamp((totals.kcal / target) * 100, 0, 100) : 0;
           els.dietProgress.style.width = `${ratio}%`;
-          els.dietProgress.classList.toggle("is-over", totals.kcal > target);
+          els.dietProgress.classList.toggle("is-over", hasFood && totals.kcal > target);
           els.dietTargetLine.innerHTML = `目标 <strong>${fmt(target)}</strong> kcal · ${escapeHTML(targets.targetLabel)}`;
 
-          if (totals.kcal > target) {
+          if (!hasFood) {
+            els.dietStatus.textContent = "暂未记录";
+            els.dietStatus.className = "status-pill";
+          } else if (totals.kcal > target) {
             els.dietStatus.textContent = `超出 ${fmt(totals.kcal - target)}`;
             els.dietStatus.className = "status-pill is-over";
           } else if (remaining <= target * 0.1) {
             els.dietStatus.textContent = "接近上限";
             els.dietStatus.className = "status-pill is-warn";
-          } else if (totals.kcal === 0) {
-            els.dietStatus.textContent = "开始记录";
-            els.dietStatus.className = "status-pill";
           } else {
             els.dietStatus.textContent = `还可 ${fmt(remaining)}`;
             els.dietStatus.className = "status-pill is-good";
@@ -11886,7 +11978,7 @@
           els.dietProgress.style.width = "0%";
           els.dietProgress.classList.remove("is-over");
           els.dietTargetLine.textContent = "填写个人信息或热量限额后，显示每日目标";
-          els.dietStatus.textContent = "待设目标";
+          els.dietStatus.textContent = hasFood ? "待设目标" : "暂未记录";
           els.dietStatus.className = "status-pill";
         }
 
@@ -11896,15 +11988,15 @@
           { key: "Fat", value: totals.fat, target: targets.fatTarget, kind: "range" }
         ];
         macroConfig.forEach(({ key, value, target: macroTarget, kind }) => {
-          els[`macro${key}`].textContent = fmt(value, 1);
+          els[`macro${key}`].textContent = hasFood ? fmt(value, 1) : "—";
           els[`macro${key}Target`].textContent = macroTarget !== null && macroTarget !== undefined ? `/ ${fmt(macroTarget)}g` : "/ —";
-          els[`macro${key}Bar`].style.width = `${pct(value, macroTarget)}%`;
+          els[`macro${key}Bar`].style.width = `${hasFood ? pct(value, macroTarget) : 0}%`;
 
-          let statusText = "待设置";
+          let statusText = hasFood ? "待设置" : "暂未记录";
           let statusClass = "is-empty";
           if (macroTarget !== null && macroTarget !== undefined && Number.isFinite(Number(macroTarget))) {
-            if (!foods.length) {
-              statusText = "待记录";
+            if (!hasFood) {
+              statusText = "暂未记录";
             } else {
               const ratio = Number(macroTarget) > 0
                 ? value / Number(macroTarget)
@@ -11930,12 +12022,12 @@
         });
 
         const fiberRatio = totals.fiber / FIBER_TARGET;
-        els.fiberValue.textContent = fmt(totals.fiber, 1);
+        els.fiberValue.textContent = hasFood ? fmt(totals.fiber, 1) : "—";
         els.fiberTarget.textContent = `/ ${FIBER_TARGET}g`;
-        els.fiberBar.style.width = `${clamp(fiberRatio * 100, 0, 100)}%`;
-        let fiberStatusText = "待记录";
+        els.fiberBar.style.width = `${hasFood ? clamp(fiberRatio * 100, 0, 100) : 0}%`;
+        let fiberStatusText = "暂未记录";
         let fiberStatusClass = "is-empty";
-        if (foods.length) {
+        if (hasFood) {
           fiberStatusText = fiberRatio >= 1 ? "达标" : "未达标";
           fiberStatusClass = fiberRatio >= 1 ? "is-good" : "is-warn";
         }
@@ -12174,6 +12266,51 @@
         `;
       }
 
+      // v23：训练负荷只做文字提醒，复用现有力量/有氧记录，不额外增加或修改任何消耗热量。
+      function buildTrainingLoadAdvice(workouts, cardios, bodyWeight) {
+        const hasStrength = workouts.length > 0;
+        const hasCardio = cardios.length > 0;
+        if (!hasStrength && !hasCardio) {
+          return { tone: "rest", text: "今日暂无训练记录；如果是休息日，保持日常活动、按正常节奏进食即可。" };
+        }
+
+        const strength = summarizeWorkouts(workouts, bodyWeight);
+        const cardio = summarizeCardios(cardios);
+        const notes = [];
+        let tone = "normal";
+
+        if (hasStrength) {
+          const volumeThreshold = (positiveNumber(bodyWeight) || 0) * 350;
+          if (strength.sets >= 20 || (volumeThreshold > 0 && strength.volume >= volumeThreshold)) {
+            tone = "high";
+            notes.push(`今日为高容量力量训练（${strength.sets} 组），请注意补充碳水和蛋白质`);
+          } else if (strength.sets >= 12) {
+            tone = "medium";
+            notes.push(`今日力量训练 ${strength.sets} 组，容量中等偏上，训练后可以适当补充蛋白质`);
+          } else {
+            notes.push(`今日力量训练 ${strength.sets} 组，容量适中，按正常节奏进食即可`);
+          }
+        }
+
+        if (hasCardio) {
+          const durationText = cardio.duration > 0
+            ? `累计 ${fmt(cardio.duration, Number.isInteger(cardio.duration) ? 0 : 1)} 分钟`
+            : `${cardio.count} 条记录`;
+          if (cardio.duration >= 60) {
+            if (tone !== "high") tone = "medium";
+            notes.push(`有氧${durationText}，时间较长，注意补水与电解质`);
+          } else {
+            notes.push(`有氧${durationText}，记得日常补水`);
+          }
+        }
+
+        if (hasStrength && hasCardio) {
+          notes.push("力量与有氧同日进行，优先保证碳水、蛋白质和水分");
+        }
+
+        return { tone, text: `${notes.join("；")}。` };
+      }
+
       function renderTraining() {
         const day = db.days[selectedDate];
         const workouts = day ? day.workouts : [];
@@ -12210,6 +12347,13 @@
         els.workoutBurn.textContent = fmt(totalBurn);
         els.trainingBurnDetail.textContent = `力量估算 ${fmt(strengthBurn)} kcal · 有氧 ${fmt(cardioSummary.calories)} kcal`;
         els.workoutCount.textContent = `${totalCount} 条`;
+
+        const loadAdvice = buildTrainingLoadAdvice(workouts, cardios, bodyWeight);
+        els.trainingLoadHint.textContent = loadAdvice.text;
+        els.trainingLoadHint.className = "training-load-hint";
+        if (loadAdvice.tone === "high" || loadAdvice.tone === "medium") {
+          els.trainingLoadHint.classList.add(`is-${loadAdvice.tone}`);
+        }
 
         const breakdown = [];
         if (workouts.length) {
@@ -12348,9 +12492,9 @@
           if (bmr && totals.kcal < bmr) {
             addRule(
               rules,
-              "bad",
-              "摄入低于基础代谢",
-              "当前摄入已低于基础代谢，长期如此将损伤身体，请增加进食！"
+              "warn",
+              "摄入低于基础代谢参考值",
+              `今日记录摄入 ${fmt(totals.kcal)} kcal，低于基础代谢参考 ${fmt(bmr)} kcal。如果还没记录完整，可以先补齐；若长期如此，建议适当增加进食。`
             );
           }
           if (targets.targetKcal) {
@@ -12507,8 +12651,8 @@
           addRule(
             rules,
             "info",
-            `${dayWord()}还没有饮食记录`,
-            "去「饮食记录」添加食物后，系统会自动分析热量、蛋白质、脂肪和微量元素。"
+            `${dayWord()}暂未记录饮食`,
+            "去「饮食记录」添加食物后，系统会自动分析热量、蛋白质、脂肪和微量元素；未记录时不会按 0 摄入判断。"
           );
         }
 
@@ -12536,20 +12680,19 @@
               "训练"
             );
           }
-          if (workoutSummary.sets >= 25) {
-            addRule(
-              rules,
-              "warn",
-              "力量训练量偏大",
-              `今天已累计 ${workoutSummary.sets} 组力量训练。如果接近极限，注意补充碳水和蛋白质，并保证睡眠恢复。`,
-              "训练"
-            );
-          }
+          const loadAdvice = buildTrainingLoadAdvice(workouts, cardios, weight);
+          addRule(
+            rules,
+            loadAdvice.tone === "high" ? "warn" : "info",
+            "训练负荷参考",
+            loadAdvice.text,
+            "训练"
+          );
         } else {
           addRule(
             rules,
             "info",
-            `${dayWord()}还没有运动记录`,
+            `${dayWord()}暂未记录运动`,
             "休息日可以忽略；如果已经训练，去「健身记录」添加力量或有氧记录。",
             "训练"
           );
@@ -12638,6 +12781,18 @@
               );
             }
           }
+
+          // v23：只有“体重下降较快 + 训练表现下滑”同时出现时才给这条温和提醒。
+          const longTerm = getLongTermTrendData();
+          if (longTerm.judgementReady && longTerm.weightDropFast && longTerm.performanceDeclining) {
+            addRule(
+              rules,
+              "warn",
+              "体重下降与训练表现",
+              "近期体重下降较快，注意检查能量摄入。",
+              "身体"
+            );
+          }
         }
 
         // 评分
@@ -12687,7 +12842,7 @@
             statusText = "需关注";
             statusKind = "bad";
             headline = `${badCount} 项需要调整`;
-            subline = "优先处理红色提醒，下一餐就能往回拉一点。";
+            subline = "按建议微调即可，下一餐就能往回拉一点。";
           } else if (warnCount > 0) {
             statusText = "可优化";
             statusKind = "warn";
@@ -12839,6 +12994,199 @@
         return { streak, hasToday };
       }
 
+      // v23：长期趋势数据（只读现有数据，不写入任何新字段，不影响导入导出结构）。
+      // 窗口固定为“含今天在内的最近 7 个自然日”，对比窗口为其前面的 7 个自然日。
+      function averageIntakeForKeys(keys) {
+        let days = 0;
+        let kcal = 0;
+        let protein = 0;
+        let carbs = 0;
+        let fat = 0;
+        keys.forEach((key) => {
+          const day = db.days[key];
+          if (!day || !Array.isArray(day.foods) || day.foods.length === 0) return;
+          const totals = sumDay(day);
+          days += 1;
+          kcal += totals.kcal;
+          protein += totals.protein;
+          carbs += totals.carbs;
+          fat += totals.fat;
+        });
+        if (!days) {
+          return { days: 0, kcal: null, protein: null, carbs: null, fat: null };
+        }
+        return {
+          days,
+          kcal: kcal / days,
+          protein: protein / days,
+          carbs: carbs / days,
+          fat: fat / days
+        };
+      }
+
+      function averageWeightForKeys(keys) {
+        const values = [];
+        keys.forEach((key) => {
+          const day = db.days[key];
+          if (!day || day.weight === null || day.weight === undefined) return;
+          const value = Number(day.weight);
+          if (Number.isFinite(value) && value > 0) values.push(value);
+        });
+        if (!values.length) return { days: 0, avg: null };
+        return {
+          days: values.length,
+          avg: values.reduce((sum, value) => sum + value, 0) / values.length
+        };
+      }
+
+      function countTrackedDaysOverall() {
+        const today = todayKey();
+        return Object.keys(db.days).filter((key) => {
+          if (dayDifference(key, today) > 0) return false;
+          const day = db.days[key];
+          if (!day) return false;
+          const hasFood = Array.isArray(day.foods) && day.foods.length > 0;
+          const hasWeight = day.weight !== null && day.weight !== undefined && Number.isFinite(Number(day.weight));
+          return hasFood || hasWeight;
+        }).length;
+      }
+
+      function getLongTermTrendData() {
+        const currentKeys = recentDateKeys(7);
+        const previousKeys = recentDateKeys(7, 7);
+        const intake = averageIntakeForKeys(currentKeys);
+        const currentWeight = averageWeightForKeys(currentKeys);
+        const previousWeight = averageWeightForKeys(previousKeys);
+        const weightDelta = currentWeight.avg !== null && previousWeight.avg !== null
+          ? currentWeight.avg - previousWeight.avg
+          : null;
+        // 记录天数按“累计有饮食或体重记录的天数”统计；不足 14 天不做长期判断。
+        const trackedDays = countTrackedDaysOverall();
+        const bodyWeight = positiveNumber(db.profile.weight);
+        const currentVolume = strengthVolumeForKeys(currentKeys, bodyWeight);
+        const previousVolume = strengthVolumeForKeys(previousKeys, bodyWeight);
+        const performanceDeclining = currentVolume > 0 && previousVolume > 0 &&
+          currentVolume < previousVolume * 0.9;
+        const weightDropFast = weightDelta !== null && weightDelta <= -0.8;
+        return {
+          currentKeys,
+          previousKeys,
+          intake,
+          currentWeight,
+          previousWeight,
+          weightDelta,
+          trackedDays,
+          judgementReady: trackedDays >= 14,
+          currentVolume,
+          previousVolume,
+          performanceDeclining,
+          weightDropFast
+        };
+      }
+
+      function buildLongTermJudgement(data) {
+        if (data.trackedDays < 14) {
+          return "数据积累中，暂不进行长期趋势判断，请继续保持记录。";
+        }
+        if (data.weightDelta === null) {
+          return "数据不足，暂不判断。";
+        }
+        const delta = data.weightDelta;
+        const abs = Math.abs(delta);
+        const goal = db.profile.goal;
+        if (abs < 0.2) {
+          return "近 7 天平均体重与前 7 天基本持平，维持当前节奏即可。";
+        }
+        if (delta < 0) {
+          if (data.weightDropFast && data.performanceDeclining) {
+            return "近期体重下降较快，注意检查能量摄入。";
+          }
+          if (data.weightDropFast) {
+            return "近 7 天平均体重下降偏快，建议检查总热量和蛋白质是否充足，不必刻意加大热量缺口。";
+          }
+          if (goal === "muscle") {
+            return "近 7 天平均体重小幅下降，增肌期建议确认热量和蛋白质是否充足。";
+          }
+          if (goal === "fatLoss") {
+            return "近 7 天平均体重小幅下降，节奏相对温和；继续保持记录观察趋势。";
+          }
+          return "近 7 天平均体重小幅下降，趋势暂算平稳；注意蛋白质摄入。";
+        }
+        if (goal === "muscle") {
+          return "近 7 天平均体重小幅上升，增肌期可接受，继续关注力量表现。";
+        }
+        if (goal === "fatLoss") {
+          return "近 7 天平均体重小幅上升，若目标是减脂，可以复查热量记录；不必焦虑，先看 2–3 周趋势。";
+        }
+        return "近 7 天平均体重小幅上升，建议结合训练表现和腰围一起观察。";
+      }
+
+      function renderLongTermTrends() {
+        if (!els.longTermTrends) return;
+        const data = getLongTermTrendData();
+        const intake = data.intake;
+        const metricConfig = [
+          { label: "平均摄入热量", value: intake.kcal, unit: "kcal", digits: 0 },
+          { label: "平均蛋白质", value: intake.protein, unit: "g", digits: 1 },
+          { label: "平均碳水", value: intake.carbs, unit: "g", digits: 1 },
+          { label: "平均脂肪", value: intake.fat, unit: "g", digits: 1 }
+        ];
+        const metricHTML = metricConfig.map((metric) => `
+          <div class="dash-metric">
+            <span>${metric.label}</span>
+            <strong>${metric.value !== null ? fmt(metric.value, metric.digits) : "—"}${metric.value !== null ? `<em>${metric.unit}</em>` : ""}</strong>
+            <small>${intake.days ? `有饮食记录 ${intake.days}/7 天` : "暂未记录"}</small>
+          </div>
+        `).join("");
+
+        const current = data.currentWeight;
+        const previous = data.previousWeight;
+        const delta = data.weightDelta;
+        let deltaText = "数据不足";
+        let deltaClass = "is-flat";
+        if (delta !== null) {
+          if (Math.abs(delta) < 0.05) {
+            deltaText = "持平";
+          } else if (delta < 0) {
+            deltaText = `↓ ${Math.abs(delta).toFixed(1)}kg`;
+            deltaClass = "is-down";
+          } else {
+            deltaText = `↑ ${delta.toFixed(1)}kg`;
+            deltaClass = "is-up";
+          }
+        }
+        const judgement = buildLongTermJudgement(data);
+        const showWarning = data.judgementReady && data.weightDropFast && data.performanceDeclining;
+        const weightHint = "单日体重波动主要来自水分与肠道内容物，不代表脂肪增减。";
+
+        els.longTermTrends.innerHTML = `
+          <div class="dashboard-metrics">${metricHTML}</div>
+
+          <div class="weight-panel">
+            <div class="weight-panel-head">
+              <div>
+                <span>近 7 天平均体重</span>
+                <strong>${current.avg !== null ? `${fmt(current.avg, 1)} kg` : "—"}</strong>
+              </div>
+              <span class="weight-change ${deltaClass}">${deltaText}</span>
+            </div>
+            <div class="long-term-weight-rows">
+              <span>前 7 天平均体重<strong>${previous.avg !== null ? `${fmt(previous.avg, 1)} kg` : "数据不足，暂不判断"}</strong></span>
+              <span>7 天均值差<strong>${delta !== null ? `${fmtSigned(delta, 1)} kg` : "数据不足，暂不判断"}</strong></span>
+              <span>近 7 天力量容量<strong>${fmt(data.currentVolume)} kg</strong></span>
+              <span>前 7 天力量容量<strong>${fmt(data.previousVolume)} kg</strong></span>
+            </div>
+            <p class="long-term-note">${weightHint}</p>
+          </div>
+
+          <div class="dashboard-advice long-term-advice">
+            <strong>长期趋势判断</strong>
+            <p>${escapeHTML(judgement)}</p>
+          </div>
+          <p class="long-term-note${showWarning ? " is-warn" : ""}">累计已记录 ${data.trackedDays} 天（饮食或体重）${data.performanceDeclining ? " · 近 7 天力量容量较前 7 天有所下滑" : ""}</p>
+        `;
+      }
+
       function renderWeeklyTrends() {
         if (!els.weeklyTrends) return;
         const baseTargets = calcTargets(todayKey());
@@ -12885,7 +13233,7 @@
           return Boolean(day && Array.isArray(day.workouts) && day.workouts.length);
         });
 
-        let changeText = "暂无对比";
+        let changeText = "数据不足";
         let changeClass = "is-flat";
         if (hasPreviousStrength && previousVolume > 0) {
           const change = ((currentVolume - previousVolume) / previousVolume) * 100;
@@ -12909,7 +13257,7 @@
         const previousBar = previousVolume > 0 ? Math.max(4, (previousVolume / maxVolume) * 100) : 0;
         const volumeHint = previousVolume > 0
           ? `前 7 天 ${fmt(previousVolume)} kg`
-          : "前 7 天暂无力量数据";
+          : "前 7 天暂无力量数据，数据不足，暂不判断。";
 
         const { streak, hasToday } = calculateCurrentStreak();
         const streakHint = streak === 0
@@ -13000,12 +13348,13 @@
         `;
       }
 
-      function buildWeightAdvice(records) {
+      function buildWeightAdvice(records, options = {}) {
+        const performanceDeclining = Boolean(options.performanceDeclining);
         if (!records.length) {
-          return "近7天还没有体重记录。建议每天固定时间记录一次，才能观察趋势。";
+          return "数据不足，暂不判断。建议每天固定时间记录一次体重，积累 14 天后再看长期趋势。";
         }
         if (records.length === 1) {
-          return "目前只有 1 次体重记录，再记录 1–2 次后即可判断趋势。";
+          return "数据不足，暂不判断。再记录 1–2 次后即可观察体重趋势。";
         }
         const change = round(records[records.length - 1].weight - records[0].weight, 1);
         const abs = Math.abs(change);
@@ -13021,7 +13370,10 @@
         }
         if (change < 0) {
           if (abs > 1.0) {
-            return `体重一周下降 ${abs.toFixed(1)}kg，速度偏快，注意蛋白质和总热量，避免肌肉流失。`;
+            if (performanceDeclining) {
+              return "近期体重下降较快，注意检查能量摄入。";
+            }
+            return `体重一周下降 ${abs.toFixed(1)}kg，速度偏快，建议检查总热量和蛋白质是否充足，不必刻意加大热量缺口。`;
           }
           if (goal === "fatLoss") {
             return `体重一周下降 ${abs.toFixed(1)}kg，热量缺口合理，继续保持！`;
@@ -13066,7 +13418,7 @@
           .filter((record) => record && Number.isFinite(record.weight));
         const first = weightRecords[0] || null;
         const latest = weightRecords[weightRecords.length - 1] || null;
-        let changeText = "—";
+        let changeText = "数据不足";
         let changeClass = "is-flat";
         if (first && latest && weightRecords.length >= 2) {
           const change = round(latest.weight - first.weight, 1);
@@ -13084,7 +13436,10 @@
         const selectedWeight = selectedDay && selectedDay.weight !== null && selectedDay.weight !== undefined
           ? String(selectedDay.weight)
           : "";
-        const advice = buildWeightAdvice(weightRecords);
+        const longTerm = getLongTermTrendData();
+        const advice = buildWeightAdvice(weightRecords, {
+          performanceDeclining: longTerm.judgementReady && longTerm.performanceDeclining
+        });
 
         els.weeklyDashboard.innerHTML = `
           <div class="dashboard-metrics">
@@ -13122,7 +13477,7 @@
           </div>
 
           <div class="dashboard-advice">
-            <strong>趋势建议</strong>
+            <strong>本周趋势建议</strong>
             <p>${escapeHTML(advice)}</p>
           </div>
         `;
@@ -13182,6 +13537,7 @@
         renderAssessment();
         renderWeeklyTrends();
         renderWeeklyDashboard();
+        renderLongTermTrends();
         renderBackupMeta();
         syncAdvancedMicroTargets();
       }

@@ -1,9 +1,10 @@
 /**
  * FitDay PWA Service Worker
+ * v23：新增动态营养监控与长期趋势，缓存名同步升级。
  * 缓存策略：应用外壳 Cache First（缓存优先）。
  * 修改 index.html / 图标后，请同步提升 CACHE_NAME，让旧缓存自动失效。
  */
-const CACHE_NAME = "fitday-pwa-v22";
+const CACHE_NAME = "fitday-pwa-v23";
 const APP_SHELL = [
   "./index.html",
   "./manifest.json",
