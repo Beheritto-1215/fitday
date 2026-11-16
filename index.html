@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<!-- FitDay v24 · 体验优化（训练概览自适应力量/有氧，饮食页恢复自定义食物快捷录入） -->
+<!-- FitDay v25 · 终极视觉与体验升级（评估页瘦身、自定义食物管理上移、进度条生长动效） -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f4f5f2">
   <meta name="color-scheme" content="light">
-  <meta name="app-version" content="v24">
+  <meta name="app-version" content="v25">
   <meta name="description" content="FitDay - 纯本地、移动端优先的健身饮食记录工具">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="健身日志">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>FitDay · 健身饮食日志</title>
@@ -52,6 +53,13 @@
       --shadow-card: 0 10px 30px rgba(24, 44, 31, 0.045);
       --shadow-float: 0 18px 48px rgba(20, 38, 26, 0.14);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* v25：注册评分变量，让综合评分环也能像进度条一样平滑生长。 */
+    @property --score {
+      syntax: "<number>";
+      inherits: false;
+      initial-value: 0;
     }
 
     *,
@@ -558,7 +566,7 @@
       height: 100%;
       border-radius: inherit;
       background: var(--accent-lime);
-      transition: width 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.2s ease;
+      transition: width 0.55s cubic-bezier(0.22, 0.8, 0.28, 1), background 0.2s ease;
     }
 
     .hero-progress > span.is-over {
@@ -636,7 +644,7 @@
       width: 0;
       height: 100%;
       border-radius: inherit;
-      transition: width 0.4s ease;
+      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .macro-carbs .macro-track i { background: #f0c46e; }
@@ -823,7 +831,7 @@
       height: 100%;
       border-radius: inherit;
       background: #a8d47b;
-      transition: width 0.4s ease;
+      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .training-stats {
@@ -984,6 +992,15 @@
 
     .custom-quick-add:active {
       transform: scale(0.97);
+    }
+
+    /* v25：自定义录入旁的管理提示 */
+    .custom-food-tip {
+      margin: -2px 0 7px;
+      color: var(--muted-2);
+      font-size: 8.5px;
+      line-height: 1.4;
+      text-align: right;
     }
 
     .input-shell {
@@ -1830,13 +1847,13 @@
       color: var(--muted-2);
     }
 
-    .advanced-food-manager {
-      margin-top: 14px;
+    .settings-food-manager {
+      margin-top: 15px;
       padding-top: 13px;
-      border-top: 1px solid var(--line);
+      border-top: 1px dashed #cddfd3;
     }
 
-    .advanced-food-manager .custom-entry {
+    .settings-food-manager .custom-entry {
       margin-top: 8px;
     }
 
@@ -2232,7 +2249,7 @@
       width: 0;
       height: 100%;
       border-radius: inherit;
-      transition: width 0.4s ease;
+      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .micro-calcium .micro-track i { background: #6ca8e0; }
@@ -2411,7 +2428,7 @@
       height: 100%;
       border-radius: inherit;
       background: linear-gradient(90deg, #d78b7a, #e0a441 42%, #6dbd8b);
-      transition: width 0.4s ease;
+      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .anti-tags {
@@ -2502,6 +2519,50 @@
       color: var(--muted-2);
       font-size: 8.5px;
       line-height: 1.4;
+    }
+
+    /* v25：合并后的「数据洞察与趋势」紧凑指标 */
+    .trend-metric .dash-bar {
+      height: 4px;
+      margin-top: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e4e9e2;
+    }
+
+    .trend-metric .dash-bar i {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
+    }
+
+    .trend-metric.is-protein .dash-bar i {
+      background: #5f91dc;
+    }
+
+    .trend-metric.is-carbs .dash-bar i {
+      background: #e0a441;
+    }
+
+    .trend-metric.is-fat .dash-bar i {
+      background: #a68bd4;
+    }
+
+    .trend-insight-foot {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.55;
+    }
+
+    .trend-weight-hint {
+      margin: 5px 0 0;
+      color: var(--muted-2);
+      font-size: 8.5px;
+      line-height: 1.5;
     }
 
     .weight-panel {
@@ -3484,7 +3545,7 @@
       place-items: center;
       border-radius: 50%;
       background: conic-gradient(var(--score-color) calc(var(--score) * 1%), #edf1ec 0);
-      transition: background 0.45s ease;
+      transition: --score 0.55s cubic-bezier(0.22, 0.8, 0.28, 1), background 0.45s ease;
     }
 
     .score-ring::before {
@@ -3779,7 +3840,7 @@
       height: 100%;
       border-radius: inherit;
       background: var(--accent);
-      transition: width 0.4s ease;
+      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .trend-bar.is-protein i {
@@ -3883,7 +3944,7 @@
       height: 100%;
       border-radius: inherit;
       background: var(--accent);
-      transition: width 0.4s ease;
+      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .trend-mini-row.is-previous .trend-mini-track i {
@@ -4089,6 +4150,61 @@
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.02em;
+    }
+
+    /* v25：设置卡片默认折叠为一行摘要，点按后展开完整表单。 */
+    .settings-fold {
+      margin: 0;
+    }
+
+    .settings-fold > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 1px 0;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .settings-fold > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .settings-fold-line {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .settings-fold-line strong {
+      flex: none;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 720;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .settings-fold-line small {
+      min-width: 0;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 500;
+      line-height: 1.4;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .settings-fold[open] > summary {
+      margin-bottom: 14px;
+    }
+
+    .settings-fold[open] > summary .advanced-chevron {
+      transform: rotate(180deg);
     }
 
     .switch-row {
@@ -5552,6 +5668,7 @@
                   自定义录入
                 </button>
               </div>
+              <p class="custom-food-tip">*提示：去设置页可管理/删除自定义食物*</p>
               <div class="input-shell">
                 <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
                 <input
@@ -5599,7 +5716,7 @@
               <button type="button" data-grams="150">150g</button>
               <button type="button" data-grams="200">200g</button>
             </div>
-            <p class="database-note">营养值均按每 100g 估算，已内置 <strong id="foodLibraryCount">1,887</strong> 种食物；米饭、肉类、薯类等已标注（生）/（熟），找不到时点上方「自定义录入」快速添加，或到综合评估 → 高级设置 → 自定义食物管理中长期维护。</p>
+            <p class="database-note">营养值均按每 100g 估算，已内置 <strong id="foodLibraryCount">1,887</strong> 种食物；米饭、肉类、薯类等已标注（生）/（熟），找不到时点上方「自定义录入」快速添加，或到综合评估 → 设置 → 自定义食物管理中长期维护。</p>
           </section>
 
           <section class="card">
@@ -5922,16 +6039,17 @@
       <!-- 综合评估 -->
       <section class="view" id="view-assessment" role="tabpanel" aria-labelledby="tab-assessment" hidden>
         <div class="stack">
-          <section class="card">
-            <div class="card-head">
-              <div>
-                <h2>设置</h2>
-                <p class="card-sub">基础信息与目标；高级选项可折叠展开</p>
-              </div>
-              <span class="count-badge">本机保存</span>
-            </div>
+          <section class="card settings-card">
+            <details class="settings-fold" id="settingsFold">
+              <summary class="settings-fold-summary">
+                <span class="settings-fold-line">
+                  <strong>设置</strong>
+                  <small id="settingsSummaryLine">完善资料后自动计算目标</small>
+                </span>
+                <span class="advanced-chevron" aria-hidden="true">⌄</span>
+              </summary>
 
-            <form id="profileForm" novalidate>
+              <form id="profileForm" novalidate>
               <div class="settings-basic-label">基础设置</div>
               <div class="settings-grid">
                 <label class="field">
@@ -5983,11 +6101,27 @@
                 </span>
               </div>
 
+              <!-- v25：自定义食物管理从高级设置移出，固定在基础设置下方，始终可见。 -->
+              <div class="settings-food-manager">
+                <span class="field-caption">自定义食物管理</span>
+                <button class="custom-entry" id="openCustomFood" type="button">
+                  <span class="custom-entry-icon" aria-hidden="true">
+                    <svg class="icon"><use href="#i-plus"></use></svg>
+                  </span>
+                  <span class="custom-entry-copy">
+                    <strong>添加 / 管理自定义食物</strong>
+                    <small id="customFoodHint">搜不到？按每 100g 营养长期保存</small>
+                  </span>
+                  <svg class="icon" aria-hidden="true"><use href="#i-right"></use></svg>
+                </button>
+                <p class="form-hint">自定义食物独立保存在本机；添加后可回到饮食页搜索使用。</p>
+              </div>
+
               <details class="settings-advanced" id="advancedSettings">
                 <summary>
                   <span class="advanced-summary-copy">
                     <strong>高级设置</strong>
-                    <small id="advancedSummaryHint">动态热量 · 分场景宏量 · 微量元素 · 自定义食物</small>
+                    <small id="advancedSummaryHint">动态热量 · 分场景宏量 · 微量元素参考</small>
                   </span>
                   <span class="advanced-chevron" aria-hidden="true">⌄</span>
                 </summary>
@@ -6139,27 +6273,13 @@
                 <p class="form-hint">铁、锌、镁会按性别自动切换；未设置性别时按男性参考值。</p>
               </div>
 
-              <div class="advanced-food-manager">
-                <span class="field-caption">自定义食物管理</span>
-                <button class="custom-entry" id="openCustomFood" type="button">
-                  <span class="custom-entry-icon" aria-hidden="true">
-                    <svg class="icon"><use href="#i-plus"></use></svg>
-                  </span>
-                  <span class="custom-entry-copy">
-                    <strong>添加 / 管理自定义食物</strong>
-                    <small id="customFoodHint">搜不到？按每 100g 营养长期保存</small>
-                  </span>
-                  <svg class="icon" aria-hidden="true"><use href="#i-right"></use></svg>
-                </button>
-                <p class="form-hint">自定义食物独立保存在本机；添加后可回到饮食页搜索使用。</p>
-              </div>
-
                 </div>
               </details>
 
               <p class="form-hint">单一模式留空会自动估算；动态模式中未填写的场景会回退到单一目标或自动估算。所有设置只保存在本机浏览器。</p>
               <button class="btn btn-primary full settings-submit" type="submit">保存设置</button>
-            </form>
+              </form>
+            </details>
           </section>
 
           <section class="card assess-hero" aria-label="当日综合评估">
@@ -6209,41 +6329,15 @@
             <p class="card-footnote">规则引擎仅做生活化提醒，不替代医生或营养师建议；估算消耗 = 静息代谢 × 1.2 + 力量训练（有效容量 × 0.05 + 组数 × 3）+ 有氧记录热量。</p>
           </section>
 
-          <section class="card" aria-labelledby="weeklyTrendTitle">
+          <section class="card" aria-labelledby="trendInsightsTitle">
             <div class="card-head compact">
               <div>
-                <h2 id="weeklyTrendTitle">本周趋势</h2>
-                <p class="card-sub">最近 7 天（含今天） · 纯本机数据计算</p>
+                <h2 id="trendInsightsTitle">数据洞察与趋势</h2>
+                <p class="card-sub">最近 7 天平均摄入 · 体重对比前 7 天</p>
               </div>
               <span class="count-badge">近 7 天</span>
             </div>
-            <div class="trend-list" id="weeklyTrends">
-              <div class="trend-loading">正在读取本地记录…</div>
-            </div>
-          </section>
-
-          <section class="card" aria-labelledby="weeklyDashboardTitle">
-            <div class="card-head compact">
-              <div>
-                <h2 id="weeklyDashboardTitle">本周数据大盘</h2>
-                <p class="card-sub">最近 7 天 · 平均摄入与体重趋势</p>
-              </div>
-              <span class="count-badge">近 7 天</span>
-            </div>
-            <div id="weeklyDashboard">
-              <div class="trend-loading">正在读取本地记录…</div>
-            </div>
-          </section>
-
-          <section class="card" aria-labelledby="longTermTitle">
-            <div class="card-head compact">
-              <div>
-                <h2 id="longTermTitle">长期趋势监控</h2>
-                <p class="card-sub">最近 7 天平均摄入 · 7 天体重对比前 7 天</p>
-              </div>
-              <span class="count-badge">近 14 天</span>
-            </div>
-            <div id="longTermTrends">
+            <div id="trendInsights">
               <div class="trend-loading">正在读取本地记录…</div>
             </div>
           </section>
@@ -9326,10 +9420,10 @@
         metricBurnLabel: byId("metricBurnLabel"),
         assessmentList: byId("assessmentList"),
         insightCount: byId("insightCount"),
-        weeklyTrends: byId("weeklyTrends"),
-        weeklyDashboard: byId("weeklyDashboard"),
-        longTermTrends: byId("longTermTrends"),
+        trendInsights: byId("trendInsights"),
 
+        settingsFold: byId("settingsFold"),
+        settingsSummaryLine: byId("settingsSummaryLine"),
         profileForm: byId("profileForm"),
         estimateCalories: byId("estimateCalories"),
         dynamicCaloriesToggle: byId("dynamicCaloriesToggle"),
@@ -9430,6 +9524,67 @@
         if (!target || !Number.isFinite(value)) return 0;
         return clamp((value / target) * 100, 0, 100);
       };
+
+      // v25：进度条平滑生长。
+      // 首次渲染从 0 开始；后续数据变化从上一档宽度过渡，避免瞬间跳变。
+      // 切换 Tab 时由 replayProgressBars 统一回到 0 再生长。
+      const progressBarHistory = new Map();
+
+      function setProgressBar(el, key, percent) {
+        if (!el) return;
+        const target = clamp(Number(percent) || 0, 0, 100);
+        const previous = progressBarHistory.has(key) ? progressBarHistory.get(key) : 0;
+        progressBarHistory.set(key, target);
+        el.dataset.barTarget = String(target);
+        el.style.transition = "none";
+        el.style.width = `${previous}%`;
+        window.requestAnimationFrame(() => {
+          el.style.transition = "";
+          el.style.width = `${target}%`;
+        });
+      }
+
+      function setScoreRing(el, score) {
+        if (!el) return;
+        const target = score === null || score === undefined || !Number.isFinite(Number(score))
+          ? 0
+          : clamp(Number(score), 0, 100);
+        const key = "assessment-score";
+        const previous = progressBarHistory.has(key) ? progressBarHistory.get(key) : 0;
+        progressBarHistory.set(key, target);
+        el.dataset.scoreTarget = String(target);
+        el.style.transition = "none";
+        el.style.setProperty("--score", String(previous));
+        window.requestAnimationFrame(() => {
+          el.style.transition = "";
+          el.style.setProperty("--score", String(target));
+        });
+      }
+
+      function replayProgressBars(root) {
+        if (!root) return;
+        const bars = Array.from(root.querySelectorAll("[data-bar-target]"));
+        const rings = Array.from(root.querySelectorAll("[data-score-target]"));
+        if (!bars.length && !rings.length) return;
+        bars.forEach((bar) => {
+          bar.style.transition = "none";
+          bar.style.width = "0%";
+        });
+        rings.forEach((ring) => {
+          ring.style.transition = "none";
+          ring.style.setProperty("--score", "0");
+        });
+        const probe = bars[0] || rings[0];
+        if (probe) void probe.offsetWidth;
+        bars.forEach((bar) => {
+          bar.style.transition = "";
+          bar.style.width = `${clamp(Number(bar.dataset.barTarget) || 0, 0, 100)}%`;
+        });
+        rings.forEach((ring) => {
+          ring.style.transition = "";
+          ring.style.setProperty("--score", String(clamp(Number(ring.dataset.scoreTarget) || 0, 0, 100)));
+        });
+      }
 
       function pad2(number) {
         return String(number).padStart(2, "0");
@@ -12109,7 +12264,7 @@
         if (target) {
           const remaining = target - totals.kcal;
           const ratio = hasFood ? clamp((totals.kcal / target) * 100, 0, 100) : 0;
-          els.dietProgress.style.width = `${ratio}%`;
+          setProgressBar(els.dietProgress, "diet-kcal", ratio);
           els.dietProgress.classList.toggle("is-over", hasFood && totals.kcal > target);
           els.dietTargetLine.innerHTML = `目标 <strong>${fmt(target)}</strong> kcal · ${escapeHTML(targets.targetLabel)}`;
 
@@ -12127,7 +12282,7 @@
             els.dietStatus.className = "status-pill is-good";
           }
         } else {
-          els.dietProgress.style.width = "0%";
+          setProgressBar(els.dietProgress, "diet-kcal", 0);
           els.dietProgress.classList.remove("is-over");
           els.dietTargetLine.textContent = "填写个人信息或热量限额后，显示每日目标";
           els.dietStatus.textContent = hasFood ? "待设目标" : "暂未记录";
@@ -12142,7 +12297,7 @@
         macroConfig.forEach(({ key, value, target: macroTarget, kind }) => {
           els[`macro${key}`].textContent = hasFood ? fmt(value, 1) : "—";
           els[`macro${key}Target`].textContent = macroTarget !== null && macroTarget !== undefined ? `/ ${fmt(macroTarget)}g` : "/ —";
-          els[`macro${key}Bar`].style.width = `${hasFood ? pct(value, macroTarget) : 0}%`;
+          setProgressBar(els[`macro${key}Bar`], `macro-${key}`, hasFood ? pct(value, macroTarget) : 0);
 
           let statusText = hasFood ? "待设置" : "暂未记录";
           let statusClass = "is-empty";
@@ -12176,7 +12331,7 @@
         const fiberRatio = totals.fiber / FIBER_TARGET;
         els.fiberValue.textContent = hasFood ? fmt(totals.fiber, 1) : "—";
         els.fiberTarget.textContent = `/ ${FIBER_TARGET}g`;
-        els.fiberBar.style.width = `${hasFood ? clamp(fiberRatio * 100, 0, 100) : 0}%`;
+        setProgressBar(els.fiberBar, "fiber", hasFood ? clamp(fiberRatio * 100, 0, 100) : 0);
         let fiberStatusText = "暂未记录";
         let fiberStatusClass = "is-empty";
         if (hasFood) {
@@ -12290,7 +12445,7 @@
           els[`micro${prefix}`].textContent = fmt(value, valueDigits);
           els[`micro${prefix}Target`].textContent = fmt(microTarget, targetDigits);
           els[`micro${prefix}Pct`].textContent = `${percent}%`;
-          els[`micro${prefix}Bar`].style.width = `${pct(value, microTarget)}%`;
+          setProgressBar(els[`micro${prefix}Bar`], `micro-${prefix}`, pct(value, microTarget));
         });
 
         renderAntiInflammatory(day);
@@ -12337,6 +12492,7 @@
         const foods = day && Array.isArray(day.foods) ? day.foods : [];
         if (!foods.length) {
           els.antiScoreBadge.textContent = "--";
+          progressBarHistory.delete("anti-score");
           els.antiInflammatory.innerHTML = `
             <div class="anti-empty">记录饮食后，会根据深色蔬菜、莓果、深海鱼、坚果、番茄、菌藻类、全谷物、豆类、发酵类以及油炸、含糖饮料、加工肉类、高盐腌制等食物组合，生成${dayLabel}抗炎指数。</div>
             <p class="anti-disclaimer">本评分为饮食结构参考，非医学诊断。</p>
@@ -12402,7 +12558,7 @@
               <p>${escapeHTML(detail)}</p>
             </div>
           </div>
-          <div class="anti-bar" aria-hidden="true"><i style="width:${score}%"></i></div>
+          <div class="anti-bar" aria-hidden="true"><i></i></div>
           <div class="anti-breakdown">
             <div class="anti-breakdown-group">
               <span class="anti-breakdown-title">加分项</span>
@@ -12416,6 +12572,7 @@
           <p class="anti-tip"><strong>抗炎小贴士：</strong>${escapeHTML(tip)}</p>
           <p class="anti-disclaimer">本评分为饮食结构参考，非医学诊断。</p>
         `;
+        setProgressBar(els.antiInflammatory.querySelector(".anti-bar i"), "anti-score", score);
       }
 
       // v23：训练负荷只做文字提醒，复用现有力量/有氧记录，不额外增加或修改任何消耗热量。
@@ -12656,6 +12813,83 @@
 
       function addRule(rules, kind, title, detail, tag = "营养") {
         rules.push({ kind, title, detail, tag });
+      }
+
+      // v25：评估建议去重与限量。
+      // 只处理展示层，不改变上方任何热量/营养/训练计算。
+      const INSIGHT_GROUP_BY_TITLE = {
+        "热量超标": "energy",
+        "接近热量上限": "energy",
+        "热量摄入偏低": "energy",
+        "热量在目标内": "energy",
+        "还没有热量目标": "energy",
+        "蛋白质不足": "protein",
+        "蛋白质接近目标": "protein",
+        "蛋白质达标": "protein",
+        "脂肪占比偏高": "fat",
+        "脂肪摄入偏低": "fat",
+        "微量元素还有缺口": "micro",
+        "微量元素接近目标": "micro",
+        "微量元素达标": "micro",
+        "BMI 偏低": "bmi",
+        "BMI 在健康区间": "bmi",
+        "BMI 偏高": "bmi",
+        "BMI 处于肥胖区间": "bmi",
+        "今日可能热量盈余": "balance",
+        "能量缺口偏大": "balance",
+        "能量收支大致平衡": "balance"
+      };
+      const SEVERE_INSIGHT_TITLES = new Set([
+        "摄入低于基础代谢参考值",
+        "当前体重不建议继续减脂"
+      ]);
+      const INSIGHT_KIND_ORDER = { bad: 0, warn: 1, info: 2, good: 3 };
+
+      function curateInsights(rules) {
+        const seenTitles = new Set();
+        const unique = rules.filter((rule) => {
+          if (seenTitles.has(rule.title)) return false;
+          seenTitles.add(rule.title);
+          return true;
+        });
+
+        // 严重问题只保留最优先的一条，避免被其他提醒稀释。
+        const severe = unique.find((rule) => SEVERE_INSIGHT_TITLES.has(rule.title));
+        if (severe) return [severe];
+
+        // “热量在目标内 / 热量超标”与“能量缺口偏大 / 盈余”来自两套口径，
+        // 同时出现会互相打架，这里只保留更值得行动的一条。
+        const energy = unique.find((rule) => INSIGHT_GROUP_BY_TITLE[rule.title] === "energy");
+        const balance = unique.find((rule) => INSIGHT_GROUP_BY_TITLE[rule.title] === "balance");
+        const dropTitles = new Set();
+        if (energy && balance) {
+          if (energy.kind === "good") {
+            if (balance.kind === "warn") dropTitles.add(energy.title);
+            else dropTitles.add(balance.title);
+          } else if (energy.kind === "warn") {
+            if (balance.kind === "warn") {
+              if (energy.title === "热量超标") dropTitles.add(balance.title);
+              else dropTitles.add(energy.title);
+            } else {
+              dropTitles.add(balance.title);
+            }
+          } else {
+            dropTitles.add(balance.title);
+          }
+        }
+
+        const usedGroups = new Set();
+        const curated = [];
+        unique
+          .filter((rule) => !dropTitles.has(rule.title))
+          .sort((a, b) => (INSIGHT_KIND_ORDER[a.kind] ?? 9) - (INSIGHT_KIND_ORDER[b.kind] ?? 9))
+          .forEach((rule) => {
+            const group = INSIGHT_GROUP_BY_TITLE[rule.title] || `rule:${rule.title}`;
+            if (usedGroups.has(group)) return;
+            usedGroups.add(group);
+            curated.push(rule);
+          });
+        return curated.slice(0, 4);
       }
 
       function renderAssessment() {
@@ -13035,8 +13269,10 @@
           score = clamp(Math.round(score), 40, 100);
         }
 
-        const badCount = rules.filter((rule) => rule.kind === "bad").length;
-        const warnCount = rules.filter((rule) => rule.kind === "warn").length;
+        const curatedRules = curateInsights(rules);
+        const badCount = curatedRules.filter((rule) => rule.kind === "bad").length;
+        const warnCount = curatedRules.filter((rule) => rule.kind === "warn").length;
+        const hasSevereInsight = curatedRules.some((rule) => SEVERE_INSIGHT_TITLES.has(rule.title));
         let statusText = "待记录";
         let statusKind = "";
         let headline = "记录一笔，评估才开始";
@@ -13045,7 +13281,12 @@
           : "先补全个人信息，再添加饮食或训练，评估会更准确。";
 
         if (score !== null) {
-          if (badCount > 0) {
+          if (hasSevereInsight) {
+            statusText = "需关注";
+            statusKind = "bad";
+            headline = "先处理 1 个关键问题";
+            subline = "这一项优先于其他建议，补齐后剩余提醒会自动恢复。";
+          } else if (badCount > 0) {
             statusText = "需关注";
             statusKind = "bad";
             headline = `${badCount} 项需要调整`;
@@ -13078,14 +13319,14 @@
             : score >= 70
               ? "#b0791a"
               : "#bf463c";
-        els.scoreRing.style.setProperty("--score", String(score ?? 0));
         els.scoreRing.style.setProperty("--score-color", scoreColor);
+        setScoreRing(els.scoreRing, score);
 
         els.assessStatus.textContent = statusText;
         els.assessStatus.className = `status-chip ${statusKind}`.trim();
         els.assessHeadline.textContent = headline;
         els.assessSubline.textContent = subline;
-        els.insightCount.textContent = `${rules.length} 条`;
+        els.insightCount.textContent = `${curatedRules.length} 条`;
 
         if (profileComplete) {
           els.metricBmi.textContent = fmt(bmi, 1);
@@ -13128,12 +13369,7 @@
           els.metricBurnLabel.textContent = "待完善资料";
         }
 
-        const sortedRules = [...rules].sort((a, b) => {
-          const order = { bad: 0, warn: 1, info: 2, good: 3 };
-          return order[a.kind] - order[b.kind];
-        });
-
-        els.assessmentList.innerHTML = sortedRules.map((rule) => {
+        els.assessmentList.innerHTML = curatedRules.map((rule) => {
           const icon = rule.kind === "good" ? "i-check" : rule.kind === "info" ? "i-info" : "i-alert";
           return `
             <article class="insight ${rule.kind}">
@@ -13328,24 +13564,91 @@
         return "近 7 天平均体重小幅上升，建议结合训练表现和腰围一起观察。";
       }
 
-      function renderLongTermTrends() {
-        if (!els.longTermTrends) return;
+      function renderTrendInsights() {
+        if (!els.trendInsights) return;
+        const keys = recentDateKeys(7);
+        const chronological = keys.slice().reverse();
         const data = getLongTermTrendData();
         const intake = data.intake;
-        const metricConfig = [
-          { label: "平均摄入热量", value: intake.kcal, unit: "kcal", digits: 0 },
-          { label: "平均蛋白质", value: intake.protein, unit: "g", digits: 1 },
-          { label: "平均碳水", value: intake.carbs, unit: "g", digits: 1 },
-          { label: "平均脂肪", value: intake.fat, unit: "g", digits: 1 }
-        ];
-        const metricHTML = metricConfig.map((metric) => `
-          <div class="dash-metric">
-            <span>${metric.label}</span>
-            <strong>${metric.value !== null ? fmt(metric.value, metric.digits) : "—"}${metric.value !== null ? `<em>${metric.unit}</em>` : ""}</strong>
-            <small>${intake.days ? `有饮食记录 ${intake.days}/7 天` : "暂未记录"}</small>
-          </div>
-        `).join("");
+        const targets = calcTargets(todayKey());
 
+        let caloriePassDays = 0;
+        let proteinPassDays = 0;
+        let hasCalorieTarget = false;
+        let hasProteinTarget = false;
+        keys.forEach((key) => {
+          const day = db.days[key];
+          const dayTargets = calcTargets(key);
+          if (dayTargets.targetKcal) hasCalorieTarget = true;
+          if (dayTargets.proteinTarget) hasProteinTarget = true;
+          if (!day || !Array.isArray(day.foods) || day.foods.length === 0) return;
+          const totals = sumDay(day);
+          if (dayTargets.targetKcal && totals.kcal <= dayTargets.targetKcal) caloriePassDays += 1;
+          if (dayTargets.proteinTarget && totals.protein >= dayTargets.proteinTarget) proteinPassDays += 1;
+        });
+
+        const metricConfig = [
+          {
+            key: "kcal",
+            label: "平均热量",
+            value: intake.kcal,
+            unit: "kcal",
+            digits: 0,
+            target: targets.targetKcal,
+            hint: hasCalorieTarget ? `未超标 ${caloriePassDays}/7 天` : "热量目标待设置"
+          },
+          {
+            key: "protein",
+            label: "平均蛋白质",
+            value: intake.protein,
+            unit: "g",
+            digits: 1,
+            target: targets.proteinTarget,
+            hint: hasProteinTarget ? `达标 ${proteinPassDays}/7 天` : "蛋白质目标待完善"
+          },
+          {
+            key: "carbs",
+            label: "平均碳水",
+            value: intake.carbs,
+            unit: "g",
+            digits: 1,
+            target: targets.carbsTarget,
+            hint: `有饮食记录 ${intake.days}/7 天`
+          },
+          {
+            key: "fat",
+            label: "平均脂肪",
+            value: intake.fat,
+            unit: "g",
+            digits: 1,
+            target: targets.fatTarget,
+            hint: `有饮食记录 ${intake.days}/7 天`
+          }
+        ];
+        const metricHTML = metricConfig.map((metric) => {
+          const valueText = metric.value !== null ? fmt(metric.value, metric.digits) : "—";
+          const targetText = metric.target !== null && metric.target !== undefined
+            ? `目标 ${fmt(metric.target, metric.digits)} ${metric.unit}`
+            : "目标待完善";
+          const percent = metric.value !== null && metric.target ? pct(metric.value, metric.target) : 0;
+          return `
+            <div class="dash-metric trend-metric is-${metric.key}">
+              <span>${metric.label}</span>
+              <strong>${valueText}${metric.value !== null ? `<em>${metric.unit}</em>` : ""}</strong>
+              <div class="dash-bar" aria-hidden="true"><i data-bar-key="trend-${metric.key}" data-bar-percent="${percent}"></i></div>
+              <small>${metric.hint} · ${targetText}</small>
+            </div>
+          `;
+        }).join("");
+
+        const weightRecords = chronological
+          .map((key, index) => {
+            const day = db.days[key];
+            return day && day.weight !== null && day.weight !== undefined
+              ? { key, weight: Number(day.weight), index }
+              : null;
+          })
+          .filter((record) => record && Number.isFinite(record.weight));
         const current = data.currentWeight;
         const previous = data.previousWeight;
         const delta = data.weightDelta;
@@ -13362,11 +13665,16 @@
             deltaClass = "is-up";
           }
         }
-        const judgement = buildLongTermJudgement(data);
-        const showWarning = data.judgementReady && data.weightDropFast && data.performanceDeclining;
-        const weightHint = "单日体重波动主要来自水分与肠道内容物，不代表脂肪增减。";
 
-        els.longTermTrends.innerHTML = `
+        const selectedDay = db.days[selectedDate];
+        const selectedWeight = selectedDay && selectedDay.weight !== null && selectedDay.weight !== undefined
+          ? String(selectedDay.weight)
+          : "";
+        const foot = data.trackedDays < 14
+          ? `累计已记录 ${data.trackedDays} 天 · 不足 14 天，暂不做长期趋势判断。`
+          : `长期趋势：${buildLongTermJudgement(data)}`;
+
+        els.trendInsights.innerHTML = `
           <div class="dashboard-metrics">${metricHTML}</div>
 
           <div class="weight-panel">
@@ -13377,143 +13685,28 @@
               </div>
               <span class="weight-change ${deltaClass}">${deltaText}</span>
             </div>
-            <div class="long-term-weight-rows">
-              <span>前 7 天平均体重<strong>${previous.avg !== null ? `${fmt(previous.avg, 1)} kg` : "数据不足，暂不判断"}</strong></span>
-              <span>7 天均值差<strong>${delta !== null ? `${fmtSigned(delta, 1)} kg` : "数据不足，暂不判断"}</strong></span>
-              <span>近 7 天力量容量<strong>${fmt(data.currentVolume)} kg</strong></span>
-              <span>前 7 天力量容量<strong>${fmt(data.previousVolume)} kg</strong></span>
+            ${weightChartHTML(weightRecords)}
+            <p class="trend-weight-hint">${previous.avg !== null
+              ? `前 7 天均值 ${fmt(previous.avg, 1)} kg · 单日波动主要来自水分与肠道内容物`
+              : "前 7 天体重数据不足，先积累记录即可。"}</p>
+            <div class="weight-log-row">
+              <label class="weight-log-field" for="weeklyWeightInput">
+                <span>记录${dayWord()}体重</span>
+                <span class="suffix-input">
+                  <input id="weeklyWeightInput" type="number" inputmode="decimal" min="30" max="300" step="0.1" value="${escapeHTML(selectedWeight)}" placeholder="如 70.5">
+                  <em>kg</em>
+                </span>
+              </label>
+              <button class="btn btn-primary weight-save-btn" type="button" data-save-weight>保存</button>
             </div>
-            <p class="long-term-note">${weightHint}</p>
           </div>
 
-          <div class="dashboard-advice long-term-advice">
-            <strong>长期趋势判断</strong>
-            <p>${escapeHTML(judgement)}</p>
-          </div>
-          <p class="long-term-note${showWarning ? " is-warn" : ""}">累计已记录 ${data.trackedDays} 天（饮食或体重）${data.performanceDeclining ? " · 近 7 天力量容量较前 7 天有所下滑" : ""}</p>
+          <p class="trend-insight-foot">${escapeHTML(foot)}</p>
         `;
-      }
 
-      function renderWeeklyTrends() {
-        if (!els.weeklyTrends) return;
-        const baseTargets = calcTargets(todayKey());
-        const dynamicEnabled = Boolean(db.profile.dynamicCalories);
-        const bodyWeight = positiveNumber(db.profile.weight);
-        const dietKeys = recentDateKeys(7);
-        let recordedFoodDays = 0;
-        let caloriePassDays = 0;
-        let proteinPassDays = 0;
-        let hasCalorieTarget = false;
-        let hasProteinTarget = false;
-
-        dietKeys.forEach((key) => {
-          const day = db.days[key];
-          const dayTargets = calcTargets(key);
-          if (dayTargets.targetKcal) hasCalorieTarget = true;
-          if (dayTargets.proteinTarget) hasProteinTarget = true;
-          if (!day || !Array.isArray(day.foods) || day.foods.length === 0) return;
-          recordedFoodDays += 1;
-          const totals = sumDay(day);
-          if (dayTargets.targetKcal && totals.kcal <= dayTargets.targetKcal) caloriePassDays += 1;
-          if (dayTargets.proteinTarget && totals.protein >= dayTargets.proteinTarget) proteinPassDays += 1;
+        $$("[data-bar-key]", els.trendInsights).forEach((bar) => {
+          setProgressBar(bar, bar.dataset.barKey, Number(bar.dataset.barPercent) || 0);
         });
-
-        const caloriePercent = clamp((caloriePassDays / 7) * 100, 0, 100);
-        const proteinPercent = clamp((proteinPassDays / 7) * 100, 0, 100);
-        const calorieValue = hasCalorieTarget ? `${caloriePassDays}/7 天` : "待设目标";
-        const proteinValue = hasProteinTarget ? `${proteinPassDays}/7 天` : "待完善体重";
-        const dietTargets = [
-          dynamicEnabled
-            ? "动态热量与分场景宏量目标"
-            : (baseTargets.targetKcal ? `热量目标 ${fmt(baseTargets.targetKcal)} kcal` : "热量目标未设置"),
-          dynamicEnabled
-            ? "蛋白质目标按每日场景"
-            : (baseTargets.proteinTarget ? `蛋白质目标 ${fmt(baseTargets.proteinTarget, 1)} g` : "蛋白质目标待完善")
-        ].join(" · ");
-
-        const currentKeys = recentDateKeys(7);
-        const previousKeys = recentDateKeys(7, 7);
-        const currentVolume = strengthVolumeForKeys(currentKeys, bodyWeight);
-        const previousVolume = strengthVolumeForKeys(previousKeys, bodyWeight);
-        const hasPreviousStrength = previousKeys.some((key) => {
-          const day = db.days[key];
-          return Boolean(day && Array.isArray(day.workouts) && day.workouts.length);
-        });
-
-        let changeText = "数据不足";
-        let changeClass = "is-flat";
-        if (hasPreviousStrength && previousVolume > 0) {
-          const change = ((currentVolume - previousVolume) / previousVolume) * 100;
-          if (Math.abs(change) < 0.5) {
-            changeText = "→ 持平";
-            changeClass = "is-flat";
-          } else if (change > 0) {
-            changeText = `↑ ${Math.round(change)}%`;
-            changeClass = "";
-          } else {
-            changeText = `↓ ${Math.abs(Math.round(change))}%`;
-            changeClass = "is-down";
-          }
-        } else if (currentVolume > 0) {
-          changeText = "新增训练";
-          changeClass = "";
-        }
-
-        const maxVolume = Math.max(currentVolume, previousVolume, 1);
-        const currentBar = currentVolume > 0 ? Math.max(4, (currentVolume / maxVolume) * 100) : 0;
-        const previousBar = previousVolume > 0 ? Math.max(4, (previousVolume / maxVolume) * 100) : 0;
-        const volumeHint = previousVolume > 0
-          ? `前 7 天 ${fmt(previousVolume)} kg`
-          : "前 7 天暂无力量数据，数据不足，暂不判断。";
-
-        const { streak, hasToday } = calculateCurrentStreak();
-        const streakHint = streak === 0
-          ? "饮食、力量或有氧任一记录即算打卡，从今天开始吧。"
-          : hasToday
-            ? "今天已经打卡，继续保持连续记录。"
-            : "今天还没记录，别让连续记录断掉。";
-
-        els.weeklyTrends.innerHTML = `
-          <div class="trend-block">
-            <div class="trend-head">
-              <span class="trend-title">饮食达标</span>
-              <span class="trend-note">有饮食记录 ${recordedFoodDays} 天</span>
-            </div>
-            <div class="trend-meter">
-              <div class="trend-meter-head"><span>热量未超标</span><strong id="trendCaloriePass">${calorieValue}</strong></div>
-              <div class="trend-bar" aria-hidden="true"><i id="trendCalorieBar" style="width:${caloriePercent}%"></i></div>
-            </div>
-            <div class="trend-meter">
-              <div class="trend-meter-head"><span>蛋白质达标</span><strong id="trendProteinPass">${proteinValue}</strong></div>
-              <div class="trend-bar is-protein" aria-hidden="true"><i id="trendProteinBar" style="width:${proteinPercent}%"></i></div>
-            </div>
-            <p class="trend-hint">${dietTargets}；未记录的日期按未达标计。</p>
-          </div>
-
-          <div class="trend-grid">
-            <div class="trend-block">
-              <div class="trend-head">
-                <span class="trend-title">力量容量</span>
-                <span class="trend-change ${changeClass}" id="trendVolumeChange">${changeText}</span>
-              </div>
-              <div class="trend-volume-value"><strong id="trendVolume">${fmt(currentVolume)}</strong><span>kg · 近 7 天</span></div>
-              <div class="trend-mini-bars" aria-hidden="true">
-                <div class="trend-mini-row"><span>近 7 天</span><div class="trend-mini-track"><i id="trendCurrentBar" style="width:${currentBar}%"></i></div></div>
-                <div class="trend-mini-row is-previous"><span>前 7 天</span><div class="trend-mini-track"><i id="trendPreviousBar" style="width:${previousBar}%"></i></div></div>
-              </div>
-              <p class="trend-hint">${volumeHint}</p>
-            </div>
-
-            <div class="trend-block">
-              <div class="trend-head">
-                <span class="trend-title">连续打卡</span>
-                <span class="trend-note">${hasToday ? "今日已记录" : "今日待记录"}</span>
-              </div>
-              <div class="trend-streak"><strong id="trendStreak">${streak}</strong><span>天</span></div>
-              <p class="trend-hint">${streakHint}</p>
-            </div>
-          </div>
-        `;
       }
 
       function shortDateLabel(key) {
@@ -13599,97 +13792,6 @@
         return `体重一周上升 ${abs.toFixed(1)}kg，注意观察饮食与活动量变化。`;
       }
 
-      function renderWeeklyDashboard() {
-        if (!els.weeklyDashboard) return;
-        const keys = recentDateKeys(7);
-        const chronological = keys.slice().reverse();
-        const foodDays = keys
-          .map((key) => db.days[key])
-          .filter((day) => day && Array.isArray(day.foods) && day.foods.length > 0);
-        let totalKcal = 0;
-        let totalProtein = 0;
-        foodDays.forEach((day) => {
-          const totals = sumDay(day);
-          totalKcal += totals.kcal;
-          totalProtein += totals.protein;
-        });
-        const avgKcal = foodDays.length ? totalKcal / foodDays.length : null;
-        const avgProtein = foodDays.length ? totalProtein / foodDays.length : null;
-        const weightRecords = chronological
-          .map((key, index) => {
-            const day = db.days[key];
-            return day && day.weight !== null && day.weight !== undefined
-              ? { key, weight: Number(day.weight), index }
-              : null;
-          })
-          .filter((record) => record && Number.isFinite(record.weight));
-        const first = weightRecords[0] || null;
-        const latest = weightRecords[weightRecords.length - 1] || null;
-        let changeText = "数据不足";
-        let changeClass = "is-flat";
-        if (first && latest && weightRecords.length >= 2) {
-          const change = round(latest.weight - first.weight, 1);
-          if (change < 0) {
-            changeText = `↓ ${Math.abs(change).toFixed(1)}kg`;
-            changeClass = "is-down";
-          } else if (change > 0) {
-            changeText = `↑ ${change.toFixed(1)}kg`;
-            changeClass = "is-up";
-          } else {
-            changeText = "→ 0.0kg";
-          }
-        }
-        const selectedDay = db.days[selectedDate];
-        const selectedWeight = selectedDay && selectedDay.weight !== null && selectedDay.weight !== undefined
-          ? String(selectedDay.weight)
-          : "";
-        const longTerm = getLongTermTrendData();
-        const advice = buildWeightAdvice(weightRecords, {
-          performanceDeclining: longTerm.judgementReady && longTerm.performanceDeclining
-        });
-
-        els.weeklyDashboard.innerHTML = `
-          <div class="dashboard-metrics">
-            <div class="dash-metric">
-              <span>平均摄入热量</span>
-              <strong>${avgKcal !== null ? fmt(avgKcal) : "—"}<em>kcal</em></strong>
-              <small>有饮食记录 ${foodDays.length}/7 天</small>
-            </div>
-            <div class="dash-metric">
-              <span>平均蛋白质</span>
-              <strong>${avgProtein !== null ? fmt(avgProtein, 1) : "—"}<em>g</em></strong>
-              <small>有饮食记录 ${foodDays.length}/7 天</small>
-            </div>
-          </div>
-
-          <div class="weight-panel">
-            <div class="weight-panel-head">
-              <div>
-                <span>7天体重趋势</span>
-                <strong>${latest ? `${fmt(latest.weight, 1)} kg` : "—"}</strong>
-              </div>
-              <span class="weight-change ${changeClass}">${changeText}</span>
-            </div>
-            ${weightChartHTML(weightRecords)}
-            <div class="weight-log-row">
-              <label class="weight-log-field" for="weeklyWeightInput">
-                <span>记录${dayWord()}体重</span>
-                <span class="suffix-input">
-                  <input id="weeklyWeightInput" type="number" inputmode="decimal" min="30" max="300" step="0.1" value="${escapeHTML(selectedWeight)}" placeholder="如 70.5">
-                  <em>kg</em>
-                </span>
-              </label>
-              <button class="btn btn-primary weight-save-btn" type="button" data-save-weight>保存</button>
-            </div>
-          </div>
-
-          <div class="dashboard-advice">
-            <strong>本周趋势建议</strong>
-            <p>${escapeHTML(advice)}</p>
-          </div>
-        `;
-      }
-
       function saveWeeklyWeight() {
         const input = byId("weeklyWeightInput");
         if (!input) return;
@@ -13735,16 +13837,33 @@
         }
       }
 
+      // v25：设置折叠时的一行摘要。
+      function updateSettingsSummary() {
+        if (!els.settingsSummaryLine) return;
+        const profile = db.profile || {};
+        const height = positiveNumber(profile.height);
+        const weight = positiveNumber(profile.weight);
+        const parts = [];
+        if (height) parts.push(`${fmt(height, Number.isInteger(height) ? 0 : 1)}cm`);
+        if (weight) parts.push(`${fmt(weight, Number.isInteger(weight) ? 0 : 1)}kg`);
+        if (parts.length || profile.sex || profile.age) {
+          parts.push((GOALS[profile.goal] || GOALS.maintain).label);
+          parts.push(profile.dynamicCalories ? "动态热量已开启" : "动态热量未开启");
+        }
+        els.settingsSummaryLine.textContent = parts.length
+          ? parts.join(" · ")
+          : "完善资料后自动计算目标";
+      }
+
       function renderAll() {
         updateDateUI();
         updateCustomFoodHint();
+        updateSettingsSummary();
         renderMealSelector();
         renderDiet();
         renderTraining();
         renderAssessment();
-        renderWeeklyTrends();
-        renderWeeklyDashboard();
-        renderLongTermTrends();
+        renderTrendInsights();
         renderBackupMeta();
         syncAdvancedMicroTargets();
       }
@@ -14440,6 +14559,7 @@
         event.preventDefault();
         const result = readProfileForm();
         if (!result.profile) {
+          if (els.settingsFold) els.settingsFold.open = true;
           if (result.input && els.advancedSettings && els.advancedSettings.contains(result.input)) {
             els.advancedSettings.open = true;
           }
@@ -14637,6 +14757,11 @@
             window.setTimeout(() => activeView.classList.remove("is-tab-animating"), 260);
           }
         }
+        // v25：切回页面时让进度条从 0 重新生长，动效在滑屏落位后触发，不影响手势。
+        const currentView = els.views.find((view) => !view.hidden);
+        if (currentView) {
+          window.requestAnimationFrame(() => replayProgressBars(currentView));
+        }
         if (updateHash) {
           try {
             history.replaceState(null, "", `#${tabName}`);
@@ -14812,10 +14937,10 @@
           if (els.dateInput.value) setSelectedDate(els.dateInput.value);
           else updateDateUI();
         });
-        els.weeklyDashboard.addEventListener("click", (event) => {
+        els.trendInsights.addEventListener("click", (event) => {
           if (event.target.closest("[data-save-weight]")) saveWeeklyWeight();
         });
-        els.weeklyDashboard.addEventListener("keydown", (event) => {
+        els.trendInsights.addEventListener("keydown", (event) => {
           if (event.key === "Enter" && event.target.id === "weeklyWeightInput") {
             event.preventDefault();
             saveWeeklyWeight();
@@ -15405,10 +15530,17 @@
         els.onboardingStart.addEventListener("click", finishOnboarding);
       }
 
+      function initSettingsFold() {
+        if (!els.settingsFold) return;
+        // 第一次使用（没有任何资料/记录）时保持展开；已有数据时默认折叠。
+        els.settingsFold.open = !hasExistingUserData();
+      }
+
       function init() {
         const hash = window.location.hash.replace("#", "");
         bindEvents();
         syncProfileForm();
+        initSettingsFold();
 
         if (db.profile.calorieLimit) {
           // 保持已有设置，不做任何自动覆盖。
