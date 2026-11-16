@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- FitDay v25 · 终极视觉与体验升级（评估页瘦身、自定义食物管理上移、进度条生长动效） -->
+<!-- FitDay v26 · 身体指标升级（腰围/体脂率趋势、进度条动画放缓、设置摘要放大） -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f4f5f2">
   <meta name="color-scheme" content="light">
-  <meta name="app-version" content="v25">
+  <meta name="app-version" content="v26">
   <meta name="description" content="FitDay - 纯本地、移动端优先的健身饮食记录工具">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -566,7 +566,7 @@
       height: 100%;
       border-radius: inherit;
       background: var(--accent-lime);
-      transition: width 0.55s cubic-bezier(0.22, 0.8, 0.28, 1), background 0.2s ease;
+      transition: width 1.2s cubic-bezier(0.22, 0.8, 0.28, 1), background 0.2s ease;
     }
 
     .hero-progress > span.is-over {
@@ -644,7 +644,7 @@
       width: 0;
       height: 100%;
       border-radius: inherit;
-      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
+      transition: width 1.2s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .macro-carbs .macro-track i { background: #f0c46e; }
@@ -831,7 +831,7 @@
       height: 100%;
       border-radius: inherit;
       background: #a8d47b;
-      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
+      transition: width 1.2s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .training-stats {
@@ -2249,7 +2249,7 @@
       width: 0;
       height: 100%;
       border-radius: inherit;
-      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
+      transition: width 1.2s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .micro-calcium .micro-track i { background: #6ca8e0; }
@@ -2428,7 +2428,7 @@
       height: 100%;
       border-radius: inherit;
       background: linear-gradient(90deg, #d78b7a, #e0a441 42%, #6dbd8b);
-      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
+      transition: width 1.2s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .anti-tags {
@@ -2536,7 +2536,7 @@
       height: 100%;
       border-radius: inherit;
       background: var(--accent);
-      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
+      transition: width 1.2s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .trend-metric.is-protein .dash-bar i {
@@ -2667,38 +2667,122 @@
       text-align: center;
     }
 
-    .weight-log-row {
+    /* v26：腰围 / 体脂率均值展示 */
+    .body-metric-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: end;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 7px;
       margin-top: 9px;
       padding-top: 9px;
       border-top: 1px solid var(--line);
     }
 
-    .weight-log-field {
+    .body-metric {
       min-width: 0;
+      padding: 8px 9px;
+      border-radius: 11px;
+      background: var(--surface-2);
     }
 
-    .weight-log-field > span:first-child {
+    .body-metric > span {
       display: block;
-      margin-bottom: 4px;
       color: var(--muted);
       font-size: 9px;
       font-weight: 600;
     }
 
-    .weight-log-field .suffix-input {
-      height: 42px;
+    .body-metric > strong {
+      display: block;
+      margin-top: 1px;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
     }
 
-    .weight-save-btn {
+    .body-metric > strong em {
+      margin-left: 2px;
+      color: var(--muted);
+      font-size: 9px;
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .body-metric > small {
+      display: block;
+      margin-top: 1px;
+      color: var(--muted);
+      font-size: 8.5px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .body-metric-hint {
+      margin: 5px 0 0;
+      color: var(--muted-2);
+      font-size: 8.5px;
+      line-height: 1.5;
+    }
+
+    .body-composition-hint {
+      margin: 7px 0 0;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--accent-ink);
+      font-size: 9.5px;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+
+    /* v26：体重 / 腰围 / 体脂率 三合一日记录 */
+    .body-log-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: end;
+      gap: 6px;
+      margin-top: 9px;
+      padding-top: 9px;
+      border-top: 1px solid var(--line);
+    }
+
+    .body-log-field {
+      min-width: 0;
+    }
+
+    .body-log-field > span:first-child {
+      display: block;
+      margin-bottom: 4px;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .body-log-field .suffix-input {
+      height: 42px;
+      border-radius: 11px;
+    }
+
+    .body-log-field .suffix-input input {
+      padding: 0 2px 0 9px;
+      font-size: 15px;
+    }
+
+    .body-log-field .suffix-input em {
+      padding-right: 8px;
+      font-size: 9.5px;
+    }
+
+    .body-save-btn {
+      width: 100%;
       min-height: 42px;
-      padding: 0 14px;
+      margin-top: 7px;
       border-radius: 11px;
       font-size: 11px;
-      white-space: nowrap;
     }
 
     .dashboard-advice {
@@ -3545,7 +3629,7 @@
       place-items: center;
       border-radius: 50%;
       background: conic-gradient(var(--score-color) calc(var(--score) * 1%), #edf1ec 0);
-      transition: --score 0.55s cubic-bezier(0.22, 0.8, 0.28, 1), background 0.45s ease;
+      transition: --score 1.2s cubic-bezier(0.22, 0.8, 0.28, 1), background 0.45s ease;
     }
 
     .score-ring::before {
@@ -3840,7 +3924,7 @@
       height: 100%;
       border-radius: inherit;
       background: var(--accent);
-      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
+      transition: width 1.2s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .trend-bar.is-protein i {
@@ -3944,7 +4028,7 @@
       height: 100%;
       border-radius: inherit;
       background: var(--accent);
-      transition: width 0.5s cubic-bezier(0.22, 0.8, 0.28, 1);
+      transition: width 1.2s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .trend-mini-row.is-previous .trend-mini-track i {
@@ -4188,12 +4272,13 @@
       line-height: 1.3;
     }
 
+    /* v26：折叠摘要加大字号 / 字重与对比度，让基础状态一眼可见。 */
     .settings-fold-line small {
       min-width: 0;
       overflow: hidden;
-      color: var(--muted);
-      font-size: 10.5px;
-      font-weight: 500;
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-weight: 600;
       line-height: 1.4;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -6333,7 +6418,7 @@
             <div class="card-head compact">
               <div>
                 <h2 id="trendInsightsTitle">数据洞察与趋势</h2>
-                <p class="card-sub">最近 7 天平均摄入 · 体重对比前 7 天</p>
+                <p class="card-sub">最近 7 天平均摄入 · 体重/腰围/体脂对比前 7 天</p>
               </div>
               <span class="count-badge">近 7 天</span>
             </div>
@@ -9906,7 +9991,10 @@
       }
 
       function normalizeDay(raw) {
-        const day = { foods: [], workouts: [], cardios: [], restDay: false, trainingType: "", weight: null };
+        const day = {
+          foods: [], workouts: [], cardios: [], restDay: false, trainingType: "",
+          weight: null, waist: null, bodyFat: null
+        };
         if (!raw || typeof raw !== "object") return day;
         day.restDay = raw.restDay === true || raw.restDay === "true";
         day.trainingType = ["rest", "normal", "high"].includes(raw.trainingType) ? raw.trainingType : "";
@@ -9914,6 +10002,11 @@
         else if (day.restDay) day.trainingType = "rest";
         const weight = optionalNumber(raw.weight, 30, 300);
         day.weight = weight === "" ? null : weight;
+        // v26：腰围（cm）与体脂率（%）为可选字段；旧备份缺失时补 null，不报错。
+        const waist = optionalNumber(raw.waist, 30, 200);
+        day.waist = waist === "" ? null : waist;
+        const bodyFat = optionalNumber(raw.bodyFat, 1, 70);
+        day.bodyFat = bodyFat === "" ? null : bodyFat;
         if (Array.isArray(raw.foods)) {
           day.foods = raw.foods.map(normalizeFoodRecord).filter(Boolean);
         }
@@ -9948,7 +10041,8 @@
           Object.entries(raw.days).forEach(([dateKey, rawDay]) => {
             if (!parseDateKey(dateKey)) return;
             const day = normalizeDay(rawDay);
-            if (day.foods.length || day.workouts.length || day.cardios.length || day.restDay || day.trainingType || day.weight !== null) {
+            if (day.foods.length || day.workouts.length || day.cardios.length || day.restDay || day.trainingType ||
+              day.weight !== null || day.waist !== null || day.bodyFat !== null) {
               days[dateKey] = day;
             }
           });
@@ -9994,7 +10088,10 @@
       function getDay(dateKey, create = false) {
         if (db.days[dateKey]) return db.days[dateKey];
         if (!create) return null;
-        db.days[dateKey] = { foods: [], workouts: [], cardios: [], restDay: false, trainingType: "", weight: null };
+        db.days[dateKey] = {
+          foods: [], workouts: [], cardios: [], restDay: false, trainingType: "",
+          weight: null, waist: null, bodyFat: null
+        };
         return db.days[dateKey];
       }
 
@@ -10007,7 +10104,9 @@
           day.cardios.length === 0 &&
           !day.restDay &&
           !day.trainingType &&
-          day.weight === null
+          (day.weight === null || day.weight === undefined) &&
+          (day.waist === null || day.waist === undefined) &&
+          (day.bodyFat === null || day.bodyFat === undefined)
         ) {
           delete db.days[dateKey];
         }
@@ -13490,8 +13589,26 @@
           if (!day) return false;
           const hasFood = Array.isArray(day.foods) && day.foods.length > 0;
           const hasWeight = day.weight !== null && day.weight !== undefined && Number.isFinite(Number(day.weight));
-          return hasFood || hasWeight;
+          const hasWaist = day.waist !== null && day.waist !== undefined && Number.isFinite(Number(day.waist));
+          const hasBodyFat = day.bodyFat !== null && day.bodyFat !== undefined && Number.isFinite(Number(day.bodyFat));
+          return hasFood || hasWeight || hasWaist || hasBodyFat;
         }).length;
+      }
+
+      // v26：腰围 / 体脂率均值（字段缺失或为空时跳过，旧数据不报错）。
+      function averageDayMetricForKeys(keys, field) {
+        const values = [];
+        keys.forEach((key) => {
+          const day = db.days[key];
+          if (!day || day[field] === null || day[field] === undefined) return;
+          const value = Number(day[field]);
+          if (Number.isFinite(value) && value > 0) values.push(value);
+        });
+        if (!values.length) return { days: 0, avg: null };
+        return {
+          days: values.length,
+          avg: values.reduce((sum, value) => sum + value, 0) / values.length
+        };
       }
 
       function getLongTermTrendData() {
@@ -13503,7 +13620,18 @@
         const weightDelta = currentWeight.avg !== null && previousWeight.avg !== null
           ? currentWeight.avg - previousWeight.avg
           : null;
-        // 记录天数按“累计有饮食或体重记录的天数”统计；不足 14 天不做长期判断。
+        // v26：7 天 / 前 7 天窗口同步计算腰围与体脂率均值（缺失字段返回 null）。
+        const currentWaist = averageDayMetricForKeys(currentKeys, "waist");
+        const previousWaist = averageDayMetricForKeys(previousKeys, "waist");
+        const waistDelta = currentWaist.avg !== null && previousWaist.avg !== null
+          ? currentWaist.avg - previousWaist.avg
+          : null;
+        const currentBodyFat = averageDayMetricForKeys(currentKeys, "bodyFat");
+        const previousBodyFat = averageDayMetricForKeys(previousKeys, "bodyFat");
+        const bodyFatDelta = currentBodyFat.avg !== null && previousBodyFat.avg !== null
+          ? currentBodyFat.avg - previousBodyFat.avg
+          : null;
+        // 记录天数按“累计有饮食或身体指标记录的天数”统计；不足 14 天不做长期判断。
         const trackedDays = countTrackedDaysOverall();
         const bodyWeight = positiveNumber(db.profile.weight);
         const currentVolume = strengthVolumeForKeys(currentKeys, bodyWeight);
@@ -13518,6 +13646,12 @@
           currentWeight,
           previousWeight,
           weightDelta,
+          currentWaist,
+          previousWaist,
+          waistDelta,
+          currentBodyFat,
+          previousBodyFat,
+          bodyFatDelta,
           trackedDays,
           judgementReady: trackedDays >= 14,
           currentVolume,
@@ -13562,6 +13696,30 @@
           return "近 7 天平均体重小幅上升，若目标是减脂，可以复查热量记录；不必焦虑，先看 2–3 周趋势。";
         }
         return "近 7 天平均体重小幅上升，建议结合训练表现和腰围一起观察。";
+      }
+
+      // v26：身体成分变化的通用增减文案（腰围 / 体脂率共用）。
+      function metricDeltaText(delta, unit) {
+        if (delta === null || delta === undefined) return "数据不足";
+        if (Math.abs(delta) < 0.05) return "持平";
+        return `${delta < 0 ? "↓" : "↑"} ${fmt(Math.abs(delta), 1)}${unit}`;
+      }
+
+      // v26：体重与腰围组合提示（仅在看长期趋势时输出，避免过早下结论）。
+      function buildCompositionInsight(data) {
+        if (data.weightDelta === null || data.waistDelta === null) return "";
+        const goal = db.profile.goal;
+        const weightFlat = Math.abs(data.weightDelta) < 0.2;
+        const weightUp = data.weightDelta >= 0.2;
+        const waistFlat = Math.abs(data.waistDelta) < 0.5;
+        const waistDown = data.waistDelta <= -0.3;
+        if (goal === "fatLoss" && weightFlat && waistDown) {
+          return "腰围下降说明脂肪正在减少，身体正在重组，不用太在意体重秤上的数字。";
+        }
+        if (goal === "muscle" && waistFlat && weightUp) {
+          return "腰围未变体重上升，大概率是干净增肌，做得很好。";
+        }
+        return "";
       }
 
       function renderTrendInsights() {
@@ -13670,6 +13828,34 @@
         const selectedWeight = selectedDay && selectedDay.weight !== null && selectedDay.weight !== undefined
           ? String(selectedDay.weight)
           : "";
+        const selectedWaist = selectedDay && selectedDay.waist !== null && selectedDay.waist !== undefined
+          ? String(selectedDay.waist)
+          : "";
+        const selectedBodyFat = selectedDay && selectedDay.bodyFat !== null && selectedDay.bodyFat !== undefined
+          ? String(selectedDay.bodyFat)
+          : "";
+        // v26：腰围 / 体脂率均值与对比；缺失数据显示“—”，不做长期判断时不出身体重组提示。
+        const compositionHint = data.judgementReady ? buildCompositionInsight(data) : "";
+        const hasWaistRecord = data.currentWaist.avg !== null;
+        const hasBodyFatRecord = data.currentBodyFat.avg !== null;
+        const bodyMetricHTML = `
+          <div class="body-metric-grid">
+            <div class="body-metric">
+              <span>腰围均值</span>
+              <strong>${hasWaistRecord ? `${fmt(data.currentWaist.avg, 1)}<em>cm</em>` : "—"}</strong>
+              <small>${metricDeltaText(data.waistDelta, "cm")}</small>
+            </div>
+            <div class="body-metric">
+              <span>体脂率均值</span>
+              <strong>${hasBodyFatRecord ? `${fmt(data.currentBodyFat.avg, 1)}<em>%</em>` : "—"}</strong>
+              <small>${metricDeltaText(data.bodyFatDelta, "%")}</small>
+            </div>
+          </div>
+          <p class="body-metric-hint">${hasWaistRecord || hasBodyFatRecord
+            ? `前 7 天：腰围 ${data.previousWaist.avg !== null ? `${fmt(data.previousWaist.avg, 1)} cm` : "—"} · 体脂率 ${data.previousBodyFat.avg !== null ? `${fmt(data.previousBodyFat.avg, 1)}%` : "—"}`
+            : "除了体重，也可以记录腰围和体脂率，围度变化更能反映身体成分。"}</p>
+          ${compositionHint ? `<p class="body-composition-hint">${escapeHTML(compositionHint)}</p>` : ""}
+        `;
         const foot = data.trackedDays < 14
           ? `累计已记录 ${data.trackedDays} 天 · 不足 14 天，暂不做长期趋势判断。`
           : `长期趋势：${buildLongTermJudgement(data)}`;
@@ -13689,16 +13875,31 @@
             <p class="trend-weight-hint">${previous.avg !== null
               ? `前 7 天均值 ${fmt(previous.avg, 1)} kg · 单日波动主要来自水分与肠道内容物`
               : "前 7 天体重数据不足，先积累记录即可。"}</p>
-            <div class="weight-log-row">
-              <label class="weight-log-field" for="weeklyWeightInput">
+            ${bodyMetricHTML}
+            <div class="body-log-grid">
+              <label class="body-log-field" for="weeklyWeightInput">
                 <span>记录${dayWord()}体重</span>
                 <span class="suffix-input">
                   <input id="weeklyWeightInput" type="number" inputmode="decimal" min="30" max="300" step="0.1" value="${escapeHTML(selectedWeight)}" placeholder="如 70.5">
                   <em>kg</em>
                 </span>
               </label>
-              <button class="btn btn-primary weight-save-btn" type="button" data-save-weight>保存</button>
+              <label class="body-log-field" for="weeklyWaistInput">
+                <span>腰围</span>
+                <span class="suffix-input">
+                  <input id="weeklyWaistInput" type="number" inputmode="decimal" min="30" max="200" step="0.1" value="${escapeHTML(selectedWaist)}" placeholder="如 78">
+                  <em>cm</em>
+                </span>
+              </label>
+              <label class="body-log-field" for="weeklyBodyFatInput">
+                <span>体脂率</span>
+                <span class="suffix-input">
+                  <input id="weeklyBodyFatInput" type="number" inputmode="decimal" min="1" max="70" step="0.1" value="${escapeHTML(selectedBodyFat)}" placeholder="如 20">
+                  <em>%</em>
+                </span>
+              </label>
             </div>
+            <button class="btn btn-primary body-save-btn" type="button" data-save-weight>保存${dayWord()}身体指标</button>
           </div>
 
           <p class="trend-insight-foot">${escapeHTML(foot)}</p>
@@ -13792,32 +13993,50 @@
         return `体重一周上升 ${abs.toFixed(1)}kg，注意观察饮食与活动量变化。`;
       }
 
-      function saveWeeklyWeight() {
-        const input = byId("weeklyWeightInput");
-        if (!input) return;
+      // v26：读取单项身体指标输入（留空 = 清除记录，返回 null 且仍算合法）。
+      function readBodyMetricInput(id, min, max, message) {
+        const input = byId(id);
+        if (!input) return { input: null, value: null, valid: true };
         const raw = input.value.trim();
-        let weight = null;
-        if (raw !== "") {
-          const value = Number(raw);
-          if (!Number.isFinite(value) || value < 30 || value > 300) {
-            showToast("体重需在 30–300kg 之间");
-            input.focus();
-            return;
-          }
-          weight = round(value, 1);
+        if (raw === "") return { input, value: null, valid: true };
+        const value = Number(raw);
+        if (!Number.isFinite(value) || value < min || value > max) {
+          showToast(message);
+          input.focus();
+          return { input, value: null, valid: false };
         }
+        return { input, value: round(value, 1), valid: true };
+      }
+
+      function saveWeeklyWeight() {
+        const weightField = readBodyMetricInput("weeklyWeightInput", 30, 300, "体重需在 30–300kg 之间");
+        if (!weightField.valid) return;
+        const waistField = readBodyMetricInput("weeklyWaistInput", 30, 200, "腰围需在 30–200cm 之间");
+        if (!waistField.valid) return;
+        const bodyFatField = readBodyMetricInput("weeklyBodyFatInput", 1, 70, "体脂率需在 1–70% 之间");
+        if (!bodyFatField.valid) return;
+        if (!weightField.input && !waistField.input && !bodyFatField.input) return;
         const dateKey = selectedDate;
         const day = getDay(dateKey, true);
-        const previous = day.weight;
-        day.weight = weight;
+        const previous = { weight: day.weight, waist: day.waist, bodyFat: day.bodyFat };
+        if (weightField.input) day.weight = weightField.value;
+        if (waistField.input) day.waist = waistField.value;
+        if (bodyFatField.input) day.bodyFat = bodyFatField.value;
         pruneDay(dateKey);
         if (!saveDB()) {
           if (!db.days[dateKey]) db.days[dateKey] = day;
-          day.weight = previous;
+          day.weight = previous.weight;
+          day.waist = previous.waist;
+          day.bodyFat = previous.bodyFat;
           return;
         }
         renderAll();
-        showToast(weight === null ? "已清除体重记录" : "体重已记录");
+        const savedLabels = [
+          weightField.value !== null ? "体重" : "",
+          waistField.value !== null ? "腰围" : "",
+          bodyFatField.value !== null ? "体脂率" : ""
+        ].filter(Boolean);
+        showToast(savedLabels.length ? `${savedLabels.join("、")}已记录` : "已清除身体指标记录");
       }
 
       function syncAdvancedMicroTargets() {
@@ -14941,7 +15160,8 @@
           if (event.target.closest("[data-save-weight]")) saveWeeklyWeight();
         });
         els.trendInsights.addEventListener("keydown", (event) => {
-          if (event.key === "Enter" && event.target.id === "weeklyWeightInput") {
+          if (event.key === "Enter" &&
+            ["weeklyWeightInput", "weeklyWaistInput", "weeklyBodyFatInput"].includes(event.target.id)) {
             event.preventDefault();
             saveWeeklyWeight();
           }
@@ -15453,6 +15673,8 @@
             (Array.isArray(day.workouts) && day.workouts.length > 0) ||
             (Array.isArray(day.cardios) && day.cardios.length > 0) ||
             day.weight !== null && day.weight !== undefined ||
+            day.waist !== null && day.waist !== undefined ||
+            day.bodyFat !== null && day.bodyFat !== undefined ||
             Boolean(day.restDay) ||
             Boolean(day.trainingType);
         });
