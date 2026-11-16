@@ -1,10 +1,10 @@
 /**
  * FitDay PWA Service Worker
- * v26：新增腰围/体脂率身体指标、进度条动画放缓、设置摘要放大；缓存名同步升级。
+ * v27：新手任务清单替代全屏引导、追踪指标开关、极简 SVG 趋势图与折叠动画；缓存名同步升级。
  * 缓存策略：应用外壳 Cache First（缓存优先）。
  * 修改 index.html / 图标后，请同步提升 CACHE_NAME，让旧缓存自动失效。
  */
-const CACHE_NAME = "fitday-pwa-v26";
+const CACHE_NAME = "fitday-pwa-v27";
 const APP_SHELL = [
   "./index.html",
   "./manifest.json",

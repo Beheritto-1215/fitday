@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- FitDay v26 · 身体指标升级（腰围/体脂率趋势、进度条动画放缓、设置摘要放大） -->
+<!-- FitDay v27 · 新手任务清单 + 可追踪指标 + 极简趋势图与折叠动画 -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f4f5f2">
   <meta name="color-scheme" content="light">
-  <meta name="app-version" content="v26">
+  <meta name="app-version" content="v27">
   <meta name="description" content="FitDay - 纯本地、移动端优先的健身饮食记录工具">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -4255,34 +4255,7 @@
       display: none;
     }
 
-    .settings-fold-line {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .settings-fold-line strong {
-      flex: none;
-      color: var(--ink);
-      font-size: 17px;
-      font-weight: 720;
-      letter-spacing: -0.02em;
-      line-height: 1.3;
-    }
-
-    /* v26：折叠摘要加大字号 / 字重与对比度，让基础状态一眼可见。 */
-    .settings-fold-line small {
-      min-width: 0;
-      overflow: hidden;
-      color: var(--ink-soft);
-      font-size: 13px;
-      font-weight: 600;
-      line-height: 1.4;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+    /* v27：折叠摘要改为独立一行，样式在文件末尾的 v27 区块。 */
 
     .settings-fold[open] > summary {
       margin-bottom: 14px;
@@ -5409,6 +5382,12 @@
       .advanced-micro-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
+      /* v27：极窄屏下三项全选改为 2 列，避免图表和输入框被挤压。 */
+      .body-trend-grid.is-count-3,
+      .body-log-grid.is-count-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -5421,161 +5400,518 @@
         transition-duration: 0.01ms !important;
       }
     }
-    .onboarding {
-      position: fixed;
-      inset: 0;
-      z-index: 700;
+    /* ==========================================================
+       v27：新手任务清单（替代旧版全屏引导）
+       ========================================================== */
+    .newbie-card {
+      padding: 15px 14px 13px;
+      border-radius: 20px;
+    }
+
+    .newbie-head {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      padding:
-        max(22px, env(safe-area-inset-top))
-        18px
-        max(22px, env(safe-area-inset-bottom));
-      background:
-        radial-gradient(circle at 20% 0%, rgba(139, 214, 174, 0.22), transparent 38%),
-        radial-gradient(circle at 100% 100%, rgba(240, 193, 112, 0.16), transparent 42%),
-        linear-gradient(150deg, #10221b 0%, #162b22 52%, #0d1b16 100%);
-      overflow-y: auto;
-    }
-
-    .onboarding[hidden] {
-      display: none;
-    }
-
-    .onboarding-shell {
-      width: min(100%, 440px);
-      padding: 22px 20px 18px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 26px;
-      background: rgba(255, 255, 255, 0.075);
-      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
-      color: #f7fbf8;
-      backdrop-filter: blur(16px);
-    }
-
-    .onboarding-top {
-      display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 12px;
-      color: rgba(255, 255, 255, 0.55);
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.16em;
+      gap: 10px;
     }
 
-    .onboarding-orb {
-      width: 118px;
-      height: 118px;
+    .newbie-head h2 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 740;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .newbie-head .card-sub {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 9.5px;
+      line-height: 1.4;
+    }
+
+    .newbie-close {
+      flex: none;
+      width: 27px;
+      height: 27px;
       display: grid;
       place-items: center;
-      margin: 26px auto 18px;
-      border: 1px solid rgba(178, 235, 201, 0.35);
-      border-radius: 34px;
-      background:
-        linear-gradient(145deg, rgba(161, 230, 187, 0.24), rgba(255, 255, 255, 0.04));
-      color: #c9f6d8;
-      font-size: 38px;
-      font-weight: 760;
-      letter-spacing: -0.05em;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      border-radius: 9px;
+      background: var(--surface-3);
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1;
     }
 
-    .onboarding-dots {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      margin-bottom: 18px;
+    .newbie-close:active {
+      background: var(--line);
     }
 
-    .onboarding-dots span {
-      width: 22px;
-      height: 4px;
-      border-radius: 99px;
-      background: rgba(255, 255, 255, 0.16);
-      transition: width 0.22s ease, background 0.22s ease;
-    }
-
-    .onboarding-dots span.is-active {
-      width: 38px;
-      background: #a8e6bd;
-    }
-
-    .onboarding-shell h2 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 720;
-      line-height: 1.35;
-      letter-spacing: -0.03em;
-      text-align: center;
-    }
-
-    .onboarding-body {
-      min-height: 76px;
-      margin: 12px 0 0;
-      color: rgba(244, 251, 246, 0.7);
-      font-size: 12px;
-      line-height: 1.75;
-      text-align: center;
-    }
-
-    .onboarding-encourage {
-      margin-top: 14px;
-      padding: 14px;
-      border: 1px solid rgba(168, 230, 189, 0.25);
-      border-radius: 15px;
-      background: rgba(168, 230, 189, 0.1);
-      color: #dcf7e5;
-      font-size: 12px;
-      font-weight: 620;
-      line-height: 1.7;
-      text-align: center;
-    }
-
-    .onboarding-actions {
+    .newbie-list {
       display: grid;
-      grid-template-columns: 0.82fr 1.2fr;
-      gap: 8px;
-      margin-top: 20px;
+      gap: 5px;
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
     }
 
-    .onboarding-actions button {
-      min-height: 48px;
-      border-radius: 12px;
-      font-size: 12px;
+    .newbie-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 9px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface-2);
+      transition: border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .newbie-item.is-done {
+      border-color: #d6eadf;
+      background: #f4faf6;
+    }
+
+    .newbie-check {
+      flex: none;
+      width: 21px;
+      height: 21px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      background: #ffffff;
+      color: var(--muted-2);
+      font-size: 9px;
       font-weight: 700;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
     }
 
-    .onboarding-prev {
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(255, 255, 255, 0.06);
-      color: rgba(255, 255, 255, 0.76);
+    .newbie-check.is-done {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #ffffff;
     }
 
-    .onboarding-next,
-    .onboarding-start {
-      border: 1px solid rgba(183, 239, 203, 0.3);
-      background: linear-gradient(135deg, #c7f2d5, #9fe2b7);
-      color: #163326;
+    .newbie-copy {
+      min-width: 0;
+      flex: 1;
     }
 
-    .onboarding-start {
-      grid-column: 1 / -1;
+    .newbie-copy strong {
+      display: block;
+      color: var(--ink);
+      font-size: 10.5px;
+      font-weight: 660;
+      line-height: 1.35;
     }
 
-    .onboarding-start[hidden],
-    .onboarding-next[hidden],
-    .onboarding-prev[hidden] {
+    .newbie-copy small {
+      display: block;
+      margin-top: 1px;
+      color: var(--muted-2);
+      font-size: 8.5px;
+      line-height: 1.4;
+    }
+
+    .newbie-item.is-done .newbie-copy strong {
+      color: var(--muted);
+    }
+
+    .newbie-foot {
+      margin-top: 9px;
+    }
+
+    .newbie-foot-note {
+      margin: 0;
+      color: var(--muted-2);
+      font-size: 8.5px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .newbie-start {
+      min-height: 40px;
+      border-radius: 12px;
+      font-size: 11.5px;
+    }
+
+    /* ==========================================================
+       v27：隐藏较深入口的呼吸红点（点击一次永久消失）
+       ========================================================== */
+    .has-hotspot {
+      position: relative;
+    }
+
+    .hotspot-dot {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      z-index: 3;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #e5484d;
+      box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.5);
+      pointer-events: none;
+      animation: hotspot-pulse 1.9s ease-out infinite;
+    }
+
+    .hotspot-dot[hidden] {
       display: none;
     }
 
-    .onboarding-foot {
-      margin: 13px 0 0;
-      color: rgba(255, 255, 255, 0.32);
+    @keyframes hotspot-pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.45);
+      }
+      68% {
+        box-shadow: 0 0 0 6px rgba(229, 72, 77, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(229, 72, 77, 0);
+      }
+    }
+
+    /* ==========================================================
+       v27：设置摘要独立成行；追踪指标多选
+       ========================================================== */
+    .settings-fold-line {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .settings-fold-kicker {
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      line-height: 1.3;
+    }
+
+    .settings-fold-line strong {
+      display: block;
+      width: 100%;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 770;
+      letter-spacing: -0.035em;
+      line-height: 1.28;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .track-metric-field {
+      margin-top: 13px;
+    }
+
+    .track-metric-options {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .track-metric-option {
+      min-width: 0;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 0 6px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 620;
+      cursor: pointer;
+      transition: border-color 0.16s ease, background 0.16s ease, color 0.16s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .track-metric-option input {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .track-metric-option:has(input:checked) {
+      border-color: #b9dbcb;
+      background: var(--accent-soft);
+      color: var(--accent-ink);
+    }
+
+    .track-metric-option:focus-within {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+
+    /* ==========================================================
+       v27：极简 SVG 趋势图 + CSS grid 折叠挤出动画
+       ========================================================== */
+    .dashboard-metrics {
+      align-items: start;
+    }
+
+    .trend-metric {
+      position: relative;
+      cursor: pointer;
+      transition: border-color 0.18s ease, background 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .trend-metric > span:first-of-type {
+      padding-right: 12px;
+    }
+
+    .trend-metric.is-open {
+      border-color: #cfe4d8;
+      background: #fbfdfc;
+    }
+
+    .trend-metric:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+
+    .trend-chevron {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: var(--muted-2);
+      font-size: 10px;
+      font-style: normal;
+      line-height: 1;
+      transition: transform 0.24s ease;
+    }
+
+    .trend-metric.is-open .trend-chevron,
+    .weight-panel.is-open .trend-chevron {
+      transform: rotate(180deg);
+    }
+
+    .trend-drawer {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition:
+        grid-template-rows 0.34s cubic-bezier(0.22, 0.8, 0.28, 1),
+        opacity 0.22s ease;
+    }
+
+    .trend-metric.is-open .trend-drawer,
+    .weight-panel.is-open .trend-drawer {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    .trend-drawer-inner {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .trend-drawer-content {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+    }
+
+    .trend-mini-chart {
+      margin-top: 2px;
+    }
+
+    .trend-mini-chart svg {
+      display: block;
+      width: 100%;
+      height: 46px;
+    }
+
+    .trend-line-chart svg {
+      height: 72px;
+    }
+
+    .trend-axis {
+      fill: none;
+      stroke: #e5e9e3;
+      stroke-width: 1;
+    }
+
+    .trend-tick {
+      stroke: #d8ded6;
+      stroke-width: 1;
+    }
+
+    .trend-svg-bar {
+      fill: var(--accent);
+      opacity: 0.9;
+    }
+
+    .trend-metric.is-protein .trend-svg-bar {
+      fill: #5f91dc;
+    }
+
+    .trend-metric.is-carbs .trend-svg-bar {
+      fill: #e0a441;
+    }
+
+    .trend-metric.is-fat .trend-svg-bar {
+      fill: #a68bd4;
+    }
+
+    .trend-line {
+      fill: none;
+      stroke: #3f9a69;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .trend-area {
+      fill: #3f9a69;
+      opacity: 0.09;
+    }
+
+    .trend-dot {
+      fill: #3f9a69;
+      stroke: #ffffff;
+      stroke-width: 1.5;
+    }
+
+    .trend-chart-empty {
+      margin-top: 7px;
+      padding: 12px 8px;
+      border-radius: 10px;
+      background: var(--surface-2);
+      color: var(--muted);
       font-size: 8.5px;
+      line-height: 1.5;
       text-align: center;
-      letter-spacing: 0.08em;
+    }
+
+    .trend-chart-caption {
+      margin: 5px 0 0;
+      color: var(--muted-2);
+      font-size: 8px;
+      line-height: 1.45;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .weight-panel {
+      position: relative;
+    }
+
+    .weight-panel-head {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .weight-panel-head:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 8px;
+    }
+
+    .body-trend-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: 9px;
+    }
+
+    .body-trend-grid.is-count-1 {
+      grid-template-columns: 1fr;
+    }
+
+    .body-trend-grid.is-count-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .body-trend-grid.is-count-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 5px;
+    }
+
+    .body-trend-chart {
+      min-width: 0;
+      padding: 8px 8px 6px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface-2);
+    }
+
+    .body-trend-chart-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .body-trend-chart-head span {
+      color: var(--muted);
+      font-size: 8.5px;
+      font-weight: 620;
+      white-space: nowrap;
+    }
+
+    .body-trend-chart-head strong {
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 720;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .body-trend-chart-head strong em {
+      margin-left: 1px;
+      color: var(--muted);
+      font-size: 8px;
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .body-trend-grid.is-count-3 .body-trend-chart {
+      padding: 7px 6px 5px;
+    }
+
+    .body-trend-grid.is-count-3 .trend-line-chart svg {
+      height: 56px;
+    }
+
+    .body-trend-grid.is-count-3 .weight-chart-labels {
+      font-size: 7px;
+    }
+
+    .body-trend-grid.is-count-3 .body-trend-chart-head span {
+      font-size: 8px;
+    }
+
+    .body-trend-grid.is-count-3 .body-trend-chart-head strong {
+      font-size: 10.5px;
+    }
+
+    .body-metric-grid.is-count-1 {
+      grid-template-columns: 1fr;
+    }
+
+    .body-metric-grid.is-count-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .body-log-grid.is-count-1 {
+      grid-template-columns: 1fr;
+    }
+
+    .body-log-grid.is-count-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   </style>
 </head>
@@ -5678,6 +6014,19 @@
       <!-- 饮食记录 -->
       <section class="view is-active" id="view-diet" role="tabpanel" aria-labelledby="tab-diet">
         <div class="stack">
+          <!-- v27：轻量新手任务清单，替代旧版全屏遮罩引导。 -->
+          <section class="card newbie-card" id="newbieChecklist" aria-labelledby="newbieTitle" hidden>
+            <div class="newbie-head">
+              <div>
+                <h2 id="newbieTitle">新手任务</h2>
+                <p class="card-sub" id="newbieSub">完成 4 个小任务，快速上手 FitDay</p>
+              </div>
+              <button class="newbie-close" id="closeNewbie" type="button" aria-label="关闭新手任务">×</button>
+            </div>
+            <ul class="newbie-list" id="newbieList"></ul>
+            <div class="newbie-foot" id="newbieFoot"></div>
+          </section>
+
           <section class="hero diet-hero" aria-label="饮食概览">
             <p class="hero-kicker"><span data-day-label>今日</span>摄入</p>
             <div class="hero-main">
@@ -5748,9 +6097,10 @@
             <div class="food-search-wrap">
               <div class="food-search-head">
                 <label class="field-label" for="foodSearch">食物名称</label>
-                <button class="custom-quick-add" id="openCustomFoodQuick" type="button" aria-label="自定义录入食物">
+                <button class="custom-quick-add has-hotspot" id="openCustomFoodQuick" type="button" aria-label="自定义录入食物" data-hotspot-owner="customFood">
                   <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>
                   自定义录入
+                  <i class="hotspot-dot" data-hotspot="customFood" aria-hidden="true"></i>
                 </button>
               </div>
               <p class="custom-food-tip">*提示：去设置页可管理/删除自定义食物*</p>
@@ -5810,7 +6160,10 @@
                 <h2><span data-day-label>今日</span>饮食</h2>
                 <p class="card-sub" id="foodListSub">还没有记录</p>
               </div>
-              <button class="copy-diet-btn" id="openCopyDiet" type="button">复制历史饮食</button>
+              <button class="copy-diet-btn has-hotspot" id="openCopyDiet" type="button" data-hotspot-owner="copyDiet">
+                复制历史饮食
+                <i class="hotspot-dot" data-hotspot="copyDiet" aria-hidden="true"></i>
+              </button>
             </div>
             <div class="food-list" id="foodList"></div>
             <div class="diet-summary" id="foodTotalsSummary" hidden></div>
@@ -6074,12 +6427,13 @@
 
           <section class="card batch-card">
             <details class="batch-panel" id="batchPanel">
-              <summary>
+              <summary class="has-hotspot" data-hotspot-owner="batchImport">
                 <span class="batch-summary-copy">
                   <strong>批量导入</strong>
                   <small>粘贴多行训练记录，智能解析后一键添加</small>
                 </span>
                 <span class="batch-chevron" aria-hidden="true">⌄</span>
+                <i class="hotspot-dot" data-hotspot="batchImport" aria-hidden="true"></i>
               </summary>
               <div class="batch-body">
                 <textarea
@@ -6128,8 +6482,8 @@
             <details class="settings-fold" id="settingsFold">
               <summary class="settings-fold-summary">
                 <span class="settings-fold-line">
-                  <strong>设置</strong>
-                  <small id="settingsSummaryLine">完善资料后自动计算目标</small>
+                  <span class="settings-fold-kicker">设置</span>
+                  <strong id="settingsSummaryLine">完善资料后自动计算目标</strong>
                 </span>
                 <span class="advanced-chevron" aria-hidden="true">⌄</span>
               </summary>
@@ -6177,6 +6531,26 @@
                 </div>
               </fieldset>
 
+              <!-- v27：自定义趋势卡要追踪的身体指标，默认仅体重。 -->
+              <fieldset class="segmented-field track-metric-field">
+                <legend>趋势追踪指标</legend>
+                <div class="track-metric-options">
+                  <label class="track-metric-option">
+                    <input type="checkbox" name="trackMetric" value="weight" checked>
+                    <span>体重</span>
+                  </label>
+                  <label class="track-metric-option">
+                    <input type="checkbox" name="trackMetric" value="waist">
+                    <span>腰围</span>
+                  </label>
+                  <label class="track-metric-option">
+                    <input type="checkbox" name="trackMetric" value="bodyFat">
+                    <span>体脂率</span>
+                  </label>
+                </div>
+                <p class="form-hint">趋势卡只显示勾选指标的均值、图表和记录框；三项全选会自动使用紧凑网格。默认仅追踪体重。</p>
+              </fieldset>
+
               <div class="field settings-field" id="singleCalorieField">
                 <label class="field-label" for="calorieLimit">每日热量限额</label>
                 <span class="suffix-input has-action">
@@ -6203,12 +6577,13 @@
               </div>
 
               <details class="settings-advanced" id="advancedSettings">
-                <summary>
+                <summary class="has-hotspot" data-hotspot-owner="advancedSettings">
                   <span class="advanced-summary-copy">
                     <strong>高级设置</strong>
                     <small id="advancedSummaryHint">动态热量 · 分场景宏量 · 微量元素参考</small>
                   </span>
                   <span class="advanced-chevron" aria-hidden="true">⌄</span>
+                  <i class="hotspot-dot" data-hotspot="advancedSettings" aria-hidden="true"></i>
                 </summary>
                 <div class="settings-advanced-body">
 
@@ -6840,28 +7215,6 @@
     </div>
   </div>
 
-  <div class="onboarding" id="onboarding" hidden role="dialog" aria-modal="true" aria-labelledby="onboardingTitle">
-    <div class="onboarding-shell">
-      <div class="onboarding-top">
-        <span>FITDAY / START</span>
-        <span id="onboardingStep">1 / 3</span>
-      </div>
-      <div class="onboarding-orb" id="onboardingOrb">01</div>
-      <div class="onboarding-dots" id="onboardingDots" aria-hidden="true"></div>
-      <h2 id="onboardingTitle">饮食记录与宏量营养</h2>
-      <p class="onboarding-body" id="onboardingBody"></p>
-      <div class="onboarding-encourage" id="onboardingEncourage" hidden>
-        “记录本身就是一种胜利，坚持下来，你会遇见更强的自己！”
-      </div>
-      <div class="onboarding-actions">
-        <button class="onboarding-prev" id="onboardingPrev" type="button" hidden>上一步</button>
-        <button class="onboarding-next" id="onboardingNext" type="button">下一步</button>
-        <button class="onboarding-start" id="onboardingStart" type="button" hidden>开始使用</button>
-      </div>
-      <p class="onboarding-foot">数据仅保存在本机浏览器</p>
-    </div>
-  </div>
-
   <script>
     (() => {
       "use strict";
@@ -6870,7 +7223,8 @@
       // 常量
       // ============================================================
       const STORAGE_KEY = "fitday.data.v1";
-      const ONBOARDING_FLAG = "fitday.onboarding.v1";
+      const CHECKLIST_FLAG = "fitday.onboarding.checklist.v1";
+      const HOTSPOT_KEY = "fitday.hotspots.v1";
       const SCHEMA_VERSION = 1;
       const ACTIVITY_FACTOR = 1.375;
       const KJ_PER_KCAL = 4.184;
@@ -6878,20 +7232,13 @@
       const MAX_FILE_SIZE = 8 * 1024 * 1024;
       const WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
       const DEFAULT_MEAL_TYPES = ["早餐", "午餐", "晚餐", "练前加餐", "练后加餐"];
-      const ONBOARDING_STEPS = [
-        {
-          title: "饮食记录与宏量营养",
-          body: "搜索食物并按克数记录，自动汇总热量、蛋白质、碳水与脂肪；当天吃完后还能看到优质蛋白与抗炎反馈。"
-        },
-        {
-          title: "训练打卡与自重计算",
-          body: "记录力量和有氧训练，自动估算运动消耗；自重动作会按动作类型折算有效容量，让训练记录更接近真实强度。"
-        },
-        {
-          title: "综合评估与数据备份",
-          body: "查看 BMI、BMR、TDEE 与每日评估建议；在综合评估底部导出 JSON 备份，换设备前先保存一份。"
-        }
+      // v27：可在趋势卡中追踪的身体指标及其输入约束（顺序即展示顺序）。
+      const TRACK_METRICS = [
+        { key: "weight", label: "体重", unit: "kg", min: 30, max: 300, inputId: "weeklyWeightInput", placeholder: "如 70.5" },
+        { key: "waist", label: "腰围", unit: "cm", min: 30, max: 200, inputId: "weeklyWaistInput", placeholder: "如 78" },
+        { key: "bodyFat", label: "体脂率", unit: "%", min: 1, max: 70, inputId: "weeklyBodyFatInput", placeholder: "如 20" }
       ];
+      const DEFAULT_TRACK_METRICS = ["weight"];
       const HIGH_DEMAND_KEYWORDS = [
         "深蹲", "硬拉", "杠铃划船", "划船", "引体", "腿举", "臀桥",
         "臀推", "分腿蹲", "保加利亚", "早安式"
@@ -9539,16 +9886,11 @@
         tabs: $$(".tab"),
         views: $$(".view"),
         toast: byId("toast"),
-        onboarding: byId("onboarding"),
-        onboardingStep: byId("onboardingStep"),
-        onboardingOrb: byId("onboardingOrb"),
-        onboardingDots: byId("onboardingDots"),
-        onboardingTitle: byId("onboardingTitle"),
-        onboardingBody: byId("onboardingBody"),
-        onboardingEncourage: byId("onboardingEncourage"),
-        onboardingPrev: byId("onboardingPrev"),
-        onboardingNext: byId("onboardingNext"),
-        onboardingStart: byId("onboardingStart"),
+        newbieChecklist: byId("newbieChecklist"),
+        newbieSub: byId("newbieSub"),
+        newbieList: byId("newbieList"),
+        newbieFoot: byId("newbieFoot"),
+        closeNewbie: byId("closeNewbie"),
         viewsStage: byId("viewsStage"),
         dialogBackdrop: byId("dialogBackdrop"),
         dialogTitle: byId("dialogTitle"),
@@ -9757,6 +10099,7 @@
           age: "",
           sex: "",
           goal: "maintain",
+          trackMetrics: [...DEFAULT_TRACK_METRICS],
           calorieLimit: "",
           dynamicCalories: false,
           restDayCalories: "",
@@ -9832,6 +10175,16 @@
         };
       }
 
+      // v27：追踪指标只接受已知 key；缺失或全部无效时回退为仅体重（旧备份兼容）。
+      function normalizeTrackMetrics(raw) {
+        const allowed = TRACK_METRICS.map((metric) => metric.key);
+        const selected = Array.isArray(raw)
+          ? raw.filter((key) => allowed.includes(key))
+          : [];
+        const ordered = allowed.filter((key) => selected.includes(key));
+        return ordered.length ? ordered : [...DEFAULT_TRACK_METRICS];
+      }
+
       function normalizeProfile(raw) {
         const profile = raw && typeof raw === "object" ? raw : {};
         const globalMacroMode = profile.macroMode === "manual" ? "manual" : "auto";
@@ -9849,6 +10202,7 @@
           age: optionalNumber(profile.age, 10, 100),
           sex: profile.sex === "male" || profile.sex === "female" ? profile.sex : "",
           goal: GOALS[profile.goal] ? profile.goal : "maintain",
+          trackMetrics: normalizeTrackMetrics(profile.trackMetrics),
           calorieLimit: optionalNumber(profile.calorieLimit, 800, 6000),
           dynamicCalories: profile.dynamicCalories === true || profile.dynamicCalories === "true",
           restDayCalories: optionalNumber(profile.restDayCalories, 800, 6000),
@@ -10479,7 +10833,8 @@
       let mealLongPressTimer = null;
       let mealLongPressTriggered = false;
       let mealLongPressStart = null;
-      let onboardingStepIndex = 0;
+      let dismissedHotspots = new Set();
+      const trendOpenModules = new Set();
       let copySourceDate = null;
       let foodEditLastFocus = null;
       let workoutEditLastFocus = null;
@@ -10569,8 +10924,7 @@
           els.cardioEditBackdrop,
           els.mealEditBackdrop,
           els.copyDietBackdrop,
-          els.copyDietModeBackdrop,
-          els.onboarding
+          els.copyDietModeBackdrop
         ].some((overlay) => overlay && !overlay.hidden);
       }
 
@@ -13722,6 +14076,171 @@
         return "";
       }
 
+      // v27：追踪指标配置（顺序与 normalizeTrackMetrics 保持一致）。
+      function trackMetricConfigs() {
+        const tracked = normalizeTrackMetrics(db.profile.trackMetrics);
+        return TRACK_METRICS.filter((metric) => tracked.includes(metric.key));
+      }
+
+      function bodyMetricStats(data, key) {
+        const cap = key === "weight" ? "Weight" : key === "waist" ? "Waist" : "BodyFat";
+        return {
+          current: data[`current${cap}`],
+          previous: data[`previous${cap}`],
+          delta: data[`${key}Delta`]
+        };
+      }
+
+      function deltaClassFor(delta) {
+        if (delta === null || delta === undefined || Math.abs(delta) < 0.05) return "is-flat";
+        return delta < 0 ? "is-down" : "is-up";
+      }
+
+      // 按“含今天在内的最近 7 个自然日”取数；缺记录的日期直接跳过，不补 0。
+      function intakeTrendSeries(chronologicalKeys, metricKey) {
+        const series = [];
+        chronologicalKeys.forEach((key, index) => {
+          const day = db.days[key];
+          if (!day || !Array.isArray(day.foods) || day.foods.length === 0) return;
+          const totals = sumDay(day);
+          const value = Number(totals[metricKey]);
+          if (Number.isFinite(value)) series.push({ key, index, value });
+        });
+        return series;
+      }
+
+      function bodyTrendSeries(chronologicalKeys, field) {
+        const series = [];
+        chronologicalKeys.forEach((key, index) => {
+          const day = db.days[key];
+          if (!day || day[field] === null || day[field] === undefined) return;
+          const value = Number(day[field]);
+          if (Number.isFinite(value) && value > 0) series.push({ key, index, value });
+        });
+        return series;
+      }
+
+      // 原生极简微型柱状图：只画有记录的日期，缺失日期留空。
+      function trendBarChartHTML(series, options = {}) {
+        if (!series.length) {
+          return `<div class="trend-chart-empty">${escapeHTML(options.emptyText || "近 7 天暂无记录")}</div>`;
+        }
+        const width = 224;
+        const height = 46;
+        const baseline = 42;
+        const top = 4;
+        const slot = (width - 8) / 7;
+        const barWidth = Math.max(6, slot * 0.46);
+        const max = Math.max(...series.map((item) => item.value), 1);
+        const digits = Number.isFinite(options.digits) ? options.digits : 0;
+        const unit = options.unit || "";
+        const bars = series.map((item) => {
+          const barHeight = Math.max(3, (item.value / max) * (baseline - top));
+          const x = 4 + item.index * slot + (slot - barWidth) / 2;
+          const y = baseline - barHeight;
+          return `<rect class="trend-svg-bar" x="${round(x, 1)}" y="${round(y, 1)}" width="${round(barWidth, 1)}" height="${round(barHeight, 1)}" rx="2.4"><title>${escapeHTML(shortDateLabel(item.key))} · ${fmt(item.value, digits)}${escapeHTML(unit)}</title></rect>`;
+        }).join("");
+        // 7 个等距刻度，帮助识别“最近 7 天”的时间轴，缺失日期留空。
+        const ticks = Array.from({ length: 7 }, (_, index) => {
+          const x = round(4 + index * slot + slot / 2, 1);
+          return `<line class="trend-tick" x1="${x}" y1="${baseline}" x2="${x}" y2="${baseline + 2}"></line>`;
+        }).join("");
+        return `
+          <div class="trend-mini-chart">
+            <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" role="img" aria-label="${escapeHTML(options.label || "近 7 天趋势")}">
+              <line class="trend-axis" x1="4" y1="${baseline}" x2="${width - 4}" y2="${baseline}"></line>
+              ${ticks}
+              ${bars}
+            </svg>
+          </div>
+        `;
+      }
+
+      // Catmull-Rom 转三次贝塞尔，得到圆滑但不夸张的折线。
+      function smoothTrendPath(points) {
+        if (points.length < 2) return "";
+        if (points.length === 2) {
+          return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`;
+        }
+        let path = `M ${points[0].x} ${points[0].y}`;
+        for (let index = 0; index < points.length - 1; index += 1) {
+          const p0 = points[index - 1] || points[index];
+          const p1 = points[index];
+          const p2 = points[index + 1];
+          const p3 = points[index + 2] || p2;
+          const cp1x = p1.x + (p2.x - p0.x) / 6;
+          const cp1y = p1.y + (p2.y - p0.y) / 6;
+          const cp2x = p2.x - (p3.x - p1.x) / 6;
+          const cp2y = p2.y - (p3.y - p1.y) / 6;
+          path += ` C ${round(cp1x, 1)} ${round(cp1y, 1)}, ${round(cp2x, 1)} ${round(cp2y, 1)}, ${p2.x} ${p2.y}`;
+        }
+        return path;
+      }
+
+      // 原生极简折线图：只有 1 天数据时画点，只有 3 天数据时只连这 3 天。
+      function trendLineChartHTML(series, options = {}) {
+        if (!series.length) {
+          return `<div class="trend-chart-empty">${escapeHTML(options.emptyText || "近 7 天暂无记录")}</div>`;
+        }
+        const width = 300;
+        const height = 72;
+        const padX = 10;
+        const padY = 10;
+        const values = series.map((item) => item.value);
+        const rawMin = Math.min(...values);
+        const rawMax = Math.max(...values);
+        const span = Math.max(Number.isFinite(options.minSpan) ? options.minSpan : 0.6, rawMax - rawMin);
+        const mid = (rawMin + rawMax) / 2;
+        const min = mid - span / 2;
+        const max = mid + span / 2;
+        const xFor = (slotIndex) => series.length === 1
+          ? width / 2
+          : padX + (slotIndex / (series.length - 1)) * (width - padX * 2);
+        const yFor = (value) => height - padY - ((value - min) / (max - min)) * (height - padY * 2);
+        const points = series.map((item, slotIndex) => ({
+          ...item,
+          x: round(xFor(slotIndex), 1),
+          y: round(yFor(item.value), 1)
+        }));
+        const linePath = smoothTrendPath(points);
+        const areaPath = points.length > 1
+          ? `${linePath} L ${points[points.length - 1].x} ${height - padY} L ${points[0].x} ${height - padY} Z`
+          : "";
+        const dots = points.map((point) =>
+          `<circle class="trend-dot" cx="${point.x}" cy="${point.y}" r="2.6"></circle>`
+        ).join("");
+        return `
+          <div class="trend-mini-chart trend-line-chart">
+            <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" role="img" aria-label="${escapeHTML(options.label || "近 7 天趋势")}">
+              <line class="trend-axis" x1="${padX}" y1="${height - padY}" x2="${width - padX}" y2="${height - padY}"></line>
+              ${areaPath ? `<path class="trend-area" d="${areaPath}"></path>` : ""}
+              ${linePath ? `<path class="trend-line" d="${linePath}" vector-effect="non-scaling-stroke"></path>` : ""}
+              ${dots}
+            </svg>
+          </div>
+          <div class="weight-chart-labels">
+            <span>${shortDateLabel(series[0].key)}</span>
+            <span>${shortDateLabel(series[series.length - 1].key)}</span>
+          </div>
+        `;
+      }
+
+      function trendModuleContainer(id) {
+        return els.trendInsights ? els.trendInsights.querySelector(`[data-trend-module="${id}"]`) : null;
+      }
+
+      function toggleTrendModule(id) {
+        if (!id) return;
+        if (trendOpenModules.has(id)) trendOpenModules.delete(id);
+        else trendOpenModules.add(id);
+        const isOpen = trendOpenModules.has(id);
+        const container = trendModuleContainer(id);
+        if (container) container.classList.toggle("is-open", isOpen);
+        $$(`[data-trend-toggle="${id}"]`, els.trendInsights).forEach((toggle) => {
+          toggle.setAttribute("aria-expanded", String(isOpen));
+        });
+      }
+
       function renderTrendInsights() {
         if (!els.trendInsights) return;
         const keys = recentDateKeys(7);
@@ -13789,73 +14308,105 @@
             ? `目标 ${fmt(metric.target, metric.digits)} ${metric.unit}`
             : "目标待完善";
           const percent = metric.value !== null && metric.target ? pct(metric.value, metric.target) : 0;
+          const series = intakeTrendSeries(chronological, metric.key);
+          const open = trendOpenModules.has(metric.key);
+          const chartCaption = series.length
+            ? `近 7 天有记录 ${series.length} 天`
+            : "近 7 天暂无摄入记录";
           return `
-            <div class="dash-metric trend-metric is-${metric.key}">
+            <div class="dash-metric trend-metric is-${metric.key}${open ? " is-open" : ""}" data-trend-module="${metric.key}" data-trend-toggle="${metric.key}" role="button" tabindex="0" aria-expanded="${open}" aria-controls="trendDrawer-${metric.key}">
               <span>${metric.label}</span>
               <strong>${valueText}${metric.value !== null ? `<em>${metric.unit}</em>` : ""}</strong>
               <div class="dash-bar" aria-hidden="true"><i data-bar-key="trend-${metric.key}" data-bar-percent="${percent}"></i></div>
               <small>${metric.hint} · ${targetText}</small>
+              <i class="trend-chevron" aria-hidden="true">⌄</i>
+              <div class="trend-drawer" id="trendDrawer-${metric.key}">
+                <div class="trend-drawer-inner">
+                  <div class="trend-drawer-content">
+                    ${trendBarChartHTML(series, {
+                      label: `近 7 天${metric.label.replace("平均", "")}变化`,
+                      unit: metric.unit,
+                      digits: metric.digits,
+                      emptyText: "近 7 天暂无摄入记录"
+                    })}
+                    <p class="trend-chart-caption">${chartCaption}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           `;
         }).join("");
 
-        const weightRecords = chronological
-          .map((key, index) => {
-            const day = db.days[key];
-            return day && day.weight !== null && day.weight !== undefined
-              ? { key, weight: Number(day.weight), index }
-              : null;
-          })
-          .filter((record) => record && Number.isFinite(record.weight));
-        const current = data.currentWeight;
-        const previous = data.previousWeight;
-        const delta = data.weightDelta;
-        let deltaText = "数据不足";
-        let deltaClass = "is-flat";
-        if (delta !== null) {
-          if (Math.abs(delta) < 0.05) {
-            deltaText = "持平";
-          } else if (delta < 0) {
-            deltaText = `↓ ${Math.abs(delta).toFixed(1)}kg`;
-            deltaClass = "is-down";
-          } else {
-            deltaText = `↑ ${delta.toFixed(1)}kg`;
-            deltaClass = "is-up";
-          }
-        }
-
         const selectedDay = db.days[selectedDate];
-        const selectedWeight = selectedDay && selectedDay.weight !== null && selectedDay.weight !== undefined
-          ? String(selectedDay.weight)
-          : "";
-        const selectedWaist = selectedDay && selectedDay.waist !== null && selectedDay.waist !== undefined
-          ? String(selectedDay.waist)
-          : "";
-        const selectedBodyFat = selectedDay && selectedDay.bodyFat !== null && selectedDay.bodyFat !== undefined
-          ? String(selectedDay.bodyFat)
-          : "";
-        // v26：腰围 / 体脂率均值与对比；缺失数据显示“—”，不做长期判断时不出身体重组提示。
+        const selectedMetricValues = {
+          weight: selectedDay && selectedDay.weight !== null && selectedDay.weight !== undefined ? String(selectedDay.weight) : "",
+          waist: selectedDay && selectedDay.waist !== null && selectedDay.waist !== undefined ? String(selectedDay.waist) : "",
+          bodyFat: selectedDay && selectedDay.bodyFat !== null && selectedDay.bodyFat !== undefined ? String(selectedDay.bodyFat) : ""
+        };
+
+        // v27：只渲染用户在设置中勾选的身体指标。
+        const trackedMetrics = trackMetricConfigs();
+        const primaryMetric = trackedMetrics[0] || TRACK_METRICS[0];
+        const primaryStats = bodyMetricStats(data, primaryMetric.key);
+        const secondaryMetrics = trackedMetrics.filter((metric) => metric.key !== primaryMetric.key);
         const compositionHint = data.judgementReady ? buildCompositionInsight(data) : "";
-        const hasWaistRecord = data.currentWaist.avg !== null;
-        const hasBodyFatRecord = data.currentBodyFat.avg !== null;
-        const bodyMetricHTML = `
-          <div class="body-metric-grid">
+        const hasBodyMetricRecord = trackedMetrics.some((metric) => bodyMetricStats(data, metric.key).current.avg !== null);
+        const bodyOpen = trendOpenModules.has("body");
+
+        const secondaryMetricHTML = secondaryMetrics.map((metric) => {
+          const stats = bodyMetricStats(data, metric.key);
+          return `
             <div class="body-metric">
-              <span>腰围均值</span>
-              <strong>${hasWaistRecord ? `${fmt(data.currentWaist.avg, 1)}<em>cm</em>` : "—"}</strong>
-              <small>${metricDeltaText(data.waistDelta, "cm")}</small>
+              <span>${metric.label}均值</span>
+              <strong>${stats.current.avg !== null ? `${fmt(stats.current.avg, 1)}<em>${metric.unit}</em>` : "—"}</strong>
+              <small>${metricDeltaText(stats.delta, metric.unit)}</small>
             </div>
-            <div class="body-metric">
-              <span>体脂率均值</span>
-              <strong>${hasBodyFatRecord ? `${fmt(data.currentBodyFat.avg, 1)}<em>%</em>` : "—"}</strong>
-              <small>${metricDeltaText(data.bodyFatDelta, "%")}</small>
+          `;
+        }).join("");
+        const bodyMetricHTML = secondaryMetrics.length
+          ? `<div class="body-metric-grid is-count-${secondaryMetrics.length}">${secondaryMetricHTML}</div>`
+          : "";
+
+        const bodyChartHTML = trackedMetrics.map((metric) => {
+          const stats = bodyMetricStats(data, metric.key);
+          const series = bodyTrendSeries(chronological, metric.key);
+          const chart = metric.key === "weight"
+            ? weightChartHTML(series.map((item) => ({ key: item.key, index: item.index, weight: item.value })))
+            : trendLineChartHTML(series, {
+              label: `近 7 天${metric.label}趋势`,
+              unit: metric.unit,
+              minSpan: metric.key === "bodyFat" ? 0.8 : 0.6,
+              emptyText: `近 7 天暂无${metric.label}记录`
+            });
+          return `
+            <div class="body-trend-chart">
+              <div class="body-trend-chart-head">
+                <span>${metric.label}</span>
+                <strong>${stats.current.avg !== null ? `${fmt(stats.current.avg, 1)}<em>${metric.unit}</em>` : "—"}</strong>
+              </div>
+              ${chart}
             </div>
-          </div>
-          <p class="body-metric-hint">${hasWaistRecord || hasBodyFatRecord
-            ? `前 7 天：腰围 ${data.previousWaist.avg !== null ? `${fmt(data.previousWaist.avg, 1)} cm` : "—"} · 体脂率 ${data.previousBodyFat.avg !== null ? `${fmt(data.previousBodyFat.avg, 1)}%` : "—"}`
-            : "除了体重，也可以记录腰围和体脂率，围度变化更能反映身体成分。"}</p>
-          ${compositionHint ? `<p class="body-composition-hint">${escapeHTML(compositionHint)}</p>` : ""}
-        `;
+          `;
+        }).join("");
+
+        const previousHint = primaryStats.previous.avg !== null
+          ? `前 7 天${primaryMetric.label}均值 ${fmt(primaryStats.previous.avg, 1)} ${primaryMetric.unit}${primaryMetric.key === "weight" ? " · 单日波动主要来自水分与肠道内容物" : ""}`
+          : `前 7 天${primaryMetric.label}数据不足，先积累记录即可。`;
+
+        const bodyLogHTML = trackedMetrics.map((metric) => {
+          const value = selectedMetricValues[metric.key] || "";
+          const fieldLabel = metric.key === "weight" ? `记录${dayWord()}体重` : metric.label;
+          return `
+            <label class="body-log-field" for="${metric.inputId}">
+              <span>${fieldLabel}</span>
+              <span class="suffix-input">
+                <input id="${metric.inputId}" type="number" inputmode="decimal" min="${metric.min}" max="${metric.max}" step="0.1" value="${escapeHTML(value)}" placeholder="${metric.placeholder}">
+                <em>${metric.unit}</em>
+              </span>
+            </label>
+          `;
+        }).join("");
+
         const foot = data.trackedDays < 14
           ? `累计已记录 ${data.trackedDays} 天 · 不足 14 天，暂不做长期趋势判断。`
           : `长期趋势：${buildLongTermJudgement(data)}`;
@@ -13863,41 +14414,30 @@
         els.trendInsights.innerHTML = `
           <div class="dashboard-metrics">${metricHTML}</div>
 
-          <div class="weight-panel">
-            <div class="weight-panel-head">
+          <div class="weight-panel${bodyOpen ? " is-open" : ""}" data-trend-module="body">
+            <div class="weight-panel-head" data-trend-toggle="body" role="button" tabindex="0" aria-expanded="${bodyOpen}" aria-controls="bodyTrendDrawer">
               <div>
-                <span>近 7 天平均体重</span>
-                <strong>${current.avg !== null ? `${fmt(current.avg, 1)} kg` : "—"}</strong>
+                <span>近 7 天${primaryMetric.label}均值</span>
+                <strong>${primaryStats.current.avg !== null ? `${fmt(primaryStats.current.avg, 1)} ${primaryMetric.unit}` : "—"}</strong>
               </div>
-              <span class="weight-change ${deltaClass}">${deltaText}</span>
+              <span class="weight-change ${deltaClassFor(primaryStats.delta)}">${metricDeltaText(primaryStats.delta, primaryMetric.unit)}</span>
+              <i class="trend-chevron" aria-hidden="true">⌄</i>
             </div>
-            ${weightChartHTML(weightRecords)}
-            <p class="trend-weight-hint">${previous.avg !== null
-              ? `前 7 天均值 ${fmt(previous.avg, 1)} kg · 单日波动主要来自水分与肠道内容物`
-              : "前 7 天体重数据不足，先积累记录即可。"}</p>
+            <div class="trend-drawer" id="bodyTrendDrawer">
+              <div class="trend-drawer-inner">
+                <div class="trend-drawer-content">
+                  <div class="body-trend-grid is-count-${trackedMetrics.length}">${bodyChartHTML}</div>
+                  <p class="trend-weight-hint">${escapeHTML(previousHint)}</p>
+                </div>
+              </div>
+            </div>
             ${bodyMetricHTML}
-            <div class="body-log-grid">
-              <label class="body-log-field" for="weeklyWeightInput">
-                <span>记录${dayWord()}体重</span>
-                <span class="suffix-input">
-                  <input id="weeklyWeightInput" type="number" inputmode="decimal" min="30" max="300" step="0.1" value="${escapeHTML(selectedWeight)}" placeholder="如 70.5">
-                  <em>kg</em>
-                </span>
-              </label>
-              <label class="body-log-field" for="weeklyWaistInput">
-                <span>腰围</span>
-                <span class="suffix-input">
-                  <input id="weeklyWaistInput" type="number" inputmode="decimal" min="30" max="200" step="0.1" value="${escapeHTML(selectedWaist)}" placeholder="如 78">
-                  <em>cm</em>
-                </span>
-              </label>
-              <label class="body-log-field" for="weeklyBodyFatInput">
-                <span>体脂率</span>
-                <span class="suffix-input">
-                  <input id="weeklyBodyFatInput" type="number" inputmode="decimal" min="1" max="70" step="0.1" value="${escapeHTML(selectedBodyFat)}" placeholder="如 20">
-                  <em>%</em>
-                </span>
-              </label>
+            <p class="body-metric-hint">${hasBodyMetricRecord
+              ? "点击上方摘要可展开最近 7 天趋势图。"
+              : "除了体重，也可以记录腰围和体脂率，围度变化更能反映身体成分。"}</p>
+            ${compositionHint ? `<p class="body-composition-hint">${escapeHTML(compositionHint)}</p>` : ""}
+            <div class="body-log-grid is-count-${trackedMetrics.length}">
+              ${bodyLogHTML}
             </div>
             <button class="btn btn-primary body-save-btn" type="button" data-save-weight>保存${dayWord()}身体指标</button>
           </div>
@@ -13909,44 +14449,23 @@
           setProgressBar(bar, bar.dataset.barKey, Number(bar.dataset.barPercent) || 0);
         });
       }
-
       function shortDateLabel(key) {
         const parts = String(key || "").split("-");
         if (parts.length !== 3) return key;
         return `${Number(parts[1])}/${Number(parts[2])}`;
       }
 
+      // v27：复用统一的圆滑折线渲染，体重也走同一套 SVG（缺失日期不补点）。
       function weightChartHTML(records) {
-        if (!records.length) {
-          return `<div class="weight-empty">近7天还没有体重记录，记录一次后即可开始观察趋势。</div>`;
-        }
-        const width = 300;
-        const height = 86;
-        const pad = 14;
-        const values = records.map((record) => record.weight);
-        const min = Math.min(...values);
-        const max = Math.max(...values);
-        const span = Math.max(0.6, max - min);
-        const xFor = (record) => pad + (record.index / 6) * (width - pad * 2);
-        const yFor = (weight) => height - pad - ((weight - min) / span) * (height - pad * 2);
-        const points = records
-          .map((record) => `${round(xFor(record), 1)},${round(yFor(record.weight), 1)}`)
-          .join(" ");
-        const dots = records
-          .map((record) => `<circle cx="${round(xFor(record), 1)}" cy="${round(yFor(record.weight), 1)}" r="2.8"></circle>`)
-          .join("");
-        return `
-          <div class="weight-chart">
-            <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" role="img" aria-label="近7天体重趋势">
-              <polyline points="${points}" vector-effect="non-scaling-stroke"></polyline>
-              ${dots}
-            </svg>
-          </div>
-          <div class="weight-chart-labels">
-            <span>${shortDateLabel(records[0].key)}</span>
-            <span>${shortDateLabel(records[records.length - 1].key)}</span>
-          </div>
-        `;
+        return trendLineChartHTML(
+          records.map((record) => ({ key: record.key, index: record.index, value: record.weight })),
+          {
+            label: "近 7 天体重趋势",
+            unit: "kg",
+            minSpan: 0.6,
+            emptyText: "近 7 天还没有体重记录，记录一次后即可开始观察趋势。"
+          }
+        );
       }
 
       function buildWeightAdvice(records, options = {}) {
@@ -14078,6 +14597,7 @@
         updateDateUI();
         updateCustomFoodHint();
         updateSettingsSummary();
+        renderNewbieChecklist();
         renderMealSelector();
         renderDiet();
         renderTraining();
@@ -14674,6 +15194,10 @@
         $$('input[name="goal"]', form).forEach((input) => {
           input.checked = input.value === (db.profile.goal || "maintain");
         });
+        const trackedMetrics = normalizeTrackMetrics(db.profile.trackMetrics);
+        $$('input[name="trackMetric"]', form).forEach((input) => {
+          input.checked = trackedMetrics.includes(input.value);
+        });
         $$('input[name="macroMode"]', form).forEach((input) => {
           input.checked = input.value === (db.profile.macroMode || "auto");
         });
@@ -14732,6 +15256,9 @@
         const goal = data.get("goal");
         profile.goal = GOALS[goal] ? goal : "maintain";
         profile.dynamicCalories = els.dynamicCaloriesToggle.checked;
+        profile.trackMetrics = normalizeTrackMetrics(
+          $$('input[name="trackMetric"]:checked', form).map((input) => input.value)
+        );
         const macroMode = form.querySelector('input[name="macroMode"]:checked');
         profile.macroMode = macroMode && macroMode.value === "manual" ? "manual" : "auto";
         ["rest", "small", "large"].forEach((scene) => {
@@ -15157,14 +15684,36 @@
           else updateDateUI();
         });
         els.trendInsights.addEventListener("click", (event) => {
-          if (event.target.closest("[data-save-weight]")) saveWeeklyWeight();
+          if (event.target.closest("[data-save-weight]")) {
+            saveWeeklyWeight();
+            return;
+          }
+          const toggle = event.target.closest("[data-trend-toggle]");
+          if (toggle) toggleTrendModule(toggle.dataset.trendToggle);
         });
         els.trendInsights.addEventListener("keydown", (event) => {
+          const toggle = event.target.closest("[data-trend-toggle]");
+          if (toggle && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault();
+            toggleTrendModule(toggle.dataset.trendToggle);
+            return;
+          }
           if (event.key === "Enter" &&
             ["weeklyWeightInput", "weeklyWaistInput", "weeklyBodyFatInput"].includes(event.target.id)) {
             event.preventDefault();
             saveWeeklyWeight();
           }
+        });
+        // v27：新手任务清单关闭 + 隐藏入口红点（点击一次永久消失）。
+        if (els.closeNewbie) els.closeNewbie.addEventListener("click", dismissNewbieChecklist);
+        if (els.newbieChecklist) {
+          els.newbieChecklist.addEventListener("click", (event) => {
+            if (event.target.closest("[data-newbie-start]")) dismissNewbieChecklist();
+          });
+        }
+        document.addEventListener("click", (event) => {
+          const owner = event.target.closest("[data-hotspot-owner]");
+          if (owner) dismissHotspot(owner.dataset.hotspotOwner);
         });
 
         // Tab
@@ -15595,6 +16144,14 @@
             input.addEventListener("change", updateMacroModeVisibility);
           });
         });
+        // v27：至少保留一项追踪指标，避免趋势卡变成空白。
+        $$('input[name="trackMetric"]', els.profileForm).forEach((input) => {
+          input.addEventListener("change", () => {
+            if (els.profileForm.querySelector('input[name="trackMetric"]:checked')) return;
+            input.checked = true;
+            showToast("至少保留一项追踪指标");
+          });
+        });
         els.profileForm.addEventListener("input", (event) => {
           const field = event.target.closest(".field");
           if (field) field.classList.remove("is-invalid");
@@ -15680,76 +16237,106 @@
         });
       }
 
-      function renderOnboardingStep() {
-        const step = ONBOARDING_STEPS[onboardingStepIndex];
-        if (!step) return;
-        const last = onboardingStepIndex === ONBOARDING_STEPS.length - 1;
-        els.onboardingStep.textContent = `${onboardingStepIndex + 1} / ${ONBOARDING_STEPS.length}`;
-        els.onboardingOrb.textContent = String(onboardingStepIndex + 1).padStart(2, "0");
-        els.onboardingTitle.textContent = step.title;
-        els.onboardingBody.textContent = step.body;
-        els.onboardingDots.innerHTML = ONBOARDING_STEPS.map((_, index) =>
-          `<span class="${index === onboardingStepIndex ? "is-active" : ""}"></span>`
-        ).join("");
-        els.onboardingPrev.hidden = onboardingStepIndex === 0;
-        els.onboardingNext.hidden = last;
-        els.onboardingStart.hidden = !last;
-        els.onboardingEncourage.hidden = !last;
-      }
-
-      function showOnboarding() {
-        onboardingStepIndex = 0;
-        renderOnboardingStep();
-        els.onboarding.hidden = false;
-        document.body.style.overflow = "hidden";
-        window.requestAnimationFrame(() => {
-          (els.onboardingStart.hidden ? els.onboardingNext : els.onboardingStart).focus({ preventScroll: true });
-        });
-      }
-
-      function finishOnboarding() {
+      // ============================================================
+      // v27：新手任务清单 + 隐藏入口红点
+      // ============================================================
+      function isChecklistDismissed() {
         try {
-          localStorage.setItem(ONBOARDING_FLAG, "1");
+          return localStorage.getItem(CHECKLIST_FLAG) === "1";
         } catch (error) {
-          // 存储不可用时仍然关闭引导，不阻塞使用。
+          return false;
         }
-        els.onboarding.hidden = true;
-        document.body.style.overflow = "";
       }
 
-      function maybeShowOnboarding() {
-        let seen = false;
-        try {
-          seen = localStorage.getItem(ONBOARDING_FLAG) === "1";
-        } catch (error) {
-          seen = false;
-        }
-        if (seen) return;
-        if (hasExistingUserData()) {
-          try {
-            localStorage.setItem(ONBOARDING_FLAG, "1");
-          } catch (error) {
-            // 忽略存储异常。
-          }
+      function newbieTaskStates() {
+        const profile = db.profile || {};
+        const profileDone = ["height", "weight", "age", "sex"].every((key) =>
+          profile[key] !== "" && profile[key] !== null && profile[key] !== undefined
+        );
+        const foodDone = Object.values(db.days || {}).some((day) =>
+          day && Array.isArray(day.foods) && day.foods.length > 0
+        );
+        const trainingDone = Object.values(db.days || {}).some((day) =>
+          day && (
+            (Array.isArray(day.workouts) && day.workouts.length > 0) ||
+            (Array.isArray(day.cardios) && day.cardios.length > 0)
+          )
+        );
+        const customFoodDone = (db.customFoods || []).length > 0;
+        return [
+          { done: profileDone, title: "完善个人信息", desc: "身高、体重、年龄、性别" },
+          { done: foodDone, title: "记录第一笔饮食", desc: "搜索食物并按克数添加" },
+          { done: trainingDone, title: "打卡第一次训练", desc: "力量或有氧任选其一" },
+          { done: customFoodDone, title: "添加一个自定义食物", desc: "搜不到的食物就自己建一条" }
+        ];
+      }
+
+      function renderNewbieChecklist() {
+        if (!els.newbieChecklist) return;
+        if (isChecklistDismissed()) {
+          els.newbieChecklist.hidden = true;
           return;
         }
-        showOnboarding();
+        const tasks = newbieTaskStates();
+        const doneCount = tasks.filter((task) => task.done).length;
+        els.newbieChecklist.hidden = false;
+        if (els.newbieSub) {
+          els.newbieSub.textContent = doneCount === tasks.length
+            ? "全部完成，准备开始健康之旅"
+            : `${doneCount}/${tasks.length} 已完成 · 完成任务自动打勾`;
+        }
+        if (els.newbieList) {
+          els.newbieList.innerHTML = tasks.map((task, index) => `
+            <li class="newbie-item${task.done ? " is-done" : ""}">
+              <span class="newbie-check${task.done ? " is-done" : ""}" aria-hidden="true">${task.done ? "✓" : index + 1}</span>
+              <span class="newbie-copy">
+                <strong>${task.title}</strong>
+                <small>${task.desc}</small>
+              </span>
+            </li>
+          `).join("");
+        }
+        if (els.newbieFoot) {
+          els.newbieFoot.innerHTML = doneCount === tasks.length
+            ? `<button class="btn btn-primary full newbie-start" type="button" data-newbie-start>开始健康之旅</button>`
+            : `<p class="newbie-foot-note">完成任务后会自动勾选，无需手动打卡。</p>`;
+        }
       }
 
-      function bindOnboardingEvents() {
-        els.onboardingNext.addEventListener("click", () => {
-          if (onboardingStepIndex < ONBOARDING_STEPS.length - 1) {
-            onboardingStepIndex += 1;
-            renderOnboardingStep();
-          }
+      function dismissNewbieChecklist() {
+        try {
+          localStorage.setItem(CHECKLIST_FLAG, "1");
+        } catch (error) {
+          // 存储不可用时仍然关闭本次卡片，不阻塞使用。
+        }
+        if (els.newbieChecklist) els.newbieChecklist.hidden = true;
+        showToast("新手任务已关闭");
+      }
+
+      function loadDismissedHotspots() {
+        try {
+          const raw = JSON.parse(localStorage.getItem(HOTSPOT_KEY) || "[]");
+          return new Set(Array.isArray(raw) ? raw.filter((id) => typeof id === "string") : []);
+        } catch (error) {
+          return new Set();
+        }
+      }
+
+      function syncHotspots() {
+        $$("[data-hotspot]").forEach((dot) => {
+          dot.hidden = dismissedHotspots.has(dot.dataset.hotspot);
         });
-        els.onboardingPrev.addEventListener("click", () => {
-          if (onboardingStepIndex > 0) {
-            onboardingStepIndex -= 1;
-            renderOnboardingStep();
-          }
-        });
-        els.onboardingStart.addEventListener("click", finishOnboarding);
+      }
+
+      function dismissHotspot(id) {
+        if (!id || dismissedHotspots.has(id)) return;
+        dismissedHotspots.add(id);
+        try {
+          localStorage.setItem(HOTSPOT_KEY, JSON.stringify([...dismissedHotspots]));
+        } catch (error) {
+          // 存储不可用时仅本次隐藏，不阻塞使用。
+        }
+        syncHotspots();
       }
 
       function initSettingsFold() {
@@ -15760,7 +16347,9 @@
 
       function init() {
         const hash = window.location.hash.replace("#", "");
+        dismissedHotspots = loadDismissedHotspots();
         bindEvents();
+        syncHotspots();
         syncProfileForm();
         initSettingsFold();
 
@@ -15771,7 +16360,6 @@
         renderAll();
         setTrainingMode(trainingMode);
         bindCopyDietEvents();
-        bindOnboardingEvents();
         switchTab(["diet", "training", "assessment"].includes(hash) ? hash : "diet", {
           updateHash: false,
           scroll: false
@@ -15782,7 +16370,6 @@
         } catch (error) {
           // 浏览器禁用了本地存储时仍可使用页面，保存时会给出提示。
         }
-        maybeShowOnboarding();
       }
 
       init();
