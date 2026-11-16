@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- FitDay v23 · 动态营养监控与长期趋势（增量升级，不改动原有数据结构） -->
+<!-- FitDay v24 · 体验优化（训练概览自适应力量/有氧，饮食页恢复自定义食物快捷录入） -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f4f5f2">
   <meta name="color-scheme" content="light">
-  <meta name="app-version" content="v23">
+  <meta name="app-version" content="v24">
   <meta name="description" content="FitDay - 纯本地、移动端优先的健身饮食记录工具">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -473,6 +473,10 @@
       gap: 10px;
     }
 
+    .hero-head {
+      min-width: 0;
+    }
+
     .hero-number {
       display: flex;
       align-items: baseline;
@@ -871,6 +875,56 @@
       font-style: normal;
     }
 
+    /* v24：混合训练日卡片下半层的有氧汇总 */
+    .hero-cardio-layer {
+      margin-top: 15px;
+      padding-top: 13px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-cardio-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .hero-cardio-name {
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: 0.12em;
+    }
+
+    .hero-cardio-kcal {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .hero-cardio-kcal strong {
+      color: #ffffff;
+      font-size: 27px;
+      font-weight: 660;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hero-cardio-kcal em {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 10px;
+      font-style: normal;
+    }
+
+    .hero-cardio-meta {
+      margin: 6px 0 0;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
     /* ---------- Forms ---------- */
     .field {
       display: block;
@@ -891,6 +945,45 @@
 
     .food-search-wrap {
       position: relative;
+    }
+
+    .food-search-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 7px;
+    }
+
+    .food-search-head .field-label {
+      margin-bottom: 0;
+    }
+
+    /* v24：饮食页恢复自定义食物快捷入口 */
+    .custom-quick-add {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      min-height: 32px;
+      padding: 0 9px;
+      border: 1px dashed #c8d9cd;
+      border-radius: 9px;
+      background: #f3f8f3;
+      color: var(--accent-ink);
+      font-size: 10px;
+      font-weight: 680;
+      white-space: nowrap;
+      transition: border-color 0.16s ease, background 0.16s ease, transform 0.14s ease;
+    }
+
+    .custom-quick-add .icon {
+      width: 12px;
+      height: 12px;
+      stroke-width: 2.2;
+    }
+
+    .custom-quick-add:active {
+      transform: scale(0.97);
     }
 
     .input-shell {
@@ -5452,7 +5545,13 @@
             </div>
 
             <div class="food-search-wrap">
-              <label class="field-label" for="foodSearch">食物名称</label>
+              <div class="food-search-head">
+                <label class="field-label" for="foodSearch">食物名称</label>
+                <button class="custom-quick-add" id="openCustomFoodQuick" type="button" aria-label="自定义录入食物">
+                  <svg class="icon" aria-hidden="true"><use href="#i-plus"></use></svg>
+                  自定义录入
+                </button>
+              </div>
               <div class="input-shell">
                 <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
                 <input
@@ -5500,7 +5599,7 @@
               <button type="button" data-grams="150">150g</button>
               <button type="button" data-grams="200">200g</button>
             </div>
-            <p class="database-note">营养值均按每 100g 估算，已内置 <strong id="foodLibraryCount">1,887</strong> 种食物；米饭、肉类、薯类等已标注（生）/（熟），找不到时请到综合评估 → 高级设置 → 自定义食物管理中录入。</p>
+            <p class="database-note">营养值均按每 100g 估算，已内置 <strong id="foodLibraryCount">1,887</strong> 种食物；米饭、肉类、薯类等已标注（生）/（熟），找不到时点上方「自定义录入」快速添加，或到综合评估 → 高级设置 → 自定义食物管理中长期维护。</p>
           </section>
 
           <section class="card">
@@ -5592,17 +5691,20 @@
             </div>
           </div>
 
-          <section class="hero training-hero" aria-label="训练概览">
-            <p class="hero-kicker">训练总容量</p>
+          <section class="hero training-hero" id="trainingHero" aria-label="训练概览">
             <div class="hero-main">
-              <div class="hero-number">
-                <strong id="workoutVolume">0</strong>
-                <span>kg</span>
+              <div class="hero-head">
+                <p class="hero-kicker" id="trainingHeroKicker">训练总容量</p>
+                <div class="hero-number">
+                  <strong id="workoutVolume">0</strong>
+                  <span id="workoutVolumeUnit">kg</span>
+                </div>
               </div>
               <span class="status-pill" id="workoutStatus">待开练</span>
             </div>
-            <p class="hero-targetline">组数 × 次数 × 有效重量，自重动作按系数折算</p>
-            <div class="training-stats">
+            <p class="hero-targetline" id="trainingHeroSub">组数 × 次数 × 有效重量，自重动作按系数折算</p>
+
+            <div class="training-stats" id="strengthHeroStats">
               <div class="training-stat">
                 <span>组数</span>
                 <strong id="workoutSets">0</strong>
@@ -5616,6 +5718,30 @@
                 <strong id="workoutBurn">0</strong><em>kcal</em>
               </div>
             </div>
+
+            <div class="training-stats" id="cardioHeroStats" hidden>
+              <div class="training-stat">
+                <span>时长</span>
+                <strong id="cardioHeroDuration">0</strong><em>分钟</em>
+              </div>
+              <div class="training-stat">
+                <span>距离</span>
+                <strong id="cardioHeroDistance">0</strong><em>km</em>
+              </div>
+              <div class="training-stat">
+                <span>记录</span>
+                <strong id="cardioHeroCount">0</strong><em>条</em>
+              </div>
+            </div>
+
+            <div class="hero-cardio-layer" id="cardioHeroLayer" hidden>
+              <div class="hero-cardio-line">
+                <span class="hero-cardio-name">有氧消耗</span>
+                <span class="hero-cardio-kcal"><strong id="cardioHeroKcal">0</strong><em>kcal</em></span>
+              </div>
+              <p class="hero-cardio-meta" id="cardioHeroMeta"></p>
+            </div>
+
             <p class="hero-burn-detail" id="trainingBurnDetail">力量 0 kcal · 有氧 0 kcal</p>
             <p class="training-load-hint" id="trainingLoadHint"></p>
             <p class="hero-estimate-note">* 运动消耗与营养目标为粗略科学估算*</p>
@@ -6525,7 +6651,7 @@
         <button class="btn btn-primary full" id="customFoodSubmit" type="submit">保存并选择</button>
       </form>
 
-      <div class="custom-manager">
+      <div class="custom-manager" id="customManagerPanel">
         <div class="custom-manager-head">
           <span>已保存的自定义食物</span>
           <span id="customManagerCount">0 个</span>
@@ -9068,6 +9194,8 @@
         foodTotalsSummary: byId("foodTotalsSummary"),
         foodLibraryCount: byId("foodLibraryCount"),
         openCustomFood: byId("openCustomFood"),
+        openCustomFoodQuick: byId("openCustomFoodQuick"),
+        customManagerPanel: byId("customManagerPanel"),
         customFoodHint: byId("customFoodHint"),
         customFoodKicker: byId("customFoodKicker"),
         customFoodSub: byId("customFoodSub"),
@@ -9134,10 +9262,22 @@
         antiInflammatory: byId("antiInflammatory"),
 
         workoutVolume: byId("workoutVolume"),
+        workoutVolumeUnit: byId("workoutVolumeUnit"),
         workoutStatus: byId("workoutStatus"),
         workoutSets: byId("workoutSets"),
         workoutReps: byId("workoutReps"),
         workoutBurn: byId("workoutBurn"),
+        trainingHero: byId("trainingHero"),
+        trainingHeroKicker: byId("trainingHeroKicker"),
+        trainingHeroSub: byId("trainingHeroSub"),
+        strengthHeroStats: byId("strengthHeroStats"),
+        cardioHeroStats: byId("cardioHeroStats"),
+        cardioHeroDuration: byId("cardioHeroDuration"),
+        cardioHeroDistance: byId("cardioHeroDistance"),
+        cardioHeroCount: byId("cardioHeroCount"),
+        cardioHeroLayer: byId("cardioHeroLayer"),
+        cardioHeroKcal: byId("cardioHeroKcal"),
+        cardioHeroMeta: byId("cardioHeroMeta"),
         trainingBurnDetail: byId("trainingBurnDetail"),
         trainingLoadHint: byId("trainingLoadHint"),
         trainingFormSub: byId("trainingFormSub"),
@@ -10069,7 +10209,10 @@
       let dialogResolver = null;
       let lastFocusedElement = null;
       let customModalLastFocus = null;
+      let customFoodModalContext = "manage";
       let trainingMode = "strength";
+      let lastTrainingModeSyncKey = "";
+      let lastTrainingModeSyncDate = "";
       let currentWorkoutPreview = null;
       let batchEntries = [];
       let batchNextId = 1;
@@ -10895,11 +11038,13 @@
         setKjResult(`${kjText} kJ ÷ 4.184 ≈ ${kcal.toFixed(1)} kcal，已填入上方热量。`, "success");
       }
 
-      function openCustomFoodModal(foodId = null) {
+      function openCustomFoodModal(foodId = null, context = "manage") {
         if (!foodId && !els.customFoodBackdrop.hidden) return;
         const editingFood = foodId ? db.customFoods.find((food) => food.id === foodId) : null;
         if (foodId && !editingFood) return;
 
+        customFoodModalContext = context === "diet" ? "diet" : "manage";
+        els.customManagerPanel.hidden = customFoodModalContext === "diet";
         editingCustomFoodId = editingFood ? editingFood.id : null;
         if (!editingFood && !els.customFoodBackdrop.hidden) return;
 
@@ -10935,10 +11080,13 @@
             input.checked = tags.includes(input.value);
           });
         } else {
+          const isDietEntry = customFoodModalContext === "diet";
           els.customFoodKicker.textContent = "MY FOOD";
-          els.customFoodTitle.textContent = "自定义食物";
-          els.customFoodSub.textContent = "按每 100g 填写营养值，保存后会自动带入上方搜索框，以后也能直接搜到。";
-          els.customFoodSubmit.textContent = "保存并选择";
+          els.customFoodTitle.textContent = isDietEntry ? "自定义录入" : "自定义食物";
+          els.customFoodSub.textContent = isDietEntry
+            ? "按每 100g 填写营养值，保存后会自动填入搜索框，选好克数就能记录。"
+            : "按每 100g 填写营养值，保存后可在饮食页搜索使用。";
+          els.customFoodSubmit.textContent = isDietEntry ? "保存并填入搜索框" : "保存并选择";
         }
 
         els.customFoodBackdrop.hidden = false;
@@ -11007,6 +11155,7 @@
           els.foodGrams.value = "100";
           highlightQuickAmount(100);
           renderPickedFood();
+          if (customFoodModalContext === "diet") els.foodGrams.focus({ preventScroll: true });
           showToast(`已更新自定义食物「${updated.name}」`);
           return;
         }
@@ -11046,7 +11195,10 @@
         els.foodGrams.value = "100";
         highlightQuickAmount(100);
         renderPickedFood();
-        showToast(`已保存「${food.name}」，填写克数即可添加`);
+        if (customFoodModalContext === "diet") els.foodGrams.focus({ preventScroll: true });
+        showToast(customFoodModalContext === "diet"
+          ? `已保存「${food.name}」，已填入搜索框，选好克数即可添加`
+          : `已保存「${food.name}」，填写克数即可添加`);
       }
 
       function deleteCustomFood(id) {
@@ -12319,6 +12471,21 @@
         const dynamicEnabled = Boolean(db.profile.dynamicCalories);
         const manualType = day && ["rest", "normal", "high"].includes(day.trainingType) ? day.trainingType : "";
 
+        // v24：纯有氧日默认切到“有氧运动”录入。只在日期或记录条数变化时重新判定，
+        // 且仅在“当天变成纯有氧”或“切换到另一天”时调整，避免覆盖用户手动切换的 Tab。
+        const modeSyncKey = `${selectedDate}|${workouts.length}|${cardios.length}`;
+        if (modeSyncKey !== lastTrainingModeSyncKey) {
+          const dayChanged = selectedDate !== lastTrainingModeSyncDate;
+          const onlyCardioDay = cardios.length > 0 && workouts.length === 0;
+          lastTrainingModeSyncKey = modeSyncKey;
+          lastTrainingModeSyncDate = selectedDate;
+          if (onlyCardioDay) {
+            if (trainingMode !== "cardio") setTrainingMode("cardio");
+          } else if (dayChanged && trainingMode !== "strength") {
+            setTrainingMode("strength");
+          }
+        }
+
         els.dayTypeBar.hidden = !dynamicEnabled;
         if (dynamicEnabled) {
           const dayInfo = getTrainingDayInfo(selectedDate);
@@ -12341,10 +12508,50 @@
         const totalBurn = strengthBurn + cardioSummary.calories;
         const totalCount = workouts.length + cardios.length;
 
-        els.workoutVolume.textContent = fmt(summary.volume);
+        const hasStrength = workouts.length > 0;
+        const hasCardio = cardios.length > 0;
+        const onlyCardio = hasCardio && !hasStrength;
+        const mixed = hasStrength && hasCardio;
+        const cardioDurationText = formatCardioDuration(cardioSummary.duration);
+        const cardioDistanceText = cardioSummary.distance > 0 ? `${fmt2(cardioSummary.distance)} km` : "";
+
+        // v24：概览卡片按当日训练类型自适应。
+        // 纯力量/空白日保持容量主指标；纯有氧日以“有氧消耗”为主指标；混合日上下分层展示。
+        els.trainingHeroKicker.textContent = onlyCardio ? "有氧消耗" : "训练总容量";
+        els.workoutVolume.textContent = onlyCardio ? fmt(cardioSummary.calories) : fmt(summary.volume);
+        els.workoutVolumeUnit.textContent = onlyCardio ? "kcal" : "kg";
+        els.trainingHeroSub.textContent = onlyCardio
+          ? (cardioSummary.calories > 0
+            ? "今日只有有氧记录，力量容量不计入"
+            : "有氧记录未填写消耗，可编辑记录补充热量")
+          : "组数 × 次数 × 有效重量，自重动作按系数折算";
+        els.strengthHeroStats.hidden = onlyCardio;
+        els.cardioHeroStats.hidden = !onlyCardio;
+        els.trainingBurnDetail.hidden = onlyCardio;
+        els.cardioHeroLayer.hidden = !mixed;
+
         els.workoutSets.textContent = fmt(summary.sets);
         els.workoutReps.textContent = fmt(summary.reps);
         els.workoutBurn.textContent = fmt(totalBurn);
+
+        if (onlyCardio) {
+          els.cardioHeroDuration.textContent = fmt(
+            cardioSummary.duration,
+            Number.isInteger(cardioSummary.duration) ? 0 : 1
+          );
+          els.cardioHeroDistance.textContent = fmt2(cardioSummary.distance);
+          els.cardioHeroCount.textContent = fmt(cardioSummary.count);
+        }
+
+        if (mixed) {
+          const cardioMeta = [];
+          if (cardioDurationText) cardioMeta.push(`时长 ${cardioDurationText}`);
+          if (cardioDistanceText) cardioMeta.push(`距离 ${cardioDistanceText}`);
+          cardioMeta.push(`${cardioSummary.count} 条记录`);
+          els.cardioHeroKcal.textContent = fmt(cardioSummary.calories);
+          els.cardioHeroMeta.textContent = cardioMeta.join(" · ");
+        }
+
         els.trainingBurnDetail.textContent = `力量估算 ${fmt(strengthBurn)} kcal · 有氧 ${fmt(cardioSummary.calories)} kcal`;
         els.workoutCount.textContent = `${totalCount} 条`;
 
@@ -14864,7 +15071,8 @@
         els.addFood.addEventListener("click", addFoodFromForm);
 
         // 自定义食物
-        els.openCustomFood.addEventListener("click", () => openCustomFoodModal());
+        els.openCustomFood.addEventListener("click", () => openCustomFoodModal(null, "manage"));
+        els.openCustomFoodQuick.addEventListener("click", () => openCustomFoodModal(null, "diet"));
         els.closeCustomFood.addEventListener("click", closeCustomFoodModal);
         els.customFoodForm.addEventListener("submit", handleCustomFoodSubmit);
         els.customFoodForm.addEventListener("input", (event) => {
@@ -14885,7 +15093,7 @@
         els.customFoodList.addEventListener("click", (event) => {
           const editButton = event.target.closest("[data-edit-custom]");
           if (editButton) {
-            openCustomFoodModal(editButton.dataset.editCustom);
+            openCustomFoodModal(editButton.dataset.editCustom, "manage");
             return;
           }
           const button = event.target.closest("[data-delete-custom]");
