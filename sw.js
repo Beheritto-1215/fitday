@@ -1,10 +1,10 @@
 /**
  * FitDay PWA Service Worker
- * v27：新手任务清单替代全屏引导、追踪指标开关、极简 SVG 趋势图与折叠动画；缓存名同步升级。
+ * v28：设置摘要胶囊标签、趋势卡手风琴详细大图、体重摘要状态标签排版修复；缓存名同步升级。
  * 缓存策略：应用外壳 Cache First（缓存优先）。
  * 修改 index.html / 图标后，请同步提升 CACHE_NAME，让旧缓存自动失效。
  */
-const CACHE_NAME = "fitday-pwa-v27";
+const CACHE_NAME = "fitday-pwa-v28";
 const APP_SHELL = [
   "./index.html",
   "./manifest.json",

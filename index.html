@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- FitDay v27 · 新手任务清单 + 可追踪指标 + 极简趋势图与折叠动画 -->
+<!-- FitDay v28 · 设置摘要胶囊标签 + 趋势卡手风琴详细大图 + 体重摘要排版修复 -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f4f5f2">
   <meta name="color-scheme" content="light">
-  <meta name="app-version" content="v27">
+  <meta name="app-version" content="v28">
   <meta name="description" content="FitDay - 纯本地、移动端优先的健身饮食记录工具">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -5913,6 +5913,262 @@
     .body-log-grid.is-count-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    /* ==========================================================
+       v28：设置摘要胶囊标签 + 趋势卡排版与手风琴大图
+       ========================================================== */
+    .settings-fold-line {
+      gap: 6px;
+    }
+
+    .settings-summary-tags {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .settings-tag {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 3px;
+      max-width: 100%;
+      padding: 4px 10px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-ink);
+      font-size: 13px;
+      font-weight: 650;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .settings-tag em {
+      color: var(--muted);
+      font-size: 10.5px;
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .settings-tag.is-goal {
+      border-color: #e3e9df;
+      background: var(--surface-3);
+      color: var(--ink-soft);
+    }
+
+    .settings-tag.is-dynamic {
+      border-color: #cfe4d8;
+      background: #ffffff;
+      color: var(--accent-ink);
+    }
+
+    .settings-tag.is-dynamic::before {
+      content: "";
+      align-self: center;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .settings-summary-empty {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 3px 10px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* v28：体重摘要改为两列网格；状态标签在标题下方，箭头独占右列，杜绝重叠。 */
+    .weight-panel-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 24px;
+      grid-template-areas:
+        "title chevron"
+        "status chevron";
+      align-items: start;
+      column-gap: 10px;
+      row-gap: 0;
+    }
+
+    .weight-panel-head > div {
+      grid-area: title;
+      min-width: 0;
+    }
+
+    .weight-panel-head > .weight-change {
+      grid-area: status;
+      justify-self: start;
+      max-width: 100%;
+      margin-top: 6px;
+    }
+
+    .weight-panel-head > .trend-chevron {
+      position: static;
+      grid-area: chevron;
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      margin-top: 1px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 11px;
+      transition: transform 0.24s ease, background 0.18s ease;
+    }
+
+    /* v28：展开后的详细柱状图（7 天日期轴 + 逐日数值），仍为原生 SVG。 */
+    .trend-detail-chart {
+      margin: 2px -8px 0;
+      padding: 8px 6px 6px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .trend-detail-values,
+    .trend-detail-days {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .trend-detail-values {
+      margin-bottom: 4px;
+    }
+
+    .trend-detail-value {
+      min-width: 0;
+      color: var(--accent-ink);
+      font-size: clamp(6.5px, 1.9vw, 8.5px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      text-align: center;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .trend-detail-value.is-empty {
+      color: transparent;
+    }
+
+    .trend-metric.is-protein .trend-detail-value {
+      color: #3f6fb5;
+    }
+
+    .trend-metric.is-carbs .trend-detail-value {
+      color: #96681a;
+    }
+
+    .trend-metric.is-fat .trend-detail-value {
+      color: #6f57a3;
+    }
+
+    .trend-detail-plot {
+      height: 104px;
+    }
+
+    .trend-detail-plot svg {
+      display: block;
+      width: 100%;
+      height: 104px;
+    }
+
+    .trend-detail-days {
+      margin-top: 4px;
+    }
+
+    .trend-detail-day {
+      min-width: 0;
+      color: var(--muted-2);
+      font-size: clamp(6.5px, 1.9vw, 8.5px);
+      font-weight: 600;
+      line-height: 1.2;
+      text-align: center;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .trend-detail-day.is-missing {
+      opacity: 0.5;
+    }
+
+    .trend-detail-day.is-today {
+      color: var(--accent-ink);
+      font-weight: 750;
+    }
+
+    .trend-detail-grid {
+      stroke: #eef1ec;
+      stroke-width: 1;
+      stroke-dasharray: 3 4;
+    }
+
+    .trend-detail-bar {
+      opacity: 0.92;
+    }
+
+    /* 内容轻微上浮入场；配合 grid-template-rows 的挤开动画，纯合成层属性，移动端更稳。 */
+    .trend-drawer-content {
+      opacity: 0;
+      transform: translateY(-5px);
+      transition:
+        opacity 0.24s ease,
+        transform 0.32s cubic-bezier(0.22, 0.8, 0.28, 1);
+    }
+
+    .trend-metric.is-open .trend-drawer-content,
+    .weight-panel.is-open .trend-drawer-content {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 柱体从基线生长；仅在与 fill-box 兼容的浏览器启用，避免老内核里位置错乱。 */
+    @supports (transform-box: fill-box) {
+      .trend-detail-bar {
+        transform-box: fill-box;
+        transform-origin: bottom center;
+        transform: scaleY(0);
+        transition: transform 0.34s cubic-bezier(0.22, 0.8, 0.28, 1);
+      }
+
+      .trend-metric.is-open .trend-detail-bar {
+        transform: scaleY(1);
+      }
+    }
+
+    @media (max-width: 340px) {
+      .settings-tag {
+        padding: 3px 8px;
+        font-size: 12.5px;
+      }
+
+      .settings-tag em {
+        font-size: 10px;
+      }
+
+      .trend-detail-chart {
+        padding: 7px 6px 5px;
+      }
+
+      .trend-detail-plot,
+      .trend-detail-plot svg {
+        height: 92px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -6483,7 +6739,7 @@
               <summary class="settings-fold-summary">
                 <span class="settings-fold-line">
                   <span class="settings-fold-kicker">设置</span>
-                  <strong id="settingsSummaryLine">完善资料后自动计算目标</strong>
+                  <span class="settings-summary-tags" id="settingsSummaryLine"><span class="settings-summary-empty">完善资料后自动计算目标</span></span>
                 </span>
                 <span class="advanced-chevron" aria-hidden="true">⌄</span>
               </summary>
@@ -14156,6 +14412,78 @@
         `;
       }
 
+      // v28：展开态使用更高、更详细的柱状图：7 天完整日期轴 + 逐日数值。
+      // 仍然只画有记录的日期，缺失日期保留刻度但不补 0。
+      function trendDetailBarChartHTML(series, options = {}) {
+        if (!series.length) {
+          return `<div class="trend-chart-empty">${escapeHTML(options.emptyText || "近 7 天暂无记录")}</div>`;
+        }
+        const width = 224;
+        const height = 104;
+        const baseline = 96;
+        const top = 8;
+        const slot = width / 7;
+        const barWidth = Math.max(9, slot * 0.52);
+        const max = Math.max(...series.map((item) => item.value), 1);
+        const digits = Number.isFinite(options.digits) ? options.digits : 0;
+        const unit = options.unit || "";
+        const axisKeys = Array.isArray(options.axisKeys) ? options.axisKeys : [];
+        const byIndex = new Map(series.map((item) => [item.index, item]));
+        // 卡片宽度有限：数值最多 4 个字符（kcal 取整；其他指标优先保留 1 位小数）。
+        const valueText = (value) => {
+          if (digits === 0) return String(Math.round(value));
+          const withDecimal = String(round(value, 1));
+          return withDecimal.length <= 4 ? withDecimal : String(Math.round(value));
+        };
+        const dayText = (key) => {
+          const parts = String(key || "").split("-");
+          return parts.length === 3 ? String(Number(parts[2])) : "";
+        };
+        const bars = series.map((item) => {
+          const barHeight = Math.max(3, (item.value / max) * (baseline - top));
+          const x = item.index * slot + (slot - barWidth) / 2;
+          const y = baseline - barHeight;
+          return `<rect class="trend-svg-bar trend-detail-bar" x="${round(x, 1)}" y="${round(y, 1)}" width="${round(barWidth, 1)}" height="${round(barHeight, 1)}" rx="2.6"><title>${escapeHTML(shortDateLabel(item.key))} · ${escapeHTML(fmt(item.value, digits))}${escapeHTML(unit)}</title></rect>`;
+        }).join("");
+        const grid = [0.33, 0.66].map((ratio) => {
+          const y = round(baseline - (baseline - top) * ratio, 1);
+          return `<line class="trend-detail-grid" x1="0" y1="${y}" x2="${width}" y2="${y}"></line>`;
+        }).join("");
+        const ticks = Array.from({ length: 7 }, (_, index) => {
+          const x = round(index * slot + slot / 2, 1);
+          return `<line class="trend-tick" x1="${x}" y1="${baseline}" x2="${x}" y2="${baseline + 2}"></line>`;
+        }).join("");
+        const values = Array.from({ length: 7 }, (_, index) => {
+          const item = byIndex.get(index);
+          return `<span class="trend-detail-value${item ? "" : " is-empty"}">${item ? escapeHTML(valueText(item.value)) : "&nbsp;"}</span>`;
+        }).join("");
+        const days = Array.from({ length: 7 }, (_, index) => {
+          const key = axisKeys[index];
+          const classes = ["trend-detail-day"];
+          if (!byIndex.has(index)) classes.push("is-missing");
+          if (key === todayKey()) classes.push("is-today");
+          return `<span class="${classes.join(" ")}">${key ? escapeHTML(dayText(key)) : "&nbsp;"}</span>`;
+        }).join("");
+        const dataSummary = series
+          .map((item) => `${shortDateLabel(item.key)} ${fmt(item.value, digits)}${unit ? " " + unit : ""}`)
+          .join("，");
+        const chartLabel = `${options.label || "近 7 天趋势"}：${dataSummary}`;
+        return `
+          <div class="trend-detail-chart">
+            <div class="trend-detail-values" aria-hidden="true">${values}</div>
+            <div class="trend-detail-plot">
+              <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" role="img" aria-label="${escapeHTML(chartLabel)}">
+                ${grid}
+                ${bars}
+                <line class="trend-axis" x1="0" y1="${baseline}" x2="${width}" y2="${baseline}"></line>
+                ${ticks}
+              </svg>
+            </div>
+            <div class="trend-detail-days" aria-hidden="true">${days}</div>
+          </div>
+        `;
+      }
+
       // Catmull-Rom 转三次贝塞尔，得到圆滑但不夸张的折线。
       function smoothTrendPath(points) {
         if (points.length < 2) return "";
@@ -14231,11 +14559,33 @@
 
       function toggleTrendModule(id) {
         if (!id) return;
-        if (trendOpenModules.has(id)) trendOpenModules.delete(id);
-        else trendOpenModules.add(id);
+        const willOpen = !trendOpenModules.has(id);
+        // v28：手风琴模式 —— 展开一张卡片时，自动收起其他卡片，避免多张大图同时撑高页面。
+        if (willOpen) {
+          Array.from(trendOpenModules).forEach((openId) => {
+            if (openId === id) return;
+            trendOpenModules.delete(openId);
+            const other = trendModuleContainer(openId);
+            if (other) {
+              other.classList.remove("is-open");
+              const otherDrawer = other.querySelector(".trend-drawer");
+              if (otherDrawer) otherDrawer.setAttribute("aria-hidden", "true");
+            }
+            $$(`[data-trend-toggle="${openId}"]`, els.trendInsights).forEach((toggle) => {
+              toggle.setAttribute("aria-expanded", "false");
+            });
+          });
+          trendOpenModules.add(id);
+        } else {
+          trendOpenModules.delete(id);
+        }
         const isOpen = trendOpenModules.has(id);
         const container = trendModuleContainer(id);
-        if (container) container.classList.toggle("is-open", isOpen);
+        if (container) {
+          container.classList.toggle("is-open", isOpen);
+          const drawer = container.querySelector(".trend-drawer");
+          if (drawer) drawer.setAttribute("aria-hidden", String(!isOpen));
+        }
         $$(`[data-trend-toggle="${id}"]`, els.trendInsights).forEach((toggle) => {
           toggle.setAttribute("aria-expanded", String(isOpen));
         });
@@ -14311,7 +14661,7 @@
           const series = intakeTrendSeries(chronological, metric.key);
           const open = trendOpenModules.has(metric.key);
           const chartCaption = series.length
-            ? `近 7 天有记录 ${series.length} 天`
+            ? `${shortDateLabel(chronological[0])}–${shortDateLabel(chronological[chronological.length - 1])} · 有记录 ${series.length} 天`
             : "近 7 天暂无摄入记录";
           return `
             <div class="dash-metric trend-metric is-${metric.key}${open ? " is-open" : ""}" data-trend-module="${metric.key}" data-trend-toggle="${metric.key}" role="button" tabindex="0" aria-expanded="${open}" aria-controls="trendDrawer-${metric.key}">
@@ -14320,16 +14670,17 @@
               <div class="dash-bar" aria-hidden="true"><i data-bar-key="trend-${metric.key}" data-bar-percent="${percent}"></i></div>
               <small>${metric.hint} · ${targetText}</small>
               <i class="trend-chevron" aria-hidden="true">⌄</i>
-              <div class="trend-drawer" id="trendDrawer-${metric.key}">
+              <div class="trend-drawer" id="trendDrawer-${metric.key}" aria-hidden="${open ? "false" : "true"}">
                 <div class="trend-drawer-inner">
                   <div class="trend-drawer-content">
-                    ${trendBarChartHTML(series, {
+                    ${trendDetailBarChartHTML(series, {
+                      axisKeys: chronological,
                       label: `近 7 天${metric.label.replace("平均", "")}变化`,
                       unit: metric.unit,
                       digits: metric.digits,
                       emptyText: "近 7 天暂无摄入记录"
                     })}
-                    <p class="trend-chart-caption">${chartCaption}</p>
+                    <p class="trend-chart-caption">${chartCaption} · 点按卡片收起</p>
                   </div>
                 </div>
               </div>
@@ -14423,7 +14774,7 @@
               <span class="weight-change ${deltaClassFor(primaryStats.delta)}">${metricDeltaText(primaryStats.delta, primaryMetric.unit)}</span>
               <i class="trend-chevron" aria-hidden="true">⌄</i>
             </div>
-            <div class="trend-drawer" id="bodyTrendDrawer">
+            <div class="trend-drawer" id="bodyTrendDrawer" aria-hidden="${bodyOpen ? "false" : "true"}">
               <div class="trend-drawer-inner">
                 <div class="trend-drawer-content">
                   <div class="body-trend-grid is-count-${trackedMetrics.length}">${bodyChartHTML}</div>
@@ -14433,7 +14784,7 @@
             </div>
             ${bodyMetricHTML}
             <p class="body-metric-hint">${hasBodyMetricRecord
-              ? "点击上方摘要可展开最近 7 天趋势图。"
+              ? "点击上方摘要可展开或收起最近 7 天趋势图。"
               : "除了体重，也可以记录腰围和体脂率，围度变化更能反映身体成分。"}</p>
             ${compositionHint ? `<p class="body-composition-hint">${escapeHTML(compositionHint)}</p>` : ""}
             <div class="body-log-grid is-count-${trackedMetrics.length}">
@@ -14576,21 +14927,28 @@
       }
 
       // v25：设置折叠时的一行摘要。
+      // v28：拆成 3–4 个胶囊标签，窄屏自动换行，不再用大字铺满整行。
       function updateSettingsSummary() {
         if (!els.settingsSummaryLine) return;
         const profile = db.profile || {};
         const height = positiveNumber(profile.height);
         const weight = positiveNumber(profile.weight);
-        const parts = [];
-        if (height) parts.push(`${fmt(height, Number.isInteger(height) ? 0 : 1)}cm`);
-        if (weight) parts.push(`${fmt(weight, Number.isInteger(weight) ? 0 : 1)}kg`);
-        if (parts.length || profile.sex || profile.age) {
-          parts.push((GOALS[profile.goal] || GOALS.maintain).label);
-          parts.push(profile.dynamicCalories ? "动态热量已开启" : "动态热量未开启");
+        const tags = [];
+        if (height) {
+          tags.push(`<span class="settings-tag">${escapeHTML(fmt(height, Number.isInteger(height) ? 0 : 1))}<em>cm</em></span>`);
         }
-        els.settingsSummaryLine.textContent = parts.length
-          ? parts.join(" · ")
-          : "完善资料后自动计算目标";
+        if (weight) {
+          tags.push(`<span class="settings-tag">${escapeHTML(fmt(weight, Number.isInteger(weight) ? 0 : 1))}<em>kg</em></span>`);
+        }
+        if (height || weight || profile.sex || profile.age) {
+          tags.push(`<span class="settings-tag is-goal">${escapeHTML((GOALS[profile.goal] || GOALS.maintain).label)}</span>`);
+          if (profile.dynamicCalories) {
+            tags.push('<span class="settings-tag is-dynamic">动态热量</span>');
+          }
+        }
+        els.settingsSummaryLine.innerHTML = tags.length
+          ? tags.join("")
+          : '<span class="settings-summary-empty">完善资料后自动计算目标</span>';
       }
 
       function renderAll() {
