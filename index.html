@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- FitDay v28 · 设置摘要胶囊标签 + 趋势卡手风琴详细大图 + 体重摘要排版修复 -->
+<!-- FitDay v29 · 设置摘要点击高亮修复 + 趋势卡三段式渐进交互 + 大豆优质蛋白 -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f4f5f2">
   <meta name="color-scheme" content="light">
-  <meta name="app-version" content="v28">
+  <meta name="app-version" content="v29">
   <meta name="description" content="FitDay - 纯本地、移动端优先的健身饮食记录工具">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -66,6 +66,8 @@
     *::before,
     *::after {
       box-sizing: border-box;
+      /* v29：全局关闭移动端点击高亮，避免设置摘要等浅色区域出现蓝条。 */
+      -webkit-tap-highlight-color: transparent;
     }
 
     html {
@@ -5664,7 +5666,11 @@
     .trend-metric {
       position: relative;
       cursor: pointer;
-      transition: border-color 0.18s ease, background 0.18s ease;
+      transition:
+        border-color 0.18s ease,
+        background 0.18s ease,
+        box-shadow 0.3s ease,
+        padding 0.3s ease;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -5680,6 +5686,51 @@
     .trend-metric:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 1px;
+    }
+
+    /* v29：三段式趋势卡 —— 半展开可多开；巨幕态独占整行、图表放大。 */
+    .trend-metric.is-full {
+      grid-column: 1 / -1;
+      min-width: 0;
+      padding: 14px 14px 12px;
+      border-color: #cfe4d8;
+      background: #fbfdfc;
+      box-shadow: 0 14px 34px rgba(22, 122, 90, 0.09);
+      animation: trend-full-in 0.36s cubic-bezier(0.22, 0.8, 0.28, 1);
+    }
+
+    @keyframes trend-full-in {
+      from {
+        transform: scaleX(0.96);
+        transform-origin: left top;
+        opacity: 0.72;
+      }
+      to {
+        transform: scaleX(1);
+        transform-origin: left top;
+        opacity: 1;
+      }
+    }
+
+    .trend-metric.is-full .trend-chevron {
+      color: var(--accent-ink);
+    }
+
+    .trend-metric.is-full .trend-drawer-content {
+      margin-top: 10px;
+      padding-top: 10px;
+    }
+
+    .trend-caption-full {
+      display: none;
+    }
+
+    .trend-metric.is-full .trend-caption-half {
+      display: none;
+    }
+
+    .trend-metric.is-full .trend-caption-full {
+      display: inline;
     }
 
     .trend-chevron {
@@ -5747,6 +5798,16 @@
     .trend-tick {
       stroke: #d8ded6;
       stroke-width: 1;
+    }
+
+    /* v29：巨幕态显示更密的日期刻度。 */
+    .trend-tick-minor {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .trend-metric.is-full .trend-tick-minor {
+      opacity: 0.45;
     }
 
     .trend-svg-bar {
@@ -5915,7 +5976,7 @@
     }
 
     /* ==========================================================
-       v28：设置摘要胶囊标签 + 趋势卡排版与手风琴大图
+       v28/v29：设置摘要胶囊标签 + 趋势卡排版、三段式大图
        ========================================================== */
     .settings-fold-line {
       gap: 6px;
@@ -5989,6 +6050,54 @@
       font-size: 12px;
       font-weight: 600;
       line-height: 1.3;
+    }
+
+    /* v29：设置摘要栏移动端点击高亮修复。
+       保持深绿/浅绿胶囊原色，点按与聚焦时不出现任何背景色突变。 */
+    .settings-fold > summary,
+    .settings-fold-line,
+    .settings-summary-tags,
+    .settings-tag,
+    .settings-summary-empty {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
+
+    .settings-fold > summary,
+    .settings-fold > summary:active,
+    .settings-fold > summary:focus,
+    .settings-fold-line,
+    .settings-fold-line:active,
+    .settings-fold-line:focus,
+    .settings-fold-line:focus-within,
+    .settings-summary-tags,
+    .settings-summary-tags:active,
+    .settings-summary-tags:focus {
+      background-color: transparent;
+    }
+
+    .settings-tag,
+    .settings-tag:active,
+    .settings-tag:focus {
+      background-color: var(--accent-soft);
+    }
+
+    .settings-tag.is-goal,
+    .settings-tag.is-goal:active,
+    .settings-tag.is-goal:focus {
+      background-color: var(--surface-3);
+    }
+
+    .settings-tag.is-dynamic,
+    .settings-tag.is-dynamic:active,
+    .settings-tag.is-dynamic:focus {
+      background-color: #ffffff;
+    }
+
+    .settings-summary-empty,
+    .settings-summary-empty:active,
+    .settings-summary-empty:focus {
+      background-color: var(--surface-2);
     }
 
     /* v28：体重摘要改为两列网格；状态标签在标题下方，箭头独占右列，杜绝重叠。 */
@@ -6065,6 +6174,42 @@
       color: transparent;
     }
 
+    .trend-detail-value b,
+    .trend-detail-day b {
+      font-weight: inherit;
+    }
+
+    /* v29：巨幕态才展开的单位与星期刻度，半展开保持紧凑。 */
+    .trend-detail-value i,
+    .trend-detail-day i,
+    .trend-detail-day-date {
+      display: block;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      font-style: normal;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 1.2;
+      transition:
+        max-height 0.3s ease,
+        opacity 0.24s ease;
+    }
+
+    .trend-detail-value i {
+      color: var(--muted);
+      font-size: 0.82em;
+    }
+
+    .trend-detail-day i {
+      color: var(--muted-2);
+      font-size: 0.9em;
+    }
+
+    .trend-detail-day-date {
+      color: inherit;
+    }
+
     .trend-metric.is-protein .trend-detail-value {
       color: #3f6fb5;
     }
@@ -6079,12 +6224,42 @@
 
     .trend-detail-plot {
       height: 104px;
+      transition: height 0.36s cubic-bezier(0.22, 0.8, 0.28, 1);
     }
 
     .trend-detail-plot svg {
       display: block;
       width: 100%;
       height: 104px;
+      transition: height 0.36s cubic-bezier(0.22, 0.8, 0.28, 1);
+    }
+
+    .trend-metric.is-full .trend-detail-value {
+      font-size: clamp(9px, 2.3vw, 11px);
+    }
+
+    .trend-metric.is-full .trend-detail-value i,
+    .trend-metric.is-full .trend-detail-day i,
+    .trend-metric.is-full .trend-detail-day-date {
+      max-height: 14px;
+      opacity: 1;
+    }
+
+    .trend-metric.is-full .trend-detail-day {
+      font-size: clamp(8px, 2.1vw, 10px);
+    }
+
+    .trend-metric.is-full .trend-detail-day-num {
+      display: none;
+    }
+
+    .trend-metric.is-full .trend-detail-plot,
+    .trend-metric.is-full .trend-detail-plot svg {
+      height: 200px;
+    }
+
+    .trend-metric.is-full .trend-detail-chart {
+      padding: 10px 8px 8px;
     }
 
     .trend-detail-days {
@@ -6164,9 +6339,10 @@
         padding: 7px 6px 5px;
       }
 
-      .trend-detail-plot,
-      .trend-detail-plot svg {
-        height: 92px;
+      /* v29：半展开保持 104px；仅巨幕态在 320px 窄屏降到 180px，避免过高。 */
+      .trend-metric.is-full .trend-detail-plot,
+      .trend-metric.is-full .trend-detail-plot svg {
+        height: 180px;
       }
     }
   </style>
@@ -7457,7 +7633,15 @@
           <label><input type="checkbox" name="antiTags" value="highSalt"><span>高盐腌制 <em>-10</em></span></label>
         </div>
 
-        <p class="custom-form-note">自定义食物会记录 4 项宏量营养、膳食纤维和 6 项微量元素；勾选标签后会参与每日抗炎评分。发酵类等标签会计入抗炎加分。所有数据仅保存在本机浏览器。</p>
+        <span class="field-caption custom-micro-caption">优质蛋白标签（可选）</span>
+        <div class="anti-tag-picker is-anti">
+          <label>
+            <input type="checkbox" name="isHighQualityProtein" id="customHighQualityProtein">
+            <span>计入优质蛋白 <em>大豆 / 肉蛋奶 / 乳清</em></span>
+          </label>
+        </div>
+
+        <p class="custom-form-note">自定义食物会记录 4 项宏量营养、膳食纤维和 6 项微量元素；勾选标签后会参与每日抗炎评分。发酵类等标签会计入抗炎加分。勾选「计入优质蛋白」后会参与每日优质蛋白占比。所有数据仅保存在本机浏览器。</p>
         <button class="btn btn-primary full" id="customFoodSubmit" type="submit">保存并选择</button>
       </form>
 
@@ -7879,11 +8063,15 @@
         return 0;
       }
 
-      const PLANT_PROTEIN_PATTERN = /豆腐|豆干|腐竹|千张|豆浆|毛豆|鹰嘴豆|红豆|绿豆|扁豆|豆类/;
+      // v29：大豆及大豆制品同样属于优质蛋白；红豆、绿豆、鹰嘴豆等非大豆豆类仍不计入。
+      const SOY_PROTEIN_PATTERN = /大豆(?!角)|黄豆|黑豆|青大豆|毛豆|豆奶|豆乳|豆浆|豆腐(?!柴)|豆干|千张|腐竹|素鸡|豆肝尖|发芽豆/;
+      const NON_SOY_PLANT_PROTEIN_PATTERN = /鹰嘴豆|红豆|绿豆|扁豆|豌豆|芸豆|蚕豆|豇豆|眉豆|花豆|赤小豆|木豆|荆豆|脑豆|豆角|荷兰豆|豆薯|豆腐柴/;
 
       function isHighQualityProteinName(name, category) {
+        const text = String(name || "");
+        if (SOY_PROTEIN_PATTERN.test(text)) return true;
         if (category !== "肉蛋奶") return false;
-        return !PLANT_PROTEIN_PATTERN.test(String(name || ""));
+        return !NON_SOY_PLANT_PROTEIN_PATTERN.test(text);
       }
 
       const PORTION_OVERRIDES = {
@@ -10425,6 +10613,7 @@
           magnesium: round(Math.min(10000, numeric(raw.magnesium)), 1),
           potassium: round(Math.min(10000, numeric(raw.potassium)), 1),
           antiTags: normalizeAntiTags(raw.antiTags),
+          isHighQualityProtein: raw.isHighQualityProtein === true,
           aliases: [],
           custom: true,
           createdAt: typeof raw.createdAt === "string" ? raw.createdAt : new Date().toISOString()
@@ -10771,10 +10960,15 @@
       function highQualityProteinStats(foods) {
         let total = 0;
         let high = 0;
+        const customById = new Map(db.customFoods.map((food) => [food.id, food]));
+        const customByName = new Map(db.customFoods.map((food) => [food.name, food]));
         (foods || []).forEach((food) => {
           const protein = (Number(food.per100 && food.per100.protein) || 0) * food.grams / 100;
           total += protein;
+          const custom = customById.get(food.foodId) ||
+            (food.category === "自定义" ? customByName.get(food.name) : null);
           if (food.isHighQualityProtein === true ||
+            (custom && custom.isHighQualityProtein === true) ||
             isHighQualityProteinName(food.name, food.category)) {
             high += protein;
           }
@@ -10793,7 +10987,7 @@
           `;
         }
         let qualityClass = "is-warn";
-        let qualityText = "不完全蛋白占比过高，建议补充肉蛋奶";
+        let qualityText = "不完全蛋白占比过高，建议补充肉蛋奶或大豆制品";
         if (stats.ratio > 0.8) {
           qualityClass = "is-excellent";
           qualityText = "优质蛋白优秀（>80%）";
@@ -11091,6 +11285,8 @@
       let mealLongPressStart = null;
       let dismissedHotspots = new Set();
       const trendOpenModules = new Set();
+      // v29：三段式趋势卡的“巨幕”模块（同一时间最多一张）。
+      let trendFullModule = null;
       let copySourceDate = null;
       let foodEditLastFocus = null;
       let workoutEditLastFocus = null;
@@ -11363,12 +11559,14 @@
         }
         const grams = currentGrams();
         const nutrition = foodNutritionAt(selectedFood, grams);
+        const highQuality = selectedFood.isHighQualityProtein === true ||
+          isHighQualityProteinName(selectedFood.name, selectedFood.category);
         els.foodSelected.hidden = false;
         els.foodSelected.innerHTML = `
           ${foodTokenHTML(selectedFood)}
           <span class="picked-copy">
             <strong>${escapeHTML(selectedFood.name)}</strong>
-            <span>${fmt(grams)}g ≈ ${fmt(nutrition.kcal)} kcal · 蛋白 ${fmt(nutrition.protein, 1)}g · 碳水 ${fmt(nutrition.carbs, 1)}g</span>
+            <span>${fmt(grams)}g ≈ ${fmt(nutrition.kcal)} kcal · 蛋白 ${fmt(nutrition.protein, 1)}g · 碳水 ${fmt(nutrition.carbs, 1)}g${highQuality ? " · 优质蛋白" : ""}</span>
           </span>
           <button class="picked-remove" type="button" data-clear-food aria-label="取消选择食物">
             <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
@@ -11785,7 +11983,7 @@
             ${foodTokenHTML(food)}
             <div class="custom-food-copy">
               <strong>${escapeHTML(food.name)}</strong>
-              <span>${fmt(food.kcal)} kcal · 蛋白 ${fmt(food.protein, 1)}g · 碳水 ${fmt(food.carbs, 1)}g · 脂肪 ${fmt(food.fat, 1)}g</span>
+              <span>${fmt(food.kcal)} kcal · 蛋白 ${fmt(food.protein, 1)}g · 碳水 ${fmt(food.carbs, 1)}g · 脂肪 ${fmt(food.fat, 1)}g${food.isHighQualityProtein ? " · 优质蛋白" : ""}</span>
             </div>
             <div class="record-actions">
               <button class="record-action-btn" type="button" data-edit-custom="${escapeHTML(food.id)}" aria-label="编辑自定义食物 ${escapeHTML(food.name)}">
@@ -11865,7 +12063,8 @@
         return {
           name,
           ...values,
-          antiTags: $$('input[name="antiTags"]:checked', els.customFoodForm).map((input) => input.value)
+          antiTags: $$('input[name="antiTags"]:checked', els.customFoodForm).map((input) => input.value),
+          isHighQualityProtein: Boolean(els.customFoodForm.elements.isHighQualityProtein && els.customFoodForm.elements.isHighQualityProtein.checked)
         };
       }
 
@@ -11943,6 +12142,9 @@
           $$('input[name="antiTags"]', form).forEach((input) => {
             input.checked = tags.includes(input.value);
           });
+          if (form.elements.isHighQualityProtein) {
+            form.elements.isHighQualityProtein.checked = editingFood.isHighQualityProtein === true;
+          }
         } else {
           const isDietEntry = customFoodModalContext === "diet";
           els.customFoodKicker.textContent = "MY FOOD";
@@ -12003,6 +12205,7 @@
             magnesium: data.magnesium,
             potassium: data.potassium,
             antiTags: data.antiTags,
+            isHighQualityProtein: data.isHighQualityProtein === true,
             custom: true
           };
           db.customFoods[index] = updated;
@@ -12040,6 +12243,7 @@
           magnesium: data.magnesium,
           potassium: data.potassium,
           antiTags: data.antiTags,
+          isHighQualityProtein: data.isHighQualityProtein === true,
           aliases: [],
           custom: true,
           createdAt: new Date().toISOString()
@@ -14412,7 +14616,7 @@
         `;
       }
 
-      // v28：展开态使用更高、更详细的柱状图：7 天完整日期轴 + 逐日数值。
+      // v28/v29：展开态使用更高、更详细的柱状图：7 天完整日期轴 + 逐日数值。
       // 仍然只画有记录的日期，缺失日期保留刻度但不补 0。
       function trendDetailBarChartHTML(series, options = {}) {
         if (!series.length) {
@@ -14439,13 +14643,22 @@
           const parts = String(key || "").split("-");
           return parts.length === 3 ? String(Number(parts[2])) : "";
         };
+        // v29：巨幕态显示“月/日 + 星期”的完整日期刻度。
+        const dateText = (key) => {
+          const parts = String(key || "").split("-");
+          return parts.length === 3 ? `${Number(parts[1])}/${Number(parts[2])}` : "";
+        };
+        const weekdayText = (key) => {
+          const date = parseDateKey(key);
+          return date ? WEEKDAYS[date.getDay()] : "";
+        };
         const bars = series.map((item) => {
           const barHeight = Math.max(3, (item.value / max) * (baseline - top));
           const x = item.index * slot + (slot - barWidth) / 2;
           const y = baseline - barHeight;
           return `<rect class="trend-svg-bar trend-detail-bar" x="${round(x, 1)}" y="${round(y, 1)}" width="${round(barWidth, 1)}" height="${round(barHeight, 1)}" rx="2.6"><title>${escapeHTML(shortDateLabel(item.key))} · ${escapeHTML(fmt(item.value, digits))}${escapeHTML(unit)}</title></rect>`;
         }).join("");
-        const grid = [0.33, 0.66].map((ratio) => {
+        const grid = [0.25, 0.5, 0.75].map((ratio) => {
           const y = round(baseline - (baseline - top) * ratio, 1);
           return `<line class="trend-detail-grid" x1="0" y1="${y}" x2="${width}" y2="${y}"></line>`;
         }).join("");
@@ -14453,16 +14666,22 @@
           const x = round(index * slot + slot / 2, 1);
           return `<line class="trend-tick" x1="${x}" y1="${baseline}" x2="${x}" y2="${baseline + 2}"></line>`;
         }).join("");
+        const minorTicks = Array.from({ length: 8 }, (_, index) => {
+          const x = round(index * slot, 1);
+          return `<line class="trend-tick trend-tick-minor" x1="${x}" y1="${baseline}" x2="${x}" y2="${baseline + 2}"></line>`;
+        }).join("");
         const values = Array.from({ length: 7 }, (_, index) => {
           const item = byIndex.get(index);
-          return `<span class="trend-detail-value${item ? "" : " is-empty"}">${item ? escapeHTML(valueText(item.value)) : "&nbsp;"}</span>`;
+          if (!item) return `<span class="trend-detail-value is-empty">&nbsp;</span>`;
+          return `<span class="trend-detail-value"><b>${escapeHTML(valueText(item.value))}</b><i>${escapeHTML(unit)}</i></span>`;
         }).join("");
         const days = Array.from({ length: 7 }, (_, index) => {
           const key = axisKeys[index];
           const classes = ["trend-detail-day"];
           if (!byIndex.has(index)) classes.push("is-missing");
           if (key === todayKey()) classes.push("is-today");
-          return `<span class="${classes.join(" ")}">${key ? escapeHTML(dayText(key)) : "&nbsp;"}</span>`;
+          const dayNum = key ? dayText(key) : "";
+          return `<span class="${classes.join(" ")}"><span class="trend-detail-day-num">${dayNum ? escapeHTML(dayNum) : "&nbsp;"}</span><span class="trend-detail-day-date">${key ? escapeHTML(dateText(key)) : ""}</span><i>${key ? escapeHTML(weekdayText(key)) : ""}</i></span>`;
         }).join("");
         const dataSummary = series
           .map((item) => `${shortDateLabel(item.key)} ${fmt(item.value, digits)}${unit ? " " + unit : ""}`)
@@ -14477,6 +14696,7 @@
                 ${bars}
                 <line class="trend-axis" x1="0" y1="${baseline}" x2="${width}" y2="${baseline}"></line>
                 ${ticks}
+                ${minorTicks}
               </svg>
             </div>
             <div class="trend-detail-days" aria-hidden="true">${days}</div>
@@ -14557,42 +14777,77 @@
         return els.trendInsights ? els.trendInsights.querySelector(`[data-trend-module="${id}"]`) : null;
       }
 
-      function toggleTrendModule(id) {
-        if (!id) return;
-        const willOpen = !trendOpenModules.has(id);
-        // v28：手风琴模式 —— 展开一张卡片时，自动收起其他卡片，避免多张大图同时撑高页面。
-        if (willOpen) {
-          Array.from(trendOpenModules).forEach((openId) => {
-            if (openId === id) return;
-            trendOpenModules.delete(openId);
-            const other = trendModuleContainer(openId);
-            if (other) {
-              other.classList.remove("is-open");
-              const otherDrawer = other.querySelector(".trend-drawer");
-              if (otherDrawer) otherDrawer.setAttribute("aria-hidden", "true");
-            }
-            $$(`[data-trend-toggle="${openId}"]`, els.trendInsights).forEach((toggle) => {
-              toggle.setAttribute("aria-expanded", "false");
-            });
-          });
-          trendOpenModules.add(id);
-        } else {
-          trendOpenModules.delete(id);
-        }
-        const isOpen = trendOpenModules.has(id);
+      // v29：三段式状态机 —— collapsed（折叠）/ half（半展开）/ full（巨幕）。
+      // 半展开允许多开；巨幕独占整行并强制其他卡片回到折叠态。
+      function trendModuleState(id) {
+        if (trendFullModule === id) return "full";
+        return trendOpenModules.has(id) ? "half" : "collapsed";
+      }
+
+      function syncTrendModuleDom(id, state) {
+        const open = state !== "collapsed";
+        const full = state === "full";
         const container = trendModuleContainer(id);
         if (container) {
-          container.classList.toggle("is-open", isOpen);
+          container.classList.toggle("is-open", open);
+          container.classList.toggle("is-full", full);
+          container.dataset.trendState = state;
           const drawer = container.querySelector(".trend-drawer");
-          if (drawer) drawer.setAttribute("aria-hidden", String(!isOpen));
+          if (drawer) drawer.setAttribute("aria-hidden", String(!open));
         }
         $$(`[data-trend-toggle="${id}"]`, els.trendInsights).forEach((toggle) => {
-          toggle.setAttribute("aria-expanded", String(isOpen));
+          toggle.setAttribute("aria-expanded", String(open));
         });
+      }
+
+      function setTrendModuleState(id, state) {
+        if (state === "collapsed") {
+          trendOpenModules.delete(id);
+          if (trendFullModule === id) trendFullModule = null;
+        } else {
+          trendOpenModules.add(id);
+          if (state === "full") trendFullModule = id;
+          else if (trendFullModule === id) trendFullModule = null;
+        }
+        syncTrendModuleDom(id, state);
+      }
+
+      function toggleTrendModule(id) {
+        if (!id || !els.trendInsights) return;
+        // 身体指标摘要保持普通两态开关，不参与巨幕。
+        if (id === "body") {
+          setTrendModuleState(id, trendModuleState(id) === "collapsed" ? "half" : "collapsed");
+          return;
+        }
+        const state = trendModuleState(id);
+        if (state === "collapsed") {
+          // 半展开可多开；若已有巨幕，先把它收回折叠态。
+          if (trendFullModule) setTrendModuleState(trendFullModule, "collapsed");
+          setTrendModuleState(id, "half");
+          return;
+        }
+        if (state === "half") {
+          // 进入巨幕：其他指标卡与身体指标摘要全部收回折叠态。
+          Array.from(trendOpenModules).forEach((otherId) => {
+            if (otherId !== id) setTrendModuleState(otherId, "collapsed");
+          });
+          if (trendFullModule && trendFullModule !== id) {
+            setTrendModuleState(trendFullModule, "collapsed");
+          }
+          setTrendModuleState(id, "full");
+          return;
+        }
+        // 巨幕态再次点击：退回折叠态。
+        setTrendModuleState(id, "collapsed");
       }
 
       function renderTrendInsights() {
         if (!els.trendInsights) return;
+        // 巨幕态只允许四张摄入指标卡；重渲染时同步修正失效状态。
+        if (trendFullModule && !["kcal", "protein", "carbs", "fat"].includes(trendFullModule)) {
+          trendFullModule = null;
+        }
+        if (trendFullModule) trendOpenModules.add(trendFullModule);
         const keys = recentDateKeys(7);
         const chronological = keys.slice().reverse();
         const data = getLongTermTrendData();
@@ -14659,12 +14914,14 @@
             : "目标待完善";
           const percent = metric.value !== null && metric.target ? pct(metric.value, metric.target) : 0;
           const series = intakeTrendSeries(chronological, metric.key);
-          const open = trendOpenModules.has(metric.key);
+          const full = trendFullModule === metric.key;
+          const open = full || trendOpenModules.has(metric.key);
+          const trendState = full ? "full" : open ? "half" : "collapsed";
           const chartCaption = series.length
             ? `${shortDateLabel(chronological[0])}–${shortDateLabel(chronological[chronological.length - 1])} · 有记录 ${series.length} 天`
             : "近 7 天暂无摄入记录";
           return `
-            <div class="dash-metric trend-metric is-${metric.key}${open ? " is-open" : ""}" data-trend-module="${metric.key}" data-trend-toggle="${metric.key}" role="button" tabindex="0" aria-expanded="${open}" aria-controls="trendDrawer-${metric.key}">
+            <div class="dash-metric trend-metric is-${metric.key}${open ? " is-open" : ""}${full ? " is-full" : ""}" data-trend-module="${metric.key}" data-trend-toggle="${metric.key}" data-trend-state="${trendState}" role="button" tabindex="0" aria-expanded="${open}" aria-controls="trendDrawer-${metric.key}">
               <span>${metric.label}</span>
               <strong>${valueText}${metric.value !== null ? `<em>${metric.unit}</em>` : ""}</strong>
               <div class="dash-bar" aria-hidden="true"><i data-bar-key="trend-${metric.key}" data-bar-percent="${percent}"></i></div>
@@ -14680,7 +14937,7 @@
                       digits: metric.digits,
                       emptyText: "近 7 天暂无摄入记录"
                     })}
-                    <p class="trend-chart-caption">${chartCaption} · 点按卡片收起</p>
+                    <p class="trend-chart-caption">${chartCaption} · <span class="trend-caption-half">再点一次放大</span><span class="trend-caption-full">巨幕模式 · 再点收起</span></p>
                   </div>
                 </div>
               </div>
@@ -14765,7 +15022,7 @@
         els.trendInsights.innerHTML = `
           <div class="dashboard-metrics">${metricHTML}</div>
 
-          <div class="weight-panel${bodyOpen ? " is-open" : ""}" data-trend-module="body">
+          <div class="weight-panel${bodyOpen ? " is-open" : ""}" data-trend-module="body" data-trend-state="${bodyOpen ? "half" : "collapsed"}">
             <div class="weight-panel-head" data-trend-toggle="body" role="button" tabindex="0" aria-expanded="${bodyOpen}" aria-controls="bodyTrendDrawer">
               <div>
                 <span>近 7 天${primaryMetric.label}均值</span>

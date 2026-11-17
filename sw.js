@@ -1,10 +1,10 @@
 /**
  * FitDay PWA Service Worker
- * v28：设置摘要胶囊标签、趋势卡手风琴详细大图、体重摘要状态标签排版修复；缓存名同步升级。
+ * v29：设置摘要移动端点击高亮修复、趋势卡三段式渐进交互（半展开多开 / 巨幕独占）、大豆及豆制品计入优质蛋白；缓存名同步升级。
  * 缓存策略：应用外壳 Cache First（缓存优先）。
  * 修改 index.html / 图标后，请同步提升 CACHE_NAME，让旧缓存自动失效。
  */
-const CACHE_NAME = "fitday-pwa-v28";
+const CACHE_NAME = "fitday-pwa-v29";
 const APP_SHELL = [
   "./index.html",
   "./manifest.json",
