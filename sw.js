@@ -1,10 +1,10 @@
 /**
  * FitDay PWA Service Worker
- * v29：设置摘要移动端点击高亮修复、趋势卡三段式渐进交互（半展开多开 / 巨幕独占）、大豆及豆制品计入优质蛋白；缓存名同步升级。
+ * v30：复制历史饮食支持按餐次勾选精确复制（覆盖仅影响选中餐次）、顶部新增与 meta 联动的版本号徽标；缓存名同步升级。
  * 缓存策略：应用外壳 Cache First（缓存优先）。
  * 修改 index.html / 图标后，请同步提升 CACHE_NAME，让旧缓存自动失效。
  */
-const CACHE_NAME = "fitday-pwa-v29";
+const CACHE_NAME = "fitday-pwa-v30";
 const APP_SHELL = [
   "./index.html",
   "./manifest.json",

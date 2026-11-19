@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- FitDay v29 · 设置摘要点击高亮修复 + 趋势卡三段式渐进交互 + 大豆优质蛋白 -->
+<!-- FitDay v30 · 复制历史饮食按餐次精确复制 + 顶部版本号显示 -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f4f5f2">
   <meta name="color-scheme" content="light">
-  <meta name="app-version" content="v29">
+  <meta name="app-version" content="v30">
   <meta name="description" content="FitDay - 纯本地、移动端优先的健身饮食记录工具">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -215,6 +215,28 @@
       font-weight: 750;
       letter-spacing: -0.02em;
       line-height: 1.25;
+    }
+
+    /* v30：顶部版本徽标，文案由 <meta name="app-version"> 注入，避免多处硬编码。 */
+    .app-version {
+      display: inline-flex;
+      align-items: center;
+      height: 16px;
+      margin-top: 3px;
+      padding: 0 6px;
+      border: 1px solid rgba(22, 122, 90, 0.16);
+      border-radius: 999px;
+      background: rgba(231, 243, 237, 0.62);
+      color: #5d8d78;
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: 0.03em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .app-version:empty {
+      display: none;
     }
 
     .local-badge {
@@ -1920,6 +1942,178 @@
       font-size: 9.5px;
       font-variant-numeric: tabular-nums;
       text-align: right;
+    }
+
+    /* ---------- v30：按餐次精确复制 ---------- */
+    .copy-date-row {
+      display: grid;
+    }
+
+    .copy-date-row .copy-date-item {
+      gap: 9px;
+    }
+
+    .copy-date-row .copy-date-copy {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .copy-date-row .copy-date-copy strong {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .copy-date-row .copy-date-kcal {
+      margin-left: auto;
+      white-space: nowrap;
+    }
+
+    .copy-date-chevron {
+      width: 13px;
+      height: 13px;
+      color: var(--muted-2);
+      transition: transform 0.26s cubic-bezier(0.22, 0.8, 0.28, 1);
+    }
+
+    .copy-date-item[aria-expanded="true"] {
+      border-color: rgba(22, 122, 90, 0.28);
+      background: var(--accent-soft);
+    }
+
+    .copy-date-item[aria-expanded="true"] .copy-date-chevron {
+      color: var(--accent-ink);
+      transform: rotate(180deg);
+    }
+
+    .copy-meal-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition:
+        grid-template-rows 0.32s cubic-bezier(0.22, 0.8, 0.28, 1),
+        opacity 0.2s ease;
+    }
+
+    .copy-date-row.is-open .copy-meal-panel {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+
+    .copy-meal-inner {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .copy-meal-list {
+      display: grid;
+      gap: 6px;
+      padding: 8px 0 2px;
+    }
+
+    .copy-meal-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #ffffff;
+      cursor: pointer;
+      transition: border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .copy-meal-item.is-checked {
+      border-color: rgba(22, 122, 90, 0.3);
+      background: var(--accent-soft);
+    }
+
+    .copy-meal-item input {
+      width: 16px;
+      height: 16px;
+      flex: none;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .copy-meal-copy {
+      min-width: 0;
+    }
+
+    .copy-meal-copy strong {
+      display: block;
+      overflow: hidden;
+      color: var(--ink);
+      font-size: 11.5px;
+      font-weight: 680;
+      line-height: 1.35;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .copy-meal-copy small {
+      display: block;
+      margin-top: 1px;
+      color: var(--muted);
+      font-size: 9px;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.35;
+    }
+
+    .copy-diet-foot {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 10px 0 2px;
+      border-top: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .copy-diet-foot[hidden] {
+      display: none;
+    }
+
+    .copy-diet-foot-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .copy-diet-summary {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 10px;
+      font-weight: 650;
+      line-height: 1.45;
+    }
+
+    .copy-diet-ghost {
+      flex: none;
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 9.5px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .copy-diet-ghost:active {
+      background: var(--surface-3);
+    }
+
+    .copy-diet-confirm {
+      min-height: 44px;
+      border-radius: 12px;
+      font-size: 12px;
     }
 
     .copy-diet-empty {
@@ -6387,6 +6581,9 @@
     <symbol id="i-right" viewBox="0 0 24 24">
       <path d="m9 18 6-6-6-6"/>
     </symbol>
+    <symbol id="i-down" viewBox="0 0 24 24">
+      <path d="m6 9 6 6 6-6"/>
+    </symbol>
     <symbol id="i-plus" viewBox="0 0 24 24">
       <path d="M12 5v14M5 12h14"/>
     </symbol>
@@ -6420,6 +6617,7 @@
         <div class="brand-copy">
           <p class="brand-kicker">FitDay / Local First</p>
           <h1>健身饮食日志</h1>
+          <span class="app-version" id="appVersion" title="当前版本"></span>
         </div>
       </div>
       <span class="local-badge"><i aria-hidden="true"></i>LOCAL</span>
@@ -7471,9 +7669,16 @@
           <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
         </button>
       </div>
-      <p class="sheet-sub">选择最近 7 天中有饮食记录的一天，复制到 <strong id="copyTargetDateLabel">今天</strong>。</p>
+      <p class="sheet-sub">选择最近 7 天中有饮食记录的一天，展开后勾选要复制的餐次，再复制到 <strong id="copyTargetDateLabel">今天</strong>。</p>
       <div class="copy-date-list" id="copyDietDates"></div>
       <div class="copy-diet-empty" id="copyDietEmpty" hidden>最近 7 天没有可复制的饮食记录。</div>
+      <div class="copy-diet-foot" id="copyDietFoot" hidden>
+        <div class="copy-diet-foot-head">
+          <p class="copy-diet-summary" id="copyDietSummary">请至少勾选一个餐次</p>
+          <button class="copy-diet-ghost" id="copyDietToggleAll" type="button">全选</button>
+        </div>
+        <button class="btn btn-primary copy-diet-confirm" id="copyDietConfirm" type="button" disabled>复制选中餐次</button>
+      </div>
     </div>
   </div>
 
@@ -7486,7 +7691,7 @@
       <p class="copy-mode-copy" id="copyModeBody"></p>
       <div class="copy-mode-actions">
         <button class="btn btn-primary full" id="copyModeAppend" type="button">追加到现有记录</button>
-        <button class="btn btn-secondary full" id="copyModeOverwrite" type="button">覆盖当前记录</button>
+        <button class="btn btn-secondary full" id="copyModeOverwrite" type="button">覆盖选中餐次</button>
         <button class="btn btn-secondary full" id="copyModeCancel" type="button">取消</button>
       </div>
     </div>
@@ -7663,6 +7868,8 @@
       // 常量
       // ============================================================
       const STORAGE_KEY = "fitday.data.v1";
+      // v30：版本号唯一来源是 <meta name="app-version">，顶部徽标由它注入。
+      const APP_VERSION = (document.querySelector('meta[name="app-version"]')?.content || "").trim();
       const CHECKLIST_FLAG = "fitday.onboarding.checklist.v1";
       const HOTSPOT_KEY = "fitday.hotspots.v1";
       const SCHEMA_VERSION = 1;
@@ -10097,6 +10304,7 @@
       const els = {
         prevDate: byId("prevDate"),
         nextDate: byId("nextDate"),
+        appVersion: byId("appVersion"),
         dateLabel: byId("dateLabel"),
         dateSub: byId("dateSub"),
         dateInput: byId("dateInput"),
@@ -10143,6 +10351,10 @@
         copyTargetDateLabel: byId("copyTargetDateLabel"),
         copyDietDates: byId("copyDietDates"),
         copyDietEmpty: byId("copyDietEmpty"),
+        copyDietFoot: byId("copyDietFoot"),
+        copyDietSummary: byId("copyDietSummary"),
+        copyDietToggleAll: byId("copyDietToggleAll"),
+        copyDietConfirm: byId("copyDietConfirm"),
         closeCopyDiet: byId("closeCopyDiet"),
         copyDietModeBackdrop: byId("copyDietModeBackdrop"),
         copyModeTitle: byId("copyModeTitle"),
@@ -11288,6 +11500,8 @@
       // v29：三段式趋势卡的“巨幕”模块（同一时间最多一张）。
       let trendFullModule = null;
       let copySourceDate = null;
+      // v30：按餐次复制时勾选的餐次集合，只对 copySourceDate 这一天生效。
+      let copySelectedMeals = new Set();
       let foodEditLastFocus = null;
       let workoutEditLastFocus = null;
       let cardioEditLastFocus = null;
@@ -15563,19 +15777,145 @@
           .filter((item) => item.foods.length > 0);
       }
 
+      // v30：把一天的饮食按餐次分组，顺序与饮食页保持一致。
+      function copyMealGroups(foods) {
+        const grouped = new Map();
+        (foods || []).forEach((food) => {
+          const meal = food.meal || "未分类";
+          if (!grouped.has(meal)) grouped.set(meal, []);
+          grouped.get(meal).push(food);
+        });
+        const order = [];
+        db.mealTypes.forEach((meal) => {
+          if (grouped.has(meal)) order.push(meal);
+        });
+        grouped.forEach((_, meal) => {
+          if (meal !== "未分类" && !order.includes(meal)) order.push(meal);
+        });
+        if (grouped.has("未分类")) order.push("未分类");
+        return order.map((meal) => {
+          const mealFoods = grouped.get(meal);
+          return { meal, foods: mealFoods, totals: sumFoods(mealFoods) };
+        });
+      }
+
+      function copyMealNamesLabel(meals) {
+        const names = [...meals];
+        if (!names.length) return "所选餐次";
+        if (names.length <= 3) return names.join("、");
+        return `${names.slice(0, 3).join("、")} 等 ${names.length} 个餐次`;
+      }
+
+      function copySelectedFoods(sourceFoods) {
+        return (sourceFoods || []).filter((food) => copySelectedMeals.has(food.meal || "未分类"));
+      }
+
+      function copyDietMealRowHTML(group) {
+        const meal = escapeHTML(group.meal);
+        return `
+          <label class="copy-meal-item" data-copy-meal-row="${meal}">
+            <input type="checkbox" data-copy-meal="${meal}">
+            <span class="copy-meal-copy">
+              <strong>${meal}</strong>
+              <small>${group.foods.length} 项 · ${fmt(group.totals.kcal)} kcal</small>
+            </span>
+          </label>
+        `;
+      }
+
+      function renderCopyDietDates(dates) {
+        els.copyDietDates.innerHTML = dates.map(({ date, foods, totals }) => {
+          const groups = copyMealGroups(foods);
+          return `
+            <div class="copy-date-row" data-copy-row="${date}">
+              <button class="copy-date-item" type="button" data-copy-date="${date}" aria-expanded="false" aria-controls="copyMeals-${date}">
+                <span class="copy-date-copy">
+                  <strong>${escapeHTML(dateTitle(date))}</strong>
+                  <small>${escapeHTML(dateSubtitle(date))}</small>
+                </span>
+                <span class="copy-date-kcal">${groups.length} 餐 · ${foods.length} 项<br>${fmt(totals.kcal)} kcal</span>
+                <svg class="icon copy-date-chevron" aria-hidden="true"><use href="#i-down"></use></svg>
+              </button>
+              <div class="copy-meal-panel" id="copyMeals-${date}" data-copy-panel="${date}" inert>
+                <div class="copy-meal-inner">
+                  <div class="copy-meal-list">${groups.map(copyDietMealRowHTML).join("")}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function syncCopyDietUI() {
+        const openDate = copySourceDate;
+        $$("[data-copy-row]").forEach((row) => {
+          const isOpen = Boolean(openDate) && row.dataset.copyRow === openDate;
+          row.classList.toggle("is-open", isOpen);
+          const button = row.querySelector("[data-copy-date]");
+          if (button) button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+          const panel = row.querySelector("[data-copy-panel]");
+          if (panel) panel.inert = !isOpen;
+          $$("[data-copy-meal]", row).forEach((input) => {
+            const checked = isOpen && copySelectedMeals.has(input.dataset.copyMeal);
+            input.checked = checked;
+            const item = input.closest(".copy-meal-item");
+            if (item) item.classList.toggle("is-checked", checked);
+          });
+        });
+
+        const sourceDay = openDate ? db.days[openDate] : null;
+        const sourceFoods = sourceDay && Array.isArray(sourceDay.foods) ? sourceDay.foods : [];
+        const selectedFoods = copySelectedFoods(sourceFoods);
+        const selectedCount = copySelectedMeals.size;
+        const groups = copyMealGroups(sourceFoods);
+
+        els.copyDietFoot.hidden = !openDate;
+        els.copyDietConfirm.disabled = selectedFoods.length === 0;
+        if (!openDate) return;
+        els.copyDietSummary.textContent = selectedCount
+          ? `已选 ${selectedCount} 个餐次 · ${selectedFoods.length} 项 · ${fmt(sumFoods(selectedFoods).kcal)} kcal`
+          : "请至少勾选一个餐次";
+        els.copyDietConfirm.textContent = selectedCount
+          ? `复制选中 ${selectedCount} 个餐次`
+          : "复制选中餐次";
+        els.copyDietToggleAll.textContent =
+          groups.length > 0 && selectedCount >= groups.length ? "取消全选" : "全选";
+      }
+
+      function toggleCopyDietDate(date) {
+        const sourceDay = db.days[date];
+        const sourceFoods = sourceDay && Array.isArray(sourceDay.foods) ? sourceDay.foods : [];
+        if (!sourceFoods.length) return;
+        if (copySourceDate === date) {
+          copySourceDate = null;
+          copySelectedMeals = new Set();
+        } else {
+          copySourceDate = date;
+          // 默认勾选该日全部餐次，取消勾选后只复制需要的餐次。
+          copySelectedMeals = new Set(copyMealGroups(sourceFoods).map((group) => group.meal));
+        }
+        syncCopyDietUI();
+      }
+
+      function toggleAllCopyMeals() {
+        if (!copySourceDate) return;
+        const sourceDay = db.days[copySourceDate];
+        const sourceFoods = sourceDay && Array.isArray(sourceDay.foods) ? sourceDay.foods : [];
+        const groups = copyMealGroups(sourceFoods);
+        const allSelected = groups.length > 0 && copySelectedMeals.size >= groups.length;
+        copySelectedMeals = allSelected
+          ? new Set()
+          : new Set(groups.map((group) => group.meal));
+        syncCopyDietUI();
+      }
+
       function openCopyDietModal() {
         copySourceDate = null;
+        copySelectedMeals = new Set();
         els.copyTargetDateLabel.textContent = dateTitle(selectedDate);
         const dates = recentCopyDietDates();
-        els.copyDietDates.innerHTML = dates.map(({ date, foods, totals }) => `
-          <button class="copy-date-item" type="button" data-copy-date="${date}">
-            <span class="copy-date-copy">
-              <strong>${escapeHTML(dateTitle(date))}</strong>
-              <small>${escapeHTML(dateSubtitle(date))}</small>
-            </span>
-            <span class="copy-date-kcal">${foods.length} 项<br>${fmt(totals.kcal)} kcal</span>
-          </button>
-        `).join("");
+        renderCopyDietDates(dates);
+        syncCopyDietUI();
         els.copyDietEmpty.hidden = dates.length > 0;
         els.copyDietBackdrop.hidden = false;
         document.body.style.overflow = "hidden";
@@ -15585,6 +15925,7 @@
         if (els.copyDietBackdrop.hidden) return;
         els.copyDietBackdrop.hidden = true;
         copySourceDate = null;
+        copySelectedMeals = new Set();
         if (!isAnyOverlayOpen()) document.body.style.overflow = "";
       }
 
@@ -15594,22 +15935,27 @@
         if (!isAnyOverlayOpen()) document.body.style.overflow = "";
       }
 
-      function askCopyDietMode(date) {
-        const source = db.days[date];
-        const sourceFoods = source && Array.isArray(source.foods) ? source.foods : [];
-        if (!sourceFoods.length) {
-          showToast("所选日期没有饮食记录");
+      function askCopyDietMode() {
+        const source = copySourceDate;
+        const sourceDay = source ? db.days[source] : null;
+        const sourceFoods = sourceDay && Array.isArray(sourceDay.foods) ? sourceDay.foods : [];
+        const selectedFoods = copySelectedFoods(sourceFoods);
+        if (!source || !selectedFoods.length) {
+          showToast("请至少勾选一个餐次");
           return;
         }
-        copySourceDate = date;
+        const selectedMeals = new Set(copySelectedMeals);
         const targetDay = db.days[selectedDate];
-        const targetCount = targetDay && Array.isArray(targetDay.foods) ? targetDay.foods.length : 0;
-        if (!targetCount) {
+        const targetFoods = targetDay && Array.isArray(targetDay.foods) ? targetDay.foods : [];
+        // 只有「选中的餐次」在当前日期已有记录时才需要询问追加 / 覆盖。
+        const conflicts = targetFoods.filter((food) => selectedMeals.has(food.meal || "未分类"));
+        if (!conflicts.length) {
           performCopyDiet("append");
           return;
         }
-        els.copyModeTitle.textContent = `当前日期已有 ${targetCount} 条饮食记录`;
-        els.copyModeBody.textContent = `将把「${dateTitle(date)}」的 ${sourceFoods.length} 条食物复制到「${dateTitle(selectedDate)}」。追加会保留现有记录，覆盖只会替换当前饮食记录，训练、体重等数据不受影响。`;
+        const mealLabel = copyMealNamesLabel(selectedMeals);
+        els.copyModeTitle.textContent = `当前日期已有 ${conflicts.length} 条同餐次记录`;
+        els.copyModeBody.textContent = `将把「${dateTitle(source)}」的 ${mealLabel}（共 ${selectedFoods.length} 条食物）复制到「${dateTitle(selectedDate)}」。追加会保留现有记录；覆盖只会替换你选中的 ${mealLabel}，其他餐次和训练、体重等数据不受影响。`;
         els.copyDietModeBackdrop.hidden = false;
         document.body.style.overflow = "hidden";
       }
@@ -15617,13 +15963,17 @@
       function performCopyDiet(mode) {
         const source = copySourceDate;
         const targetDate = selectedDate;
+        const selectedMeals = new Set(copySelectedMeals);
         const sourceDay = source ? db.days[source] : null;
-        const sourceFoods = sourceDay && Array.isArray(sourceDay.foods) ? [...sourceDay.foods] : [];
+        const sourceFoods = sourceDay && Array.isArray(sourceDay.foods)
+          ? sourceDay.foods.filter((food) => selectedMeals.has(food.meal || "未分类"))
+          : [];
         if (!source || source === targetDate || !sourceFoods.length) {
           closeCopyDietMode();
           closeCopyDietModal();
           return;
         }
+        // 保留完整的营养快照（per100）与抗炎标签，只替换记录 id 与时间。
         const copies = sourceFoods.map((food) => ({
           ...food,
           id: uid(),
@@ -15634,7 +15984,9 @@
         const targetDay = getDay(targetDate, true);
         const previousFoods = [...targetDay.foods];
         if (mode === "overwrite") {
-          targetDay.foods.splice(0, targetDay.foods.length, ...copies);
+          // 只移除被选中餐次的旧记录，未选中的餐次原样保留。
+          const kept = targetDay.foods.filter((food) => !selectedMeals.has(food.meal || "未分类"));
+          targetDay.foods.splice(0, targetDay.foods.length, ...kept, ...copies);
         } else {
           targetDay.foods.push(...copies);
         }
@@ -15646,10 +15998,11 @@
         copies.forEach((food) => {
           expandedMeals.add(`${targetDate}|${food.meal || "未分类"}`);
         });
+        const actionText = mode === "overwrite" ? "覆盖" : "追加";
         closeCopyDietMode();
         closeCopyDietModal();
         renderAll();
-        showToast(`已从「${dateTitle(source)}」${mode === "overwrite" ? "覆盖" : "追加"} ${copies.length} 条饮食`);
+        showToast(`已从「${dateTitle(source)}」${actionText} ${copies.length} 条饮食（${copyMealNamesLabel(selectedMeals)}）`);
       }
 
       function bindCopyDietEvents() {
@@ -15661,8 +16014,17 @@
         els.copyDietDates.addEventListener("click", (event) => {
           const button = event.target.closest("[data-copy-date]");
           if (!button) return;
-          askCopyDietMode(button.dataset.copyDate);
+          toggleCopyDietDate(button.dataset.copyDate);
         });
+        els.copyDietDates.addEventListener("change", (event) => {
+          const input = event.target.closest("[data-copy-meal]");
+          if (!input) return;
+          if (input.checked) copySelectedMeals.add(input.dataset.copyMeal);
+          else copySelectedMeals.delete(input.dataset.copyMeal);
+          syncCopyDietUI();
+        });
+        els.copyDietToggleAll.addEventListener("click", toggleAllCopyMeals);
+        els.copyDietConfirm.addEventListener("click", askCopyDietMode);
         els.copyModeAppend.addEventListener("click", () => performCopyDiet("append"));
         els.copyModeOverwrite.addEventListener("click", () => performCopyDiet("overwrite"));
         els.copyModeCancel.addEventListener("click", closeCopyDietMode);
@@ -16960,10 +17322,18 @@
         els.settingsFold.open = !hasExistingUserData();
       }
 
+      // v30：把 meta 中的版本号写到顶部徽标，升级时只改 meta 一处。
+      function syncAppVersion() {
+        if (!els.appVersion || !APP_VERSION) return;
+        els.appVersion.textContent = APP_VERSION;
+        els.appVersion.title = `FitDay ${APP_VERSION} · 本地优先`;
+      }
+
       function init() {
         const hash = window.location.hash.replace("#", "");
         dismissedHotspots = loadDismissedHotspots();
         bindEvents();
+        syncAppVersion();
         syncHotspots();
         syncProfileForm();
         initSettingsFold();
